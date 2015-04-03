@@ -1,0 +1,11 @@
+*.suo
+
+/usmooth/bin
+/usmooth/packages
+/usmooth/usmooth.app/obj
+/usmooth/usmooth.app/x64
+/usmooth/usmooth.app/x86
+/usmooth/usmooth.common/obj
+/usmooth/usmooth.testserver/obj
+/usmooth/usmooth.testserver/x64
+/usmooth/usmooth.testserver/x86
