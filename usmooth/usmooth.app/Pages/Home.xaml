@@ -4,11 +4,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="600">
     <Grid Style="{StaticResource ContentRoot}">
         <ScrollViewer>
-            <StackPanel MinWidth="200">
-                <TextBlock Text="TODO: add content" />
+            <StackPanel Height="219" Width="550" HorizontalAlignment="Center">
+                <Grid Width="500">
+                    <StackPanel Height="30" Width="Auto" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Text="Target:" Style="{StaticResource Heading2}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <TextBox Width="120" Text="10.20.98.91" VerticalAlignment="Center" Margin="20,0,0,0" />
+                        <TextBlock Text="Recently connected:" Margin="30,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <ComboBox Width="120" VerticalAlignment="Center" Margin="20,0,0,0" />
+                    </StackPanel>
+                </Grid>
+                <Grid Width="500">
+                    <StackPanel Height="50" Width="Auto" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,5">
+                        <Button x:Name="bt_connect" Height="25" Width="150" Content="Connect" Margin="0,0,30,0" Click="bt_connect_Click" />
+                        <Button x:Name="bt_disconnect" Height="25" Width="100" Content="Disconnect" Margin="30,0,0,0" IsEnabled="False" />
+                    </StackPanel>
+                </Grid>
+                <Grid Width="500">
+                    <StackPanel Height="50" Width="Auto" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,5">
+                        <Label Height="25" Width="120" Content="Status: 00:00:00" Margin="0,0,30,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+                        <Button x:Name="detailed" Height="25" Width="120" Content="Detailed Info" Margin="0,0,0,0" />
+                    </StackPanel>
+                </Grid>
             </StackPanel>
         </ScrollViewer>
     </Grid>

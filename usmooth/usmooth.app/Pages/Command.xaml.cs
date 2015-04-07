@@ -16,28 +16,18 @@ using System.Windows.Shapes;
 namespace usmooth.app.Pages
 {
     /// <summary>
-    /// Interaction logic for Home.xaml
+    /// Interaction logic for Command.xaml
     /// </summary>
-    public partial class Home : UserControl
+    public partial class Command : UserControl
     {
-        private QotdClient _client;
-        private ushort _clientPort = 5555;
-        //private string _clientHost = "127.0.0.1";
-        private string _clientHost = "10.20.98.91";
-
-
-        public Home()
+        public Command()
         {
             InitializeComponent();
         }
 
-        private void bt_connect_Click(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            _client = new QotdClient(_clientHost, _clientPort, AddToLog);
-        }
-        private void AddToLog(string text)
-        {
-            Console.WriteLine(text);
+            tb_cmdbox.Focus();
         }
     }
 }

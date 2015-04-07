@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "usmooth.app", "usmooth.app\usmooth.app.csproj", "{24A97835-7542-4545-A391-8F108DBF81D4}"
 	ProjectSection(ProjectDependencies) = postProject
 		{EB918101-869A-4419-9498-4D81603C6003} = {EB918101-869A-4419-9498-4D81603C6003}
+		{8C67519B-310E-451D-99ED-E75E597C3011} = {8C67519B-310E-451D-99ED-E75E597C3011}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "usmooth.testserver", "usmooth.testserver\usmooth.testserver.csproj", "{EFEDE750-CBDB-4399-8CF4-D239335BB6C4}"
