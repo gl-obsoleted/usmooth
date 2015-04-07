@@ -15,6 +15,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "usmooth.testserver", "usmoo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "usmooth.common", "usmooth.common\usmooth.common.csproj", "{EB918101-869A-4419-9498-4D81603C6003}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ucore", "..\external\ucore\ucore\ucore.csproj", "{8C67519B-310E-451D-99ED-E75E597C3011}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{BAE3AF35-0011-4D9B-B0E1-C69DB8D8A85D}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +42,10 @@ Global
 		{EB918101-869A-4419-9498-4D81603C6003}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB918101-869A-4419-9498-4D81603C6003}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB918101-869A-4419-9498-4D81603C6003}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C67519B-310E-451D-99ED-E75E597C3011}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C67519B-310E-451D-99ED-E75E597C3011}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C67519B-310E-451D-99ED-E75E597C3011}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C67519B-310E-451D-99ED-E75E597C3011}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
