@@ -13,28 +13,37 @@ using Timer = System.Timers.Timer;
 
 namespace usmooth.app
 {
+    public class LogEventArgs : EventArgs
+    {
+        public LogEventArgs(string text) 
+        {
+            Text = text;
+        }
+
+        public string Text { get; set; }
+    }
+
     public class NetClient : IDisposable
     {
         string _host;
         ushort _port;
 
-        private UsCmdParsing m_cmdParser = new UsCmdParsing();
-
         private TcpClient _tcpClient;
-        // A delegate of a log method
-        private readonly Action<string> _logCallback;
 
+        private UsCmdParsing m_cmdParser = new UsCmdParsing();
         private Timer m_tickTimer = new Timer(1000);
 
         public event SysPost.StdMulticastDelegation Connected;
         public event SysPost.StdMulticastDelegation Disconnected;
+        public event SysPost.StdMulticastDelegation LogEmitted;
 
-        public NetClient(Action<string> logCallback)
+        public NetClient()
         {
-            _logCallback = logCallback;
             m_tickTimer.Elapsed += (object sender, global::System.Timers.ElapsedEventArgs e) => Tick();
             m_tickTimer.AutoReset = true;
         }
+
+        public bool IsConnected { get { return _tcpClient != null; } }
 
         public void Connect(string host, ushort port)
         {
@@ -67,6 +76,11 @@ namespace usmooth.app
         {
             try
             {
+                if (!_tcpClient.Connected)
+                {
+                    throw new Exception();
+                }
+
                 // check if the remote client is still connected
                 if (_tcpClient.Client.Poll(0, SelectMode.SelectRead))
                 {
@@ -77,10 +91,6 @@ namespace usmooth.app
                     }
                 }
 
-                if (!_tcpClient.Connected)
-                {
-                    throw new Exception();
-                }
 
                 if (_tcpClient.Available > 0)
                 {
@@ -111,10 +121,6 @@ namespace usmooth.app
             {
                 Disconnect();
             }
-        }
-
-        ~NetClient()
-        {
         }
 
         // Free the resources
@@ -179,7 +185,7 @@ namespace usmooth.app
         // Adds a formatted entry to the log
         private void AddToLog(string text)
         {
-            _logCallback(text);
+            SysPost.InvokeMulticast(this, LogEmitted, new LogEventArgs(text));
         }
     }
 }

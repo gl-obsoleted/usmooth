@@ -74,6 +74,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Net\NetGuardTimer.cs" />
+    <Compile Include="Net\NetManager.cs" />
     <Compile Include="Pages\History.xaml.cs">
       <DependentUpon>History.xaml</DependentUpon>
     </Compile>

@@ -23,7 +23,7 @@ namespace usmooth.app
             _timer.Start();
         }
 
-        public void Diactivate()
+        public void Deactivate()
         {
             if (_timer != null)
             {

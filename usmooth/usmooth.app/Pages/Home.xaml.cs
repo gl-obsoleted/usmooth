@@ -18,23 +18,17 @@ using usmooth.common;
 
 namespace usmooth.app.Pages
 {
-    public enum LogWndOpt
-    {
-        Info,
-        Bold,
-        Error,
-    }
 
     /// <summary>
     /// Interaction logic for Home.xaml
     /// </summary>
     public partial class Home : UserControl
     {
-        private NetClient _client;
-        private NetGuardTimer _guardTimer = new NetGuardTimer();
-
         public Home()
         {
+            if (NetManager.Instance == null)
+                throw new Exception();
+
             InitializeComponent();
 
             if (!cb_targetIP.Items.IsEmpty)
@@ -43,41 +37,51 @@ namespace usmooth.app.Pages
             }
 
             bb_logging.BBCode = string.Empty;
-            PrintLogWnd("usmooth is initialized successfully.");
 
-            _client = new NetClient(PrintLogWnd);
+            UsLogging.Receivers += Impl_PrintLogToWnd;
+            UsLogging.Printf("usmooth is initialized successfully.");
 
-            _client.Connected += this.OnConnected;
-            _client.Disconnected += this.OnDisconnected;
+            NetManager.Instance.LogicallyConnected += OnLogicallyConnected;
+            NetManager.Instance.LogicallyDisconnected += OnLogicallyDisconnected;
+        }
 
-            _client.RegisterCmdHandler(eNetCmd.SV_HandshakeResponse, Handle_HandshakeResponse);
-            _client.RegisterCmdHandler(eNetCmd.SV_KeepAliveResponse, Handle_KeepAliveResponse);
-            _client.RegisterCmdHandler(eNetCmd.SV_ExecCommandResponse, Handle_ExecCommandResponse);
+        void OnLogicallyConnected(object sender, EventArgs e)
+        {
+            this.Dispatcher.Invoke(new Action(() =>
+            {
+                bt_connect.IsEnabled = false;
+                bt_disconnect.IsEnabled = true;
+            }));
+        }
 
-            _guardTimer.Timeout += OnGuardingTimeout;
+        private void OnLogicallyDisconnected(object sender, EventArgs e)
+        {
+            this.Dispatcher.Invoke(new Action(() =>
+            {
+                bt_connect.IsEnabled = true;
+                bt_disconnect.IsEnabled = false;
+            }));
         }
 
         private void bt_connect_Click(object sender, RoutedEventArgs e)
         {
+            if (NetManager.Instance == null)
+                throw new Exception();
+
             if (cb_targetIP.Text.Length == 0)
                 return;
             string[] info = cb_targetIP.Text.Split(':');
             if (info.Length != 2)
                 return;
 
-            _client.Connect(info[0], (ushort)EzConv.ToInt(info[1]));
+            NetManager.Instance.Client.Connect(info[0], (ushort)EzConv.ToInt(info[1]));
 
             // temporarily disable all connection buttons to prevent double submitting
             bt_connect.IsEnabled = false;
             bt_disconnect.IsEnabled = false;
         }
 
-        private void PrintLogWnd(string text)
-        {
-            PrintLogWnd(LogWndOpt.Info, text);
-        }
-
-        private void PrintLogWnd(LogWndOpt opt, string text)
+        private void Impl_PrintLogToWnd(LogWndOpt opt, string text)
         {
             m_loggingPanel.Dispatcher.Invoke(new Action(() =>
             {
@@ -102,35 +106,6 @@ namespace usmooth.app.Pages
             }));
         }
 
-        private bool Handle_HandshakeResponse(eNetCmd cmd, UsCmd c)
-        {
-            PrintLogWnd("eNetCmd.SV_HandshakeResponse received, connection validated.");
-
-            this.Dispatcher.Invoke(new Action(() =>
-            {
-                bt_connect.IsEnabled = false;
-                bt_disconnect.IsEnabled = true;
-
-                _guardTimer.Diactivate();
-            }));
-
-            return true;
-        }
-
-        private bool Handle_KeepAliveResponse(eNetCmd cmd, UsCmd c)
-        {
-
-            return true;
-        }
-
-        private bool Handle_ExecCommandResponse(eNetCmd cmd, UsCmd c)
-        {
-            int retVal = c.ReadInt32();
-            PrintLogWnd(string.Format("command executing result: [b]{0}[/b]", retVal));
-
-            return true;
-        }
-
         private void bt_exec_cmd_Click(object sender, RoutedEventArgs e)
         {
             ExecInputCmd();
@@ -146,64 +121,32 @@ namespace usmooth.app.Pages
 
         private void ExecInputCmd()
         {
-            if (tb_cmdbox.Text.Length == 0)
+            if (!NetManager.Instance.IsConnected)
             {
-                PrintLogWnd(LogWndOpt.Bold, "the command bar is empty, try 'help' to list all supported commands.");
+                UsLogging.Printf(LogWndOpt.Bold, "not connected to server, command ignored.");
                 return;
             }
 
-            string cmdContent = tb_cmdbox.Text;
-            tb_cmdbox.Clear();
-            if (_client == null)
+            if (tb_cmdbox.Text.Length == 0)
             {
-                PrintLogWnd(string.Format("not connected to server, command [b]{0}[/b] ignored.", cmdContent));
+                UsLogging.Printf(LogWndOpt.Bold, "the command bar is empty, try 'help' to list all supported commands.");
                 return;
             }
 
             UsCmd cmd = new UsCmd();
             cmd.WriteInt16((short)eNetCmd.CL_ExecCommand);
-            cmd.WriteString(cmdContent);
-            _client.SendPacket(cmd);
-            PrintLogWnd(string.Format("command executed: [b]{0}[/b]", cmdContent));
+            cmd.WriteString(tb_cmdbox.Text);
+            NetManager.Instance.Client.SendPacket(cmd);
+
+            UsLogging.Printf(string.Format("command executed: [b]{0}[/b]", tb_cmdbox.Text));
+            tb_cmdbox.Clear();
         }
 
-        private void OnConnected(object sender, EventArgs e)
-        {
-            UsCmd cmd = new UsCmd();
-            cmd.WriteInt16((short)eNetCmd.CL_Handshake);
-            cmd.WriteInt16(Properties.Settings.Default.VersionMajor);
-            cmd.WriteInt16(Properties.Settings.Default.VersionMinor);
-            cmd.WriteInt16(Properties.Settings.Default.VersionPatch);
-            _client.SendPacket(cmd);
-
-            _guardTimer.Activate();
-        }
-
-        void OnGuardingTimeout(object sender, EventArgs e)
-        {
-            PrintLogWnd(LogWndOpt.Error, "guarding timeout, closing connection...");
-            DisconnectClient();
-        }
-
-        private void OnDisconnected(object sender, EventArgs e)
-        {
-            this.Dispatcher.Invoke(new Action(() => 
-            {
-                bt_connect.IsEnabled = true;
-                bt_disconnect.IsEnabled = false;
-            }));
-        }
 
         private void bt_disconnect_Click(object sender, RoutedEventArgs e)
         {
-            PrintLogWnd(LogWndOpt.Bold, "trying to disconnect...");
-            DisconnectClient();
-        }
-
-        private void DisconnectClient()
-        {
-            _guardTimer.Diactivate();
-            _client.Disconnect();
+            UsLogging.Printf(LogWndOpt.Bold, "disconnecting manually...");
+            NetManager.Instance.DisconnectClient();
         }
     }
 }

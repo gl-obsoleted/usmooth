@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UsLogging.cs" />
     <Compile Include="UsNetCmd.cs" />
     <Compile Include="UsCmd.cs" />
     <Compile Include="UsCmdParsing.cs" />
