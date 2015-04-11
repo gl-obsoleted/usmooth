@@ -36,6 +36,10 @@
     <Reference Include="FirstFloor.ModernUI">
       <HintPath>..\packages\ModernUI.WPF.1.0.6\lib\net45\FirstFloor.ModernUI.dll</HintPath>
     </Reference>
+    <Reference Include="MsgPack, Version=0.5.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MsgPack.Cli.0.5.11\lib\net45\MsgPack.dll</HintPath>
+    </Reference>
     <Reference Include="NanomsgRPC">
       <HintPath>..\packages\NanomsgRPC.0.1.1\lib\net40\NanomsgRPC.dll</HintPath>
     </Reference>
@@ -46,6 +50,7 @@
       <HintPath>..\packages\NNanomsg.0.5.1\lib\net40\NNanomsg.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -73,6 +78,11 @@
     </Compile>
     <Compile Include="Pages\Realtime.xaml.cs">
       <DependentUpon>Realtime.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="QotdClient.cs" />
     <Page Include="MainWindow.xaml">
@@ -123,7 +133,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\ucore\ucore\ucore.csproj">

@@ -8,56 +8,60 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ucore;
+using usmooth.common;
 using Timer = System.Timers.Timer;
 
 namespace usmooth.app
 {
-    class ConnectionStateChangedEventArgs : EventArgs
-    {
-        public ConnectionStateChangedEventArgs(bool connected)
-        {
-            Connected = connected;
-        }
-
-        public bool Connected { get; set; }
-    }
-
-    public delegate void ConnectionStateChangedHandler(bool connected);
-
     public class QotdClient : IDisposable
     {
+        string _host;
+        ushort _port;
+
+        private UsCmdParsing m_cmdParser = new UsCmdParsing();
+
         private TcpClient _tcpClient;
-        // A Thread that reads data from the server
-        private Thread _threadRead;
         // A delegate of a log method
         private readonly Action<string> _logCallback;
 
         private Timer m_tickTimer = new Timer(1000);
 
-        public event ConnectionStateChangedHandler ConnectionStateChanged;
+        public event SysPost.StdMulticastDelegation Connected;
+        public event SysPost.StdMulticastDelegation Disconnected;
 
         // QOTD client constructor
-        public QotdClient(string host, ushort port, Action<string> logCallback)
+        public QotdClient(Action<string> logCallback)
         {
             _logCallback = logCallback;
-            try
-            {
-                // Creating a new TcpClient instance
-                _tcpClient = new TcpClient();
-            }
-            catch (Exception e)
-            {
-                AddToLog(e.ToString());
-                throw;
-            }
-
             m_tickTimer.Elapsed += (object sender, global::System.Timers.ElapsedEventArgs e) => Tick();
             m_tickTimer.AutoReset = true;
-            m_tickTimer.Start();
+        }
 
-            AddToLog(string.Format("Start connection to {0}:{1}...", host, port));
-            // Start the asynchronous connection procedure
-            _tcpClient.BeginConnect(host, port, OnConnect, _tcpClient);
+        public void Connect(string host, ushort port)
+        {
+            _host = host;
+            _port = port;
+            _tcpClient = new TcpClient();
+            _tcpClient.BeginConnect(_host, _port, OnConnect, _tcpClient);
+            AddToLog(string.Format("[b]connect to [u]{0}:{1}[/u]...[/b]", host, port));
+        }
+
+        public void Disconnect()
+        {
+            m_tickTimer.Stop();
+            if (_tcpClient != null)
+            {
+                _tcpClient.Close();
+                _tcpClient = null;
+
+                AddToLog(string.Format("Connection closed."));
+                SysPost.InvokeMulticast(this, Disconnected);
+            }
+        }
+
+        public void RegisterCmdHandler(eNetCmd cmd, EtCmdHandler handler)
+        {
+            m_cmdParser.RegisterHandler(cmd, handler);
         }
 
         private void Tick()
@@ -81,10 +85,23 @@ namespace usmooth.app
 
                 if (_tcpClient.Available > 0)
                 {
-
                     byte[] buffer = new byte[8192];
                     int len = _tcpClient.GetStream().Read(buffer, 0, buffer.Length);
-                    AddToLog(string.Format("server_msg: {0}.", Encoding.UTF8.GetString(buffer, 0, len)));
+
+                    UsCmd cmd = new UsCmd(buffer);
+                    UsCmdExecResult result = m_cmdParser.Execute(cmd);
+                    switch (result)
+                    {
+                        case UsCmdExecResult.Succ:
+                            break;
+                        case UsCmdExecResult.Failed:
+                            AddToLog(string.Format("server cmd execution failed: {0}.", new UsCmd(buffer).ReadNetCmd()));
+                            break;
+                        case UsCmdExecResult.HandlerNotFound:
+                            AddToLog(string.Format("unknown server msg: {0}.", Encoding.UTF8.GetString(buffer, 0, len)));
+                            break;
+                    }
+
                 }
                 else
                 {
@@ -93,47 +110,43 @@ namespace usmooth.app
             }
             catch (Exception ex)
             {
-                Dispose();
+                Disconnect();
             }
         }
 
         ~QotdClient()
         {
-            FreeResources();
         }
 
         // Free the resources
         public void Dispose()
         {
-            m_tickTimer.Stop();
-            if (_tcpClient != null)
-            {
-                FreeResources();
-                AddToLog(string.Format("Connection closed."));
-                SysPost.InvokeMulticast(this, ConnectionStateChanged, new ConnectionStateChangedEventArgs(false));
-            }
+            Disconnect();
         }
 
         public void SendCommand(string cmd)
         {
-            byte[] buffer = Encoding.UTF8.GetBytes(cmd);
-
             try
             {
+                byte[] buffer = Encoding.UTF8.GetBytes(cmd);
                 _tcpClient.GetStream().Write(buffer, 0, buffer.Length);
             }
             catch (Exception)
             {
-                Dispose();                
+                Disconnect();
             }
         }
 
-        private void FreeResources()
+        public void SendPacket(UsCmd cmd)
         {
-            if (_tcpClient != null)
+            try
             {
-                _tcpClient.Close();
-                _tcpClient = null;
+                byte[] buffer = cmd.Buffer;
+                _tcpClient.GetStream().Write(buffer, 0, buffer.Length);
+            }
+            catch (Exception)
+            {
+                Disconnect();
             }
         }
 
@@ -147,14 +160,15 @@ namespace usmooth.app
             {
                 if (tcpClient.Connected) // may throw NullReference
                 {
+                    m_tickTimer.Start();
                     AddToLog(string.Format("Connected successfully."));
-                    SysPost.InvokeMulticast(this, ConnectionStateChanged, new ConnectionStateChangedEventArgs(true));
+                    SysPost.InvokeMulticast(this, Connected);
                 }
             }
             catch (Exception)
             {
                 AddToLog(string.Format("Connection failed."));
-                Dispose();
+                Disconnect();
                 return;
             }
         }

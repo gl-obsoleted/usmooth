@@ -20,6 +20,15 @@ namespace usmooth.common
             m_buffer = given;
         }
 
+        public eNetCmd ReadNetCmd()
+        {
+            if (m_readOffset != 0)
+                throw new System.Exception("net command should be read as the first 2 bytes.");
+
+            short val = ReadInt16();
+            return (eNetCmd)val;
+        }
+
         public short ReadInt16()
         {
             if (m_readOffset + sizeof(short) > m_buffer.Length)
@@ -73,6 +82,14 @@ namespace usmooth.common
 
             m_readOffset += (int)strLen;
             return ret;
+        }
+
+        public void WriteNetCmd(eNetCmd cmd)
+        {
+            if (m_writeOffset != 0)
+                throw new System.Exception("net command should be written as the first 2 bytes.");
+
+            WriteInt16((short)cmd);
         }
 
         public void WriteInt16(short value)

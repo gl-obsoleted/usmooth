@@ -24,7 +24,7 @@
                         </ComboBox>
                         <Button x:Name="bt_connect" Height="25" Width="150" Content="Connect" Margin="10,0,10,0" Click="bt_connect_Click" />
                         <Label Height="25" Width="120" Content="Status: 00:00:00" Margin="10,0,10,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
-                        <Button x:Name="bt_disconnect" Height="25" Width="100" Content="Disconnect" Margin="10,0,10,0" IsEnabled="False" />
+                        <Button x:Name="bt_disconnect" Height="25" Width="100" Content="Disconnect" Margin="10,0,10,0" IsEnabled="False" Click="bt_disconnect_Click" />
                     </StackPanel>
                 </Grid>
             </StackPanel>

@@ -8,6 +8,8 @@ namespace usmooth.common
 {
     public enum eNetCmd
     {
+        None,
+
         CL_CmdBegin,
         CL_Handshake,
         CL_KeepAlive,

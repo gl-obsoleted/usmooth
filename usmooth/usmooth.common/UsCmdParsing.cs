@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace usmooth.common
 {
-    public delegate void EtCmdHandler(short cmd, UsCmd c);
+    public delegate bool EtCmdHandler(eNetCmd cmd, UsCmd c);
+
+    public enum UsCmdExecResult
+    {
+        Succ,
+        Failed,
+        HandlerNotFound,
+    }
 
     public class UsCmdParsing
     {
@@ -15,16 +22,30 @@ namespace usmooth.common
             m_handlers[cmd] = handler;
         }
 
-        public void Execute(UsCmd c)
+        public UsCmdExecResult Execute(UsCmd c)
         {
             try
             {
-                short cmdId = c.ReadInt16();
-                m_handlers[(eNetCmd)cmdId](cmdId, c);
+                eNetCmd cmd = c.ReadNetCmd();
+                EtCmdHandler handler;
+                if (!m_handlers.TryGetValue(cmd, out handler))
+                {
+                    return UsCmdExecResult.HandlerNotFound;
+                }
+
+                if (handler(cmd, c))
+                {
+                    return UsCmdExecResult.Succ;
+                }
+                else
+                {
+                    return UsCmdExecResult.Failed;
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("[cmd] Execution failed. ({0})", ex.Message);
+                return UsCmdExecResult.Failed;
             }
         }
 
