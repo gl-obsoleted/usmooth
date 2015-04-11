@@ -30,6 +30,11 @@ namespace usmooth.app.Pages
         {
             InitializeComponent();
 
+            if (!cb_targetIP.Items.IsEmpty)
+            {
+                cb_targetIP.SelectedItem = cb_targetIP.Items[0];
+            }
+
             bb_logging.BBCode = string.Empty;
             AddToLog("usmooth is initialized successfully.");
 
@@ -50,10 +55,12 @@ namespace usmooth.app.Pages
         }
         private void AddToLog(string text)
         {
-            string content = string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), text);
-            Console.WriteLine(content);
-            bb_logging.BBCode += content;
-            m_loggingPanel.ScrollToBottom();
+            m_loggingPanel.Dispatcher.Invoke(new Action(() =>
+            {
+                string content = string.Format("{0} {1}\r\n", DateTime.Now.ToLongTimeString(), text);
+                bb_logging.BBCode += content;
+                m_loggingPanel.ScrollToBottom();
+            }));
         }
 
         private void Handle_HandshakeResponse(short cmd, UsCmd c)
@@ -90,7 +97,17 @@ namespace usmooth.app.Pages
                 return;
             }
 
-            AddToLog(string.Format("Command entered: {0}", tb_cmdbox.Text));
+            AddToLog(string.Format("command executed: [b]{0}[/b]", tb_cmdbox.Text));
+
+            if (_client != null)
+            {
+                _client.SendCommand(tb_cmdbox.Text);
+            }
+            else
+            {
+                AddToLog("not connected to server, command ignored.");
+            }
+
             tb_cmdbox.Clear();
         }
     }
