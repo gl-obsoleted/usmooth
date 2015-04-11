@@ -12,11 +12,6 @@
                 <mui:Link DisplayName="status" Source="/Pages/Home.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
-        <mui:LinkGroup DisplayName="command">
-            <mui:LinkGroup.Links>
-                <mui:Link DisplayName="logging" Source="/Pages/Command.xaml" />
-            </mui:LinkGroup.Links>
-        </mui:LinkGroup>
         <mui:LinkGroup DisplayName="realtime">
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="data" Source="/Pages/Realtime.xaml" />
