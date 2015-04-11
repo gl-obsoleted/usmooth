@@ -73,6 +73,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Net\NetGuardTimer.cs" />
     <Compile Include="Pages\History.xaml.cs">
       <DependentUpon>History.xaml</DependentUpon>
     </Compile>
@@ -84,7 +85,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="QotdClient.cs" />
+    <Compile Include="Net\NetClient.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

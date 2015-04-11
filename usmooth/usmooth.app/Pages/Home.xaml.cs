@@ -15,7 +15,6 @@ using System.Windows.Shapes;
 using System.Configuration;
 using ucore;
 using usmooth.common;
-using Timer = System.Timers.Timer;
 
 namespace usmooth.app.Pages
 {
@@ -31,8 +30,8 @@ namespace usmooth.app.Pages
     /// </summary>
     public partial class Home : UserControl
     {
-        private QotdClient _client;
-        private Timer _handshakeTimer;
+        private NetClient _client;
+        private NetGuardTimer _guardTimer = new NetGuardTimer();
 
         public Home()
         {
@@ -46,7 +45,7 @@ namespace usmooth.app.Pages
             bb_logging.BBCode = string.Empty;
             PrintLogWnd("usmooth is initialized successfully.");
 
-            _client = new QotdClient(PrintLogWnd);
+            _client = new NetClient(PrintLogWnd);
 
             _client.Connected += this.OnConnected;
             _client.Disconnected += this.OnDisconnected;
@@ -54,6 +53,8 @@ namespace usmooth.app.Pages
             _client.RegisterCmdHandler(eNetCmd.SV_HandshakeResponse, Handle_HandshakeResponse);
             _client.RegisterCmdHandler(eNetCmd.SV_KeepAliveResponse, Handle_KeepAliveResponse);
             _client.RegisterCmdHandler(eNetCmd.SV_ExecCommandResponse, Handle_ExecCommandResponse);
+
+            _guardTimer.Timeout += OnGuardingTimeout;
         }
 
         private void bt_connect_Click(object sender, RoutedEventArgs e)
@@ -110,7 +111,7 @@ namespace usmooth.app.Pages
                 bt_connect.IsEnabled = false;
                 bt_disconnect.IsEnabled = true;
 
-                _handshakeTimer.Stop();
+                _guardTimer.Diactivate();
             }));
 
             return true;
@@ -124,6 +125,8 @@ namespace usmooth.app.Pages
 
         private bool Handle_ExecCommandResponse(eNetCmd cmd, UsCmd c)
         {
+            int retVal = c.ReadInt32();
+            PrintLogWnd(string.Format("command executing result: [b]{0}[/b]", retVal));
 
             return true;
         }
@@ -145,22 +148,23 @@ namespace usmooth.app.Pages
         {
             if (tb_cmdbox.Text.Length == 0)
             {
-                PrintLogWnd("the command bar is empty, try 'help' to list all supported commands.");
+                PrintLogWnd(LogWndOpt.Bold, "the command bar is empty, try 'help' to list all supported commands.");
                 return;
             }
 
-            PrintLogWnd(string.Format("command executed: [b]{0}[/b]", tb_cmdbox.Text));
-
-            if (_client != null)
-            {
-                _client.SendCommand(tb_cmdbox.Text);
-            }
-            else
-            {
-                PrintLogWnd("not connected to server, command ignored.");
-            }
-
+            string cmdContent = tb_cmdbox.Text;
             tb_cmdbox.Clear();
+            if (_client == null)
+            {
+                PrintLogWnd(string.Format("not connected to server, command [b]{0}[/b] ignored.", cmdContent));
+                return;
+            }
+
+            UsCmd cmd = new UsCmd();
+            cmd.WriteInt16((short)eNetCmd.CL_ExecCommand);
+            cmd.WriteString(cmdContent);
+            _client.SendPacket(cmd);
+            PrintLogWnd(string.Format("command executed: [b]{0}[/b]", cmdContent));
         }
 
         private void OnConnected(object sender, EventArgs e)
@@ -172,14 +176,12 @@ namespace usmooth.app.Pages
             cmd.WriteInt16(Properties.Settings.Default.VersionPatch);
             _client.SendPacket(cmd);
 
-            _handshakeTimer = new Timer(3000);
-            _handshakeTimer.Elapsed += OnHandshakeTimeout;
-            _handshakeTimer.Start();
+            _guardTimer.Activate();
         }
 
-        void OnHandshakeTimeout(object sender, System.Timers.ElapsedEventArgs e)
+        void OnGuardingTimeout(object sender, EventArgs e)
         {
-            PrintLogWnd(LogWndOpt.Error, "handshake timeout, closing connection...");
+            PrintLogWnd(LogWndOpt.Error, "guarding timeout, closing connection...");
             DisconnectClient();
         }
 
@@ -200,12 +202,7 @@ namespace usmooth.app.Pages
 
         private void DisconnectClient()
         {
-            if (_handshakeTimer != null)
-            {
-                _handshakeTimer.Stop();
-                _handshakeTimer = null;
-            }
-
+            _guardTimer.Diactivate();
             _client.Disconnect();
         }
     }

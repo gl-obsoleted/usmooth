@@ -13,7 +13,7 @@ using Timer = System.Timers.Timer;
 
 namespace usmooth.app
 {
-    public class QotdClient : IDisposable
+    public class NetClient : IDisposable
     {
         string _host;
         ushort _port;
@@ -29,8 +29,7 @@ namespace usmooth.app
         public event SysPost.StdMulticastDelegation Connected;
         public event SysPost.StdMulticastDelegation Disconnected;
 
-        // QOTD client constructor
-        public QotdClient(Action<string> logCallback)
+        public NetClient(Action<string> logCallback)
         {
             _logCallback = logCallback;
             m_tickTimer.Elapsed += (object sender, global::System.Timers.ElapsedEventArgs e) => Tick();
@@ -114,7 +113,7 @@ namespace usmooth.app
             }
         }
 
-        ~QotdClient()
+        ~NetClient()
         {
         }
 
@@ -163,6 +162,10 @@ namespace usmooth.app
                     m_tickTimer.Start();
                     AddToLog(string.Format("Connected successfully."));
                     SysPost.InvokeMulticast(this, Connected);
+                }
+                else
+                {
+                    throw new Exception();
                 }
             }
             catch (Exception)
