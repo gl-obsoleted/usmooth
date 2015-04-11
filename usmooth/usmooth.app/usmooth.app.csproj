@@ -130,6 +130,10 @@
       <Project>{8c67519b-310e-451d-99ed-e75e597c3011}</Project>
       <Name>ucore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\usmooth.common\usmooth.common.csproj">
+      <Project>{eb918101-869a-4419-9498-4d81603c6003}</Project>
+      <Name>usmooth.common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

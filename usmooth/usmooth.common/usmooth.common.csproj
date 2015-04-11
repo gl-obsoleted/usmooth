@@ -39,7 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cmd.cs" />
+    <Compile Include="UsNetCmd.cs" />
+    <Compile Include="UsCmd.cs" />
+    <Compile Include="UsCmdParsing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -11,7 +11,7 @@
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="6"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
 
         <ScrollViewer>
@@ -43,8 +43,8 @@
                     <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="tb_cmdbox" Height="25" Width="Auto" />
-                <Button Grid.Column="1" x:Name="bt_exec_cmd" Height="25" Content="Execute" Margin="20,0,0,0" />
+                <TextBox x:Name="tb_cmdbox" Height="25" Width="Auto" KeyDown="tb_cmdbox_KeyDown" />
+                <Button Grid.Column="1" x:Name="bt_exec_cmd" Height="25" Content="Execute" Margin="20,0,0,0" Click="bt_exec_cmd_Click" />
             </Grid>
         </ScrollViewer>
     </Grid>
