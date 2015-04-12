@@ -45,7 +45,7 @@ namespace usmooth.app
             ushort port = (ushort)EzConv.ToInt(Properties.Settings.Default.ServerPort);
             if (port == 0)
             {
-                UsLogging.Printf(LogWndOpt.Bold, "port '{0}' invalid, connection aborted.", port);
+                UsLogging.Printf(LogWndOpt.Error, "port '{0}' invalid, connection aborted.", port);
                 return false;
             }
 
@@ -61,6 +61,11 @@ namespace usmooth.app
         public void Send(UsCmd cmd)
         {
             _client.SendPacket(cmd);
+        }
+
+        public void RegisterCmdHandler(eNetCmd cmd, EtCmdHandler handler)
+        {
+            _client.RegisterCmdHandler(cmd, handler);
         }
 
         private void OnConnected(object sender, EventArgs e)

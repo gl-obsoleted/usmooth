@@ -21,6 +21,7 @@ namespace usmooth.app.Pages
 {
     public class MeshObject
     {
+        public int InstID { get; set; }
         public string Name { get; set; }
         public string MeshName { get; set; }
         public int VertCnt { get; set; }
@@ -30,6 +31,7 @@ namespace usmooth.app.Pages
 
     public class MaterialObject
     {
+        public int InstID { get; set; }
         public string Name { get; set; }
         public string ShaderName { get; set; }
         public int RefCnt { get; set; }
@@ -37,6 +39,7 @@ namespace usmooth.app.Pages
 
     public class TextureObject
     {
+        public int InstID { get; set; }
         public string Name { get; set; }
         public string PixelSize { get; set; }
         public int RefCnt { get; set; }
@@ -55,28 +58,77 @@ namespace usmooth.app.Pages
             //MeshGrid.DataContext = GetMeshCollection();
             //MaterialGrid.DataContext = GetMaterialCollection();
             //TextureGrid.DataContext = GetTextureCollection();
+
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Mesh, Handle_FrameData_Mesh);
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Material, Handle_FrameData_Material);
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Texture, Handle_FrameData_Texture);
         }
 
-        private ObservableCollection<MeshObject> GetMeshCollection()
+        private ObservableCollection<MeshObject> GetMeshCollection(UsCmd c)
         {
             var meshes = new ObservableCollection<MeshObject>();
-            meshes.Add(new MeshObject { Name = "Orlando", MeshName = "Gee", VertCnt = 100, MatCnt = 2, Size = 3.25f });
-            meshes.Add(new MeshObject { Name = "Orlando", MeshName = "Gee", VertCnt = 50, MatCnt = 2, Size = 3.25f });
-            meshes.Add(new MeshObject { Name = "Orlando", MeshName = "Gee", VertCnt = 20, MatCnt = 2, Size = 3.25f });
+
+            int count = c.ReadInt32();
+            if (count > 0)
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    var m = new MeshObject();
+                    m.InstID = c.ReadInt32();
+                    m.Name = c.ReadString();
+                    m.MeshName = c.ReadString();
+                    m.VertCnt = c.ReadInt32();
+                    m.MatCnt = c.ReadInt32();
+                    m.Size = (float)c.ReadInt32();
+                    meshes.Add(m);
+                }
+            }
+
             return meshes;
         }
 
-        private ObservableCollection<MaterialObject> GetMaterialCollection()
+        private ObservableCollection<MaterialObject> GetMaterialCollection(UsCmd c)
         {
             var materials = new ObservableCollection<MaterialObject>();
-            materials.Add(new MaterialObject { Name = "Orlando", ShaderName = "Gee", RefCnt = 2 });
+            int count = c.ReadInt32();
+            if (count > 0)
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    var m = new MaterialObject();
+                    m.InstID = c.ReadInt32();
+                    m.Name = c.ReadString();
+                    m.ShaderName = c.ReadString();
+                    m.RefCnt = c.ReadInt32();
+                    for (int k = 0; k < m.RefCnt; k++)
+                        c.ReadInt32();
+
+                    materials.Add(m);
+                }
+            }
             return materials;
         }
 
-        private ObservableCollection<TextureObject> GetTextureCollection()
+        private ObservableCollection<TextureObject> GetTextureCollection(UsCmd c)
         {
             var textures = new ObservableCollection<TextureObject>();
-            textures.Add(new TextureObject { Name = "Orlando", PixelSize = "512x512", RefCnt = 2, MemSize = "356KB" });
+            int count = c.ReadInt32();
+            if (count > 0)
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    var m = new TextureObject();
+                    m.InstID = c.ReadInt32();
+                    m.Name = c.ReadString();
+                    m.PixelSize = c.ReadString();
+                    m.MemSize = c.ReadString();
+                    m.RefCnt = c.ReadInt32();
+                    for (int k = 0; k < m.RefCnt; k++)
+                        c.ReadInt32();
+
+                    textures.Add(m);
+                }
+            }
             return textures;
         }
 
@@ -100,12 +152,40 @@ namespace usmooth.app.Pages
                 }
             }
 
-            //UsCmd cmd = new UsCmd();
-            //cmd.WriteNetCmd(eNetCmd.CL_RequestFrameData);
-            //NetManager.Instance.Send(cmd);
+            UsCmd cmd = new UsCmd();
+            cmd.WriteNetCmd(eNetCmd.CL_RequestFrameData);
+            NetManager.Instance.Send(cmd);
         }
         public void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
+        }
+
+        private bool Handle_FrameData_Mesh(eNetCmd cmd, UsCmd c)
+        {
+            UsLogging.Printf("eNetCmd.Handle_FrameData_Mesh received ({0}).", c.Buffer.Length);
+            MeshGrid.Dispatcher.Invoke(new Action(() =>
+            {
+                MeshGrid.DataContext = GetMeshCollection(c);
+            }));
+            return true;
+        }
+        private bool Handle_FrameData_Material(eNetCmd cmd, UsCmd c)
+        {
+            UsLogging.Printf("eNetCmd.Handle_FrameData_Material received ({0}).", c.Buffer.Length);
+            MaterialGrid.Dispatcher.Invoke(new Action(() =>
+            {
+                MaterialGrid.DataContext = GetMaterialCollection(c);
+            }));
+            return true;
+        }
+        private bool Handle_FrameData_Texture(eNetCmd cmd, UsCmd c)
+        {
+            UsLogging.Printf("eNetCmd.Handle_FrameData_Texture received ({0}).", c.Buffer.Length);
+            TextureGrid.Dispatcher.Invoke(new Action(() =>
+            {
+                TextureGrid.DataContext = GetTextureCollection(c);
+            }));
+            return true;
         }
     }
 }

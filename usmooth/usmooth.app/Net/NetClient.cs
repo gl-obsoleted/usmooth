@@ -98,23 +98,29 @@ namespace usmooth.app
         {
             try
             {
-                if (_tcpClient.Available > 0)
+                while (_tcpClient.Available > 0)
                 {
-                    byte[] buffer = new byte[8192];
-                    int len = _tcpClient.GetStream().Read(buffer, 0, buffer.Length);
-
-                    UsCmd cmd = new UsCmd(buffer);
-                    UsCmdExecResult result = m_cmdParser.Execute(cmd);
-                    switch (result)
+                    byte[] cmdLenBuf = new byte[2];
+                    int cmdLenRead = _tcpClient.GetStream().Read(cmdLenBuf, 0, cmdLenBuf.Length);
+                    ushort cmdLen = BitConverter.ToUInt16(cmdLenBuf, 0);
+                    if (cmdLenRead > 0 && cmdLen > 0)
                     {
-                        case UsCmdExecResult.Succ:
-                            break;
-                        case UsCmdExecResult.Failed:
-                            AddToLog(string.Format("server cmd execution failed: {0}.", new UsCmd(buffer).ReadNetCmd()));
-                            break;
-                        case UsCmdExecResult.HandlerNotFound:
-                            AddToLog(string.Format("unknown server msg: {0}.", Encoding.UTF8.GetString(buffer, 0, len)));
-                            break;
+                        byte[] buffer = new byte[cmdLen];
+                        int len = _tcpClient.GetStream().Read(buffer, 0, buffer.Length);
+
+                        UsCmd cmd = new UsCmd(buffer);
+                        UsCmdExecResult result = m_cmdParser.Execute(cmd);
+                        switch (result)
+                        {
+                            case UsCmdExecResult.Succ:
+                                break;
+                            case UsCmdExecResult.Failed:
+                                AddToLog(string.Format("server cmd execution failed: {0}.", new UsCmd(buffer).ReadNetCmd()));
+                                break;
+                            case UsCmdExecResult.HandlerNotFound:
+                                AddToLog(string.Format("unknown server msg: {0}.", Encoding.UTF8.GetString(buffer, 0, len)));
+                                break;
+                        }
                     }
                 }
             }

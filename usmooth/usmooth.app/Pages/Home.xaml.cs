@@ -162,7 +162,7 @@ namespace usmooth.app.Pages
 
         private void bt_disconnect_Click(object sender, RoutedEventArgs e)
         {
-            UsLogging.Printf(LogWndOpt.Bold, "disconnecting manually...");
+            UsLogging.Printf(LogWndOpt.Error, "[b]disconnecting manually...[/b]");
             NetManager.Instance.Disconnect();
         }
     }

@@ -7,7 +7,7 @@ namespace usmooth.common
 {
     public class UsCmd
     {
-        public const int DefaultCmdSize = 1024;
+        public const int DefaultCmdSize = 8192;
 
         public UsCmd()
         {
@@ -73,11 +73,11 @@ namespace usmooth.common
             }
 
             string ret = Encoding.Default.GetString(m_buffer, m_readOffset, (int)strLen);
-            if (ret[ret.Length - 1] == 0)
-            {
-                char[] cStrTail = { '\0' };
-                ret = ret.TrimEnd(cStrTail);
-            }
+            //if (ret[ret.Length - 1] == 0)
+            //{
+            //    char[] cStrTail = { '\0' };
+            //    ret = ret.TrimEnd(cStrTail);
+            //}
 
             m_readOffset += (int)strLen;
             return ret;
@@ -122,7 +122,7 @@ namespace usmooth.common
         public void WriteString(string value)
         {
             short len = (short)value.Length;
-            len += 1; // 为了和 EtCmdPacket::WriteCStr() 保持一致
+            //len += 1; // 为了和 EtCmdPacket::WriteCStr() 保持一致
 
             if (len >= short.MaxValue)
             {
@@ -142,6 +142,7 @@ namespace usmooth.common
             get { return m_buffer; }
         }
 
+        public int WrittenLen { get { return m_writeOffset; } }
 
         int m_writeOffset = 0;
         int m_readOffset = 0;
