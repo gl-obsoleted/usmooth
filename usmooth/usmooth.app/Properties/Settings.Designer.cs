@@ -49,5 +49,34 @@ namespace usmooth.app.Properties {
                 return ((short)(this["VersionPatch"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection RecentAddrList {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["RecentAddrList"]));
+            }
+            set {
+                this["RecentAddrList"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
+        public string LocalAddr {
+            get {
+                return ((string)(this["LocalAddr"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5555")]
+        public string ServerPort {
+            get {
+                return ((string)(this["ServerPort"]));
+            }
+        }
     }
 }

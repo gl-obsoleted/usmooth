@@ -20,7 +20,6 @@
                     <StackPanel Height="30" Width="Auto" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,5">
                         <TextBlock Text="Target:" Style="{StaticResource Heading2}" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         <ComboBox x:Name="cb_targetIP" Width="150" VerticalAlignment="Center" Margin="10,0,10,0" IsEditable="True" >
-                            <ComboBoxItem Content="127.0.0.1:5555"/>
                         </ComboBox>
                         <Button x:Name="bt_connect" Height="25" Width="150" Content="Connect" Margin="10,0,10,0" Click="bt_connect_Click" />
                         <Label Height="25" Width="120" Content="Status: 00:00:00" Margin="10,0,10,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />

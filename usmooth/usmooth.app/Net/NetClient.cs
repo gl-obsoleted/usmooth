@@ -51,7 +51,7 @@ namespace usmooth.app
             _port = port;
             _tcpClient = new TcpClient();
             _tcpClient.BeginConnect(_host, _port, OnConnect, _tcpClient);
-            AddToLog(string.Format("[b]connect to [u]{0}:{1}[/u]...[/b]", host, port));
+            UsLogging.Printf(LogWndOpt.Bold, "connecting to [u]{0}:{1}[/u]...", host, port);
         }
 
         public void Disconnect()
@@ -62,7 +62,7 @@ namespace usmooth.app
                 _tcpClient.Close();
                 _tcpClient = null;
 
-                AddToLog(string.Format("Connection closed."));
+                UsLogging.Printf("connection closed.");
                 SysPost.InvokeMulticast(this, Disconnected);
             }
         }

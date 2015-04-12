@@ -31,10 +31,16 @@ namespace usmooth.app.Pages
 
             InitializeComponent();
 
-            if (!cb_targetIP.Items.IsEmpty)
+            // refresh recent target IP list
+            cb_targetIP.Items.Add(Properties.Settings.Default.LocalAddr);
+            if (Properties.Settings.Default.RecentAddrList != null)
             {
-                cb_targetIP.SelectedItem = cb_targetIP.Items[0];
+                foreach (var item in Properties.Settings.Default.RecentAddrList)
+                {
+                    cb_targetIP.Items.Add(item);
+                }
             }
+            cb_targetIP.SelectedItem = cb_targetIP.Items[0];
 
             bb_logging.BBCode = string.Empty;
 
@@ -51,6 +57,15 @@ namespace usmooth.app.Pages
             {
                 bt_connect.IsEnabled = false;
                 bt_disconnect.IsEnabled = true;
+
+                string remoteAddr = cb_targetIP.Text;
+                UsLogging.Printf(LogWndOpt.Bold, "connected to [u]{0}[/u].", remoteAddr);
+
+                if (AppSettingsUtil.AppendAsRecentlyConnected(remoteAddr))
+                {
+                    cb_targetIP.Items.Add(remoteAddr);
+                    UsLogging.Printf("{0} is appended into the recent connection list.", remoteAddr);
+                }
             }));
         }
 
@@ -66,15 +81,17 @@ namespace usmooth.app.Pages
         private void bt_connect_Click(object sender, RoutedEventArgs e)
         {
             if (NetManager.Instance == null)
-                throw new Exception();
-
-            if (cb_targetIP.Text.Length == 0)
+            {
+                UsLogging.Printf(LogWndOpt.Bold, "NetManager not available, connecting failed.");
                 return;
-            string[] info = cb_targetIP.Text.Split(':');
-            if (info.Length != 2)
-                return;
+            }
 
-            NetManager.Instance.Client.Connect(info[0], (ushort)EzConv.ToInt(info[1]));
+            ushort port = (ushort)EzConv.ToInt(Properties.Settings.Default.ServerPort);
+            if (!NetManager.Instance.Connect(cb_targetIP.Text))
+            {
+                UsLogging.Printf(LogWndOpt.Bold, "connecting failed.");
+                return;
+            }
 
             // temporarily disable all connection buttons to prevent double submitting
             bt_connect.IsEnabled = false;
@@ -136,7 +153,7 @@ namespace usmooth.app.Pages
             UsCmd cmd = new UsCmd();
             cmd.WriteInt16((short)eNetCmd.CL_ExecCommand);
             cmd.WriteString(tb_cmdbox.Text);
-            NetManager.Instance.Client.SendPacket(cmd);
+            NetManager.Instance.Send(cmd);
 
             UsLogging.Printf(string.Format("command executed: [b]{0}[/b]", tb_cmdbox.Text));
             tb_cmdbox.Clear();
@@ -146,7 +163,7 @@ namespace usmooth.app.Pages
         private void bt_disconnect_Click(object sender, RoutedEventArgs e)
         {
             UsLogging.Printf(LogWndOpt.Bold, "disconnecting manually...");
-            NetManager.Instance.DisconnectClient();
+            NetManager.Instance.Disconnect();
         }
     }
 }

@@ -12,8 +12,6 @@ namespace usmooth.app
     {
         public static NetManager Instance;
 
-        public NetClient Client { get { return _client; } }
-
         public bool IsConnected { get { return _client.IsConnected; } }
 
         public event SysPost.StdMulticastDelegation LogicallyConnected;
@@ -37,9 +35,27 @@ namespace usmooth.app
             _client.Dispose();
         }
 
-        public void DisconnectClient()
+        public bool Connect(string addr)
+        {
+            ushort port = (ushort)EzConv.ToInt(Properties.Settings.Default.ServerPort);
+            if (port == 0)
+            {
+                UsLogging.Printf(LogWndOpt.Bold, "port '{0}' invalid, connection aborted.", port);
+                return false;
+            }
+
+            _client.Connect(addr, port);
+            return true;
+        }
+
+        public void Disconnect()
         {
             _client.Disconnect();
+        }
+
+        public void Send(UsCmd cmd)
+        {
+            _client.SendPacket(cmd);
         }
 
         private void OnConnected(object sender, EventArgs e)
@@ -68,12 +84,11 @@ namespace usmooth.app
                 UsLogging.Printf(LogWndOpt.Info, lea.Text);
             }
         }
-
-
+          
         private void OnGuardingTimeout(object sender, EventArgs e)
         {
             UsLogging.Printf(LogWndOpt.Error, "guarding timeout, closing connection...");
-            DisconnectClient();
+            Disconnect();
         }
 
         private bool Handle_HandshakeResponse(eNetCmd cmd, UsCmd c)

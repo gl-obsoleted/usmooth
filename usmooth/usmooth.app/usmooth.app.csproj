@@ -73,6 +73,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="AppSettingsUtil.cs" />
     <Compile Include="Net\NetGuardTimer.cs" />
     <Compile Include="Net\NetManager.cs" />
     <Compile Include="Pages\History.xaml.cs">
