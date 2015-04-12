@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FirstFloor.ModernUI.Windows;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,8 +12,10 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using usmooth.common;
+using FirstFloor.ModernUI.Windows.Navigation;
+using FirstFloor.ModernUI.Windows.Controls;
 
 namespace usmooth.app.Pages
 {
@@ -43,15 +46,15 @@ namespace usmooth.app.Pages
     /// <summary>
     /// Interaction logic for Realtime.xaml
     /// </summary>
-    public partial class Realtime : UserControl
+    public partial class Realtime : UserControl, IContent
     {
         public Realtime()
         {
             InitializeComponent();
 
-            MeshGrid.DataContext = GetMeshCollection();
-            MaterialGrid.DataContext = GetMaterialCollection();
-            TextureGrid.DataContext = GetTextureCollection();
+            //MeshGrid.DataContext = GetMeshCollection();
+            //MaterialGrid.DataContext = GetMaterialCollection();
+            //TextureGrid.DataContext = GetTextureCollection();
         }
 
         private ObservableCollection<MeshObject> GetMeshCollection()
@@ -75,6 +78,34 @@ namespace usmooth.app.Pages
             var textures = new ObservableCollection<TextureObject>();
             textures.Add(new TextureObject { Name = "Orlando", PixelSize = "512x512", RefCnt = 2, MemSize = "356KB" });
             return textures;
+        }
+
+        public void OnFragmentNavigation(FragmentNavigationEventArgs e)
+        {
+        }
+        public void OnNavigatedFrom(NavigationEventArgs e)
+        {
+        }
+        public void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (!NetManager.Instance.IsConnected)
+            {
+                if (ModernDialog.ShowMessage("usmooth is [b]offline[/b], connect to a running game first.", "offline", MessageBoxButton.OK) == MessageBoxResult.OK)
+                {
+                    UsLogging.Printf("trying to enter the '[b]realtime[/b]' page when usmooth is [b]offline[/b], back to the main page.");
+
+                    DefaultLinkNavigator dln = new DefaultLinkNavigator();
+                    dln.Navigate(new Uri("/Pages/Home.xaml", UriKind.Relative), this);
+                    return;
+                }
+            }
+
+            //UsCmd cmd = new UsCmd();
+            //cmd.WriteNetCmd(eNetCmd.CL_RequestFrameData);
+            //NetManager.Instance.Send(cmd);
+        }
+        public void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
         }
     }
 }

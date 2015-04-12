@@ -9,17 +9,20 @@ namespace usmooth.common
     {
         None,
 
-        CL_CmdBegin,
+        CL_CmdBegin             = 1000,
         CL_Handshake,
         CL_KeepAlive,
         CL_ExecCommand,
+        CL_RequestFrameData,
         CL_CmdEnd,
 
-        SV_CmdBegin,
+        SV_CmdBegin             = 2000,
         SV_HandshakeResponse,
         SV_KeepAliveResponse,
         SV_ExecCommandResponse,
-        SV_FrameData,
+        SV_FrameData_Mesh,
+        SV_FrameData_Material,
+        SV_FrameData_Texture,
         SV_CmdEnd,
     }
 }

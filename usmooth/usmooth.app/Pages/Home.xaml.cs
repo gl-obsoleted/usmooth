@@ -51,7 +51,7 @@ namespace usmooth.app.Pages
             NetManager.Instance.LogicallyDisconnected += OnLogicallyDisconnected;
         }
 
-        void OnLogicallyConnected(object sender, EventArgs e)
+        private void OnLogicallyConnected(object sender, EventArgs e)
         {
             this.Dispatcher.Invoke(new Action(() =>
             {
@@ -151,7 +151,7 @@ namespace usmooth.app.Pages
             }
 
             UsCmd cmd = new UsCmd();
-            cmd.WriteInt16((short)eNetCmd.CL_ExecCommand);
+            cmd.WriteNetCmd(eNetCmd.CL_ExecCommand);
             cmd.WriteString(tb_cmdbox.Text);
             NetManager.Instance.Send(cmd);
 

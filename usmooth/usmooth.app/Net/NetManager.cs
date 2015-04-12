@@ -14,6 +14,7 @@ namespace usmooth.app
         public static NetManager Instance;
 
         public bool IsConnected { get { return _client.IsConnected; } }
+        public string RemoteAddr { get { return _client.RemoteAddr; } }
 
         public event SysPost.StdMulticastDelegation LogicallyConnected;
         public event SysPost.StdMulticastDelegation LogicallyDisconnected;

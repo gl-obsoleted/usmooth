@@ -41,6 +41,8 @@ namespace usmooth.app
 
         public bool IsConnected { get { return _tcpClient != null; } }
 
+        public string RemoteAddr { get { return _tcpClient.Client.RemoteEndPoint.ToString(); } }
+
         public void Connect(string host, ushort port)
         {
             _host = host;
