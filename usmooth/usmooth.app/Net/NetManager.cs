@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ucore;
 using usmooth.common;
+using Timer = System.Timers.Timer;
 
 namespace usmooth.app
 {
@@ -28,6 +29,9 @@ namespace usmooth.app
             _client.RegisterCmdHandler(eNetCmd.SV_ExecCommandResponse, Handle_ExecCommandResponse);
 
             _guardTimer.Timeout += OnGuardingTimeout;
+
+            _tickTimer.Elapsed += (object sender, global::System.Timers.ElapsedEventArgs e) => Tick();
+            _tickTimer.AutoReset = true;
         }
 
         public void Dispose()
@@ -67,12 +71,15 @@ namespace usmooth.app
             cmd.WriteInt16(Properties.Settings.Default.VersionPatch);
             _client.SendPacket(cmd);
 
+            _tickTimer.Start();
             _guardTimer.Activate();
         }
 
         private void OnDisconnected(object sender, EventArgs e)
         {
+            _tickTimer.Stop();
             _guardTimer.Deactivate();
+
             SysPost.InvokeMulticast(this, LogicallyDisconnected);
         }
 
@@ -103,7 +110,7 @@ namespace usmooth.app
 
         private bool Handle_KeepAliveResponse(eNetCmd cmd, UsCmd c)
         {
-
+            UsLogging.Printf("'KeepAlive' received.");
             return true;
         }
 
@@ -115,7 +122,41 @@ namespace usmooth.app
             return true;
         }
 
+        private long INTERVAL_KeepAlive = 3000;
+        private long INTERVAL_CheckingConnectionStatus = 1000;
+        private long INTERVAL_ReceivingData = 200;
+
+        private long _currentTimeInMilliseconds = 0;
+        private long _lastKeepAlive = 0;
+        private long _lastCheckingConnectionStatus = 0;
+        private long _lastReceivingData = 0;
+        private void Tick()
+        {
+            _currentTimeInMilliseconds = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
+            if (_currentTimeInMilliseconds - _lastKeepAlive > INTERVAL_KeepAlive)
+            {
+                UsCmd cmd = new UsCmd();
+                cmd.WriteNetCmd(eNetCmd.CL_KeepAlive);
+                _client.SendPacket(cmd);
+                _lastKeepAlive = _currentTimeInMilliseconds;
+            }
+
+            if (_currentTimeInMilliseconds - _lastCheckingConnectionStatus > INTERVAL_CheckingConnectionStatus)
+            {
+                _client.Tick_CheckConnectionStatus();
+                _lastCheckingConnectionStatus = _currentTimeInMilliseconds;
+            }
+
+            if (_currentTimeInMilliseconds - _lastReceivingData > INTERVAL_ReceivingData)
+            {
+                _client.Tick_ReceivingData();
+                _lastReceivingData = _currentTimeInMilliseconds;
+            }
+        }
+
         private NetClient _client = new NetClient();
         private NetGuardTimer _guardTimer = new NetGuardTimer();
+        private Timer _tickTimer = new Timer(100);
     }
 }

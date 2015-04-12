@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ucore;
 using usmooth.common;
-using Timer = System.Timers.Timer;
 
 namespace usmooth.app
 {
@@ -31,7 +30,6 @@ namespace usmooth.app
         private TcpClient _tcpClient;
 
         private UsCmdParsing m_cmdParser = new UsCmdParsing();
-        private Timer m_tickTimer = new Timer(1000);
 
         public event SysPost.StdMulticastDelegation Connected;
         public event SysPost.StdMulticastDelegation Disconnected;
@@ -39,8 +37,6 @@ namespace usmooth.app
 
         public NetClient()
         {
-            m_tickTimer.Elapsed += (object sender, global::System.Timers.ElapsedEventArgs e) => Tick();
-            m_tickTimer.AutoReset = true;
         }
 
         public bool IsConnected { get { return _tcpClient != null; } }
@@ -56,7 +52,6 @@ namespace usmooth.app
 
         public void Disconnect()
         {
-            m_tickTimer.Stop();
             if (_tcpClient != null)
             {
                 _tcpClient.Close();
@@ -72,7 +67,7 @@ namespace usmooth.app
             m_cmdParser.RegisterHandler(cmd, handler);
         }
 
-        private void Tick()
+        public void Tick_CheckConnectionStatus()
         {
             try
             {
@@ -90,8 +85,17 @@ namespace usmooth.app
                         throw new IOException();
                     }
                 }
+            }
+            catch (Exception)
+            {
+                Disconnect();
+            }
+        }
 
-
+        public void Tick_ReceivingData()
+        {
+            try
+            {
                 if (_tcpClient.Available > 0)
                 {
                     byte[] buffer = new byte[8192];
@@ -110,20 +114,14 @@ namespace usmooth.app
                             AddToLog(string.Format("unknown server msg: {0}.", Encoding.UTF8.GetString(buffer, 0, len)));
                             break;
                     }
-
-                }
-                else
-                {
-                    AddToLog(string.Format("idle {0}.", DateTime.Now.ToLongTimeString()));
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Disconnect();
             }
         }
 
-        // Free the resources
         public void Dispose()
         {
             Disconnect();
@@ -165,7 +163,6 @@ namespace usmooth.app
             {
                 if (tcpClient.Connected) // may throw NullReference
                 {
-                    m_tickTimer.Start();
                     AddToLog(string.Format("Connected successfully."));
                     SysPost.InvokeMulticast(this, Connected);
                 }
