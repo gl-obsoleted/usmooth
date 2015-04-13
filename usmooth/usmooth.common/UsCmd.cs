@@ -7,7 +7,8 @@ namespace usmooth.common
 {
     public class UsCmd
     {
-        public const int DefaultCmdSize = 8192;
+        public const int DefaultCmdSize = 32 * 1024;
+        //public const int DefaultCmdSize = 8192;
 
         public UsCmd()
         {

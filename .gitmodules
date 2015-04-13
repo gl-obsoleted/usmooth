@@ -1,3 +1,0 @@
-[submodule "external/ucore"]
-	path = external/ucore
-	url = https://github.com/mc-gulu/ucore.git

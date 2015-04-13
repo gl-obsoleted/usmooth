@@ -7,7 +7,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ucore;
 using usmooth.common;
 
 namespace usmooth.app
@@ -152,8 +151,7 @@ namespace usmooth.app
         {
             try
             {
-                byte[] buffer = cmd.Buffer;
-                _tcpClient.GetStream().Write(buffer, 0, buffer.Length);
+                _tcpClient.GetStream().Write(cmd.Buffer, 0, cmd.WrittenLen);
             }
             catch (Exception)
             {
