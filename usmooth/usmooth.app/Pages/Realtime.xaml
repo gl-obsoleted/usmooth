@@ -24,13 +24,13 @@
                 <ScrollViewer Margin="{StaticResource SplitLeft}">
                     <StackPanel>
                         <TextBlock Text="Meshes" Style="{StaticResource Heading2}" />
-                        <DataGrid Name="MeshGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" >
+                        <DataGrid Name="MeshGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" MouseDoubleClick="MeshGrid_MouseDoubleClick" >
                             <DataGrid.Columns>
-                                <mui:DataGridTextColumn Header="Object" Binding="{Binding Name}"/>
-                                <mui:DataGridTextColumn Header="Mesh" Binding="{Binding MeshName}" />
-                                <mui:DataGridTextColumn Header="顶点数" Binding="{Binding VertCnt}"/>
-                                <mui:DataGridTextColumn Header="材质数" Binding="{Binding MatCnt}"/>
-                                <mui:DataGridTextColumn Header="尺寸" Binding="{Binding Size}"/>
+                                <mui:DataGridTextColumn Header="物件" Binding="{Binding Name}" IsReadOnly="True"/>
+                                <mui:DataGridTextColumn Header="模型" Binding="{Binding MeshName}" IsReadOnly="True" />
+                                <mui:DataGridTextColumn Header="顶点数" Binding="{Binding VertCnt}" IsReadOnly="True"/>
+                                <mui:DataGridTextColumn Header="材质数" Binding="{Binding MatCnt}" IsReadOnly="True"/>
+                                <mui:DataGridTextColumn Header="尺寸" Binding="{Binding Size}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
@@ -41,9 +41,9 @@
                         <TextBlock Text="Materials" Style="{StaticResource Heading2}" />
                         <DataGrid Name="MaterialGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" >
                             <DataGrid.Columns>
-                                <mui:DataGridTextColumn Header="Material" Binding="{Binding Name}"/>
-                                <mui:DataGridTextColumn Header="Shader" Binding="{Binding ShaderName}" />
-                                <mui:DataGridTextColumn Header="引用次数" Binding="{Binding RefCnt}"/>
+                                <mui:DataGridTextColumn Header="材质" Binding="{Binding Name}" IsReadOnly="True"/>
+                                <mui:DataGridTextColumn Header="Shader" Binding="{Binding ShaderName}" IsReadOnly="True" />
+                                <mui:DataGridTextColumn Header="引用次数" Binding="{Binding RefCnt}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
@@ -56,10 +56,10 @@
                 <TextBlock Text="Textures" Style="{StaticResource Heading2}" />
                 <DataGrid Name="TextureGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" >
                     <DataGrid.Columns>
-                        <mui:DataGridTextColumn Header="Texture" Binding="{Binding Name}"/>
-                        <mui:DataGridTextColumn Header="Size" Binding="{Binding PixelSize}" />
-                        <mui:DataGridTextColumn Header="引用次数" Binding="{Binding RefCnt}"/>
-                        <mui:DataGridTextColumn Header="内存开销" Binding="{Binding MemSize}"/>
+                        <mui:DataGridTextColumn Header="贴图" Binding="{Binding Name}" IsReadOnly="True"/>
+                        <mui:DataGridTextColumn Header="尺寸" Binding="{Binding PixelSize}" IsReadOnly="True" />
+                        <mui:DataGridTextColumn Header="引用次数" Binding="{Binding RefCnt}" IsReadOnly="True"/>
+                        <mui:DataGridTextColumn Header="内存开销" Binding="{Binding MemSize}" IsReadOnly="True"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>

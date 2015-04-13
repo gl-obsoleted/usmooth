@@ -19,6 +19,11 @@ namespace usmooth.common
     {
         public static event LoggingHandler Receivers;
 
+        public static void Debugf(string format, params object[] args)
+        {
+            System.Diagnostics.Debugger.Log(0, null, string.Format(format, args) + Environment.NewLine);
+        }
+
         public static void Printf(string format, params object[] args)
         {
             Printf(LogWndOpt.Info, format, args);

@@ -187,5 +187,23 @@ namespace usmooth.app.Pages
             }));
             return true;
         }
+
+        private void MeshGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var selected = MeshGrid.SelectedCells;
+            if (selected.Count == 0)
+                return;
+
+            var mo = selected[0].Item as MeshObject;
+            if (mo == null)
+                return;
+
+            UsLogging.Debugf("clicked {0} - {1}", mo.Name, mo.MeshName);
+
+            UsCmd cmd = new UsCmd();
+            cmd.WriteNetCmd(eNetCmd.CL_FlyToObject);
+            cmd.WriteInt32(mo.InstID);
+            NetManager.Instance.Send(cmd);
+        }
     }
 }

@@ -14,6 +14,7 @@ namespace usmooth.common
         CL_KeepAlive,
         CL_ExecCommand,
         CL_RequestFrameData,
+        CL_FlyToObject,
         CL_CmdEnd,
 
         SV_CmdBegin             = 2000,
