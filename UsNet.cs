@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading;
 using LostPolygon.System.Net;
 using LostPolygon.System.Net.Sockets;
-using UnityEngine;
 using Random = System.Random;
 
 using System.IO;

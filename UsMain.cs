@@ -2,6 +2,7 @@
 using System.Collections;
 using LostPolygon.GoodOldSockets.Examples;
 using System;
+using UnityEditor;
 
 public class UsMain : MonoBehaviour {
 
@@ -27,10 +28,15 @@ public class UsMain : MonoBehaviour {
 
 		if (_currentTimeInMilliseconds - _tickNetLast > _tickNetInterval)
 		{
-			UsPerfManager.Instance.RefreshVisibleMeshes();
-			// UsPerfManager.Instance.DumpAllInfo();
+			if (UsPerfManager.Instance != null) {
+				UsPerfManager.Instance.RefreshVisibleMeshes();
+				// UsPerfManager.Instance.DumpAllInfo();
+			}
 
-			_net.Update ();
+			if (_net != null) {
+				_net.Update ();
+			}
+
 			_tickNetLast = _currentTimeInMilliseconds;
 		}
 	}

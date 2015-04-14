@@ -125,7 +125,7 @@ public class UsPerfManager {
 	public UsCmd CreateMeshCmd() {
 		UsCmd cmd = new UsCmd();
 		cmd.WriteNetCmd(eNetCmd.SV_FrameData_Mesh);
-		Debug.Log (string.Format("mesh count: {0}", VisibleObjects.Count));
+		// Debug.Log (string.Format("mesh count: {0}", VisibleObjects.Count));
 		cmd.WriteInt32 (VisibleObjects.Count);
 		foreach (GameObject gameobject in VisibleObjects) {
 			MeshFilter mf = (MeshFilter)gameobject.GetComponent (typeof(MeshFilter));
