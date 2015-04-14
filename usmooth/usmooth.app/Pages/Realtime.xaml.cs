@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using usmooth.common;
 using FirstFloor.ModernUI.Windows.Navigation;
 using FirstFloor.ModernUI.Windows.Controls;
+using System.Collections;
 
 namespace usmooth.app.Pages
 {
@@ -35,6 +36,7 @@ namespace usmooth.app.Pages
         public string Name { get; set; }
         public string ShaderName { get; set; }
         public int RefCnt { get; set; }
+        public List<int> RefList { get; set; }
     }
 
     public class TextureObject
@@ -44,6 +46,7 @@ namespace usmooth.app.Pages
         public string PixelSize { get; set; }
         public int RefCnt { get; set; }
         public string MemSize { get; set; }
+        public List<int> RefList { get; set; }
     }
 
     /// <summary>
@@ -54,10 +57,6 @@ namespace usmooth.app.Pages
         public Realtime()
         {
             InitializeComponent();
-
-            //MeshGrid.DataContext = GetMeshCollection();
-            //MaterialGrid.DataContext = GetMaterialCollection();
-            //TextureGrid.DataContext = GetTextureCollection();
 
             NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Mesh, Handle_FrameData_Mesh);
             NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Material, Handle_FrameData_Material);
@@ -100,8 +99,13 @@ namespace usmooth.app.Pages
                     m.Name = c.ReadString();
                     m.ShaderName = c.ReadString();
                     m.RefCnt = c.ReadInt32();
+
+                    m.RefList = new List<int>();
                     for (int k = 0; k < m.RefCnt; k++)
-                        c.ReadInt32();
+                    {
+                        int owner = c.ReadInt32();
+                        m.RefList.Add(owner);
+                    }
 
                     materials.Add(m);
                 }
@@ -123,8 +127,12 @@ namespace usmooth.app.Pages
                     m.PixelSize = c.ReadString();
                     m.MemSize = c.ReadString();
                     m.RefCnt = c.ReadInt32();
+                    m.RefList = new List<int>();
                     for (int k = 0; k < m.RefCnt; k++)
-                        c.ReadInt32();
+                    {
+                        int owner = c.ReadInt32();
+                        m.RefList.Add(owner);
+                    }
 
                     textures.Add(m);
                 }
@@ -152,9 +160,7 @@ namespace usmooth.app.Pages
                 }
             }
 
-            UsCmd cmd = new UsCmd();
-            cmd.WriteNetCmd(eNetCmd.CL_RequestFrameData);
-            NetManager.Instance.Send(cmd);
+            RequestServerForLatestData();
         }
         public void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
@@ -188,22 +194,150 @@ namespace usmooth.app.Pages
             return true;
         }
 
+        private T GetSelectedObject<T>(DataGrid dataGrid) where T : class
+        {
+            var selected = dataGrid.SelectedCells;
+            if (selected.Count == 0)
+                return null;
+
+            return selected[0].Item as T;
+        }
+
+        private void HighlightObject(DataGrid dg, object item)
+        {
+            var row = dg.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
+            row.Background = Brushes.Chartreuse;
+        }
+
+        private void RemoveHighlightObject(DataGrid dg, object item)
+        {
+            var row = dg.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
+            if (row != null)
+                row.Background = dg.RowBackground;
+        }
+
+        private void HighlightMeshObjects(List<int> instIDs)
+        {
+            foreach (var item in MeshGrid.Items)
+            {
+                MeshObject mo = item as MeshObject;
+                if (mo != null && instIDs.Contains(mo.InstID))
+                {
+                    HighlightObject(MeshGrid, item);
+                    m_relevantMeshes.Add(mo);
+                }
+            }
+        }
+
+        private List<MaterialObject> HighlightMaterialObjects(List<int> instIDs)
+        {
+            List<MaterialObject> highlighted = new List<MaterialObject>();
+            foreach (var item in MaterialGrid.Items)
+            {
+                MaterialObject mo = item as MaterialObject;
+                if (mo != null && instIDs.Contains(mo.InstID))
+                {
+                    HighlightObject(MaterialGrid, item);
+                    highlighted.Add(mo);
+                    m_relevantMaterials.Add(mo);
+                }
+            }
+            return highlighted;
+        }
+
+        private void HighlightTextureObjectsByOwner(int ownerInstID)
+        {
+            foreach (var item in TextureGrid.Items)
+            {
+                TextureObject to = item as TextureObject;
+                if (to != null && to.RefList.Contains(ownerInstID))
+                {
+                    HighlightObject(TextureGrid, item);
+                    m_relevantTextures.Add(to);
+                }
+            }
+        }
+
         private void MeshGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var selected = MeshGrid.SelectedCells;
-            if (selected.Count == 0)
-                return;
-
-            var mo = selected[0].Item as MeshObject;
+            var mo = GetSelectedObject<MeshObject>(MeshGrid);
             if (mo == null)
                 return;
-
-            UsLogging.Debugf("clicked {0} - {1}", mo.Name, mo.MeshName);
 
             UsCmd cmd = new UsCmd();
             cmd.WriteNetCmd(eNetCmd.CL_FlyToObject);
             cmd.WriteInt32(mo.InstID);
             NetManager.Instance.Send(cmd);
         }
+
+        private void ClearAllSelectionsAndHighlightedObjects()
+        {
+            MeshGrid.UnselectAllCells();
+            MaterialGrid.UnselectAllCells();
+            TextureGrid.UnselectAllCells();
+
+            foreach (var item in m_relevantMeshes)
+                RemoveHighlightObject(MeshGrid, item);
+            foreach (var item in m_relevantMaterials)
+                RemoveHighlightObject(MaterialGrid, item);
+            foreach (var item in m_relevantTextures)
+                RemoveHighlightObject(TextureGrid, item);
+
+            m_relevantMeshes.Clear();
+            m_relevantMaterials.Clear();
+            m_relevantTextures.Clear();
+        }
+
+        private void MaterialGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var mat = GetSelectedObject<MaterialObject>(MaterialGrid);
+            if (mat == null)
+                return;
+
+            ClearAllSelectionsAndHighlightedObjects();
+
+            m_relevantMaterials.Add(mat);
+            HighlightObject(MaterialGrid, mat);
+
+            HighlightMeshObjects(mat.RefList);
+            HighlightTextureObjectsByOwner(mat.InstID);
+        }
+
+        private void TextureGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var texture = GetSelectedObject<TextureObject>(TextureGrid);
+            if (texture == null)
+                return;
+
+            ClearAllSelectionsAndHighlightedObjects();
+
+            m_relevantTextures.Add(texture);
+            HighlightObject(TextureGrid, texture);
+
+            List<MaterialObject> matLst = HighlightMaterialObjects(texture.RefList);
+
+            foreach (var mat in matLst)
+            {
+                HighlightMeshObjects(mat.RefList);
+            }
+        }
+
+        private void RequestServerForLatestData()
+        {
+            ClearAllSelectionsAndHighlightedObjects();
+
+            UsCmd cmd = new UsCmd();
+            cmd.WriteNetCmd(eNetCmd.CL_RequestFrameData);
+            NetManager.Instance.Send(cmd);
+        }
+
+        private void bt_refresh_Click(object sender, RoutedEventArgs e)
+        {
+            RequestServerForLatestData();
+        }
+
+        List<MeshObject> m_relevantMeshes = new List<MeshObject>();
+        List<MaterialObject> m_relevantMaterials = new List<MaterialObject>();
+        List<TextureObject> m_relevantTextures = new List<TextureObject>();
     }
 }

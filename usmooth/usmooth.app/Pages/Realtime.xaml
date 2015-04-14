@@ -7,19 +7,26 @@
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="700">
     <Grid Style="{StaticResource ContentRoot}">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="6"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
         <ScrollViewer>
+            <StackPanel Height="30" Width="Auto" HorizontalAlignment="Left" Orientation="Horizontal" Margin="0,5">
+                <Button x:Name="bt_refresh" Height="25" Width="150" Content="Refresh" Margin="10,0,10,0" Click="bt_refresh_Click" />
+            </StackPanel>
+        </ScrollViewer>
+        
+        <ScrollViewer Grid.Row="1">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="6"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="6"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="6"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
                 <ScrollViewer Margin="{StaticResource SplitLeft}">
                     <StackPanel>
@@ -35,11 +42,11 @@
                         </DataGrid>
                     </StackPanel>
                 </ScrollViewer>
-                <GridSplitter Grid.Row="1" />
-                <ScrollViewer Grid.Row="2 " Margin="{StaticResource SplitRight}">
+                <GridSplitter Grid.Column="1" />
+                <ScrollViewer Grid.Column="2 " Margin="{StaticResource SplitRight}">
                     <StackPanel>
                         <TextBlock Text="Materials" Style="{StaticResource Heading2}" />
-                        <DataGrid Name="MaterialGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" >
+                        <DataGrid Name="MaterialGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" MouseDoubleClick="MaterialGrid_MouseDoubleClick" >
                             <DataGrid.Columns>
                                 <mui:DataGridTextColumn Header="材质" Binding="{Binding Name}" IsReadOnly="True"/>
                                 <mui:DataGridTextColumn Header="Shader" Binding="{Binding ShaderName}" IsReadOnly="True" />
@@ -48,21 +55,21 @@
                         </DataGrid>
                     </StackPanel>
                 </ScrollViewer>
+                <GridSplitter Grid.Column="3" />
+                <ScrollViewer Grid.Column="4 " Margin="{StaticResource SplitRight}">
+                    <StackPanel>
+                        <TextBlock Text="Textures" Style="{StaticResource Heading2}" />
+                        <DataGrid Name="TextureGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" MouseDoubleClick="TextureGrid_MouseDoubleClick" >
+                            <DataGrid.Columns>
+                                <mui:DataGridTextColumn Header="贴图" Binding="{Binding Name}" IsReadOnly="True"/>
+                                <mui:DataGridTextColumn Header="尺寸" Binding="{Binding PixelSize}" IsReadOnly="True" />
+                                <mui:DataGridTextColumn Header="引用次数" Binding="{Binding RefCnt}" IsReadOnly="True"/>
+                                <mui:DataGridTextColumn Header="内存开销" Binding="{Binding MemSize}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </ScrollViewer>
             </Grid>
-        </ScrollViewer>
-        <GridSplitter Grid.Column="1" />
-        <ScrollViewer Grid.Column="2 " Margin="{StaticResource SplitRight}">
-            <StackPanel>
-                <TextBlock Text="Textures" Style="{StaticResource Heading2}" />
-                <DataGrid Name="TextureGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" >
-                    <DataGrid.Columns>
-                        <mui:DataGridTextColumn Header="贴图" Binding="{Binding Name}" IsReadOnly="True"/>
-                        <mui:DataGridTextColumn Header="尺寸" Binding="{Binding PixelSize}" IsReadOnly="True" />
-                        <mui:DataGridTextColumn Header="引用次数" Binding="{Binding RefCnt}" IsReadOnly="True"/>
-                        <mui:DataGridTextColumn Header="内存开销" Binding="{Binding MemSize}" IsReadOnly="True"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </StackPanel>
         </ScrollViewer>
     </Grid>
 </UserControl>
