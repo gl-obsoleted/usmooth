@@ -134,23 +134,12 @@ namespace usmooth.app
             Disconnect();
         }
 
-        public void SendCommand(string cmd)
-        {
-            try
-            {
-                byte[] buffer = Encoding.UTF8.GetBytes(cmd);
-                _tcpClient.GetStream().Write(buffer, 0, buffer.Length);
-            }
-            catch (Exception)
-            {
-                Disconnect();
-            }
-        }
-
         public void SendPacket(UsCmd cmd)
         {
             try
             {
+                byte[] cmdLenBytes = BitConverter.GetBytes((ushort)cmd.WrittenLen);
+                _tcpClient.GetStream().Write(cmdLenBytes, 0, cmdLenBytes.Length);
                 _tcpClient.GetStream().Write(cmd.Buffer, 0, cmd.WrittenLen);
             }
             catch (Exception)
