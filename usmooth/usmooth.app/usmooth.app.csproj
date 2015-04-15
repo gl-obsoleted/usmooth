@@ -52,6 +52,8 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -73,13 +75,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AppSettingsUtil.cs" />
+    <Compile Include="Pages\Realtime\Realtime.Highlight.cs" />
+    <Compile Include="Pages\Realtime\Realtime.Net.cs" />
+    <Compile Include="Util\AppSettingsUtil.cs" />
     <Compile Include="Net\NetGuardTimer.cs" />
     <Compile Include="Net\NetManager.cs" />
     <Compile Include="Pages\History.xaml.cs">
       <DependentUpon>History.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Realtime.xaml.cs">
+    <Compile Include="Pages\Realtime\Realtime.xaml.cs">
       <DependentUpon>Realtime.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
@@ -88,6 +92,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Net\NetClient.cs" />
+    <Compile Include="Util\DataGridUtil.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -100,7 +105,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\Realtime.xaml">
+    <Page Include="Pages\Realtime\Realtime.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

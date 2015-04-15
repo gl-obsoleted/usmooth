@@ -14,7 +14,8 @@
 
         <ScrollViewer>
             <StackPanel Height="30" Width="Auto" HorizontalAlignment="Left" Orientation="Horizontal" Margin="0,5">
-                <Button x:Name="bt_refresh" Height="25" Width="150" Content="Refresh" Margin="10,0,10,0" Click="bt_refresh_Click" />
+                <Button x:Name="bt_refresh" Height="25" Width="150" Content="刷新数据" Margin="10,0,10,0" Click="bt_refresh_Click" ToolTip="点击这里，向 Unity Editor 发起请求，更新下面三列数据。" />
+                <Button x:Name="bt_locate" Height="25" Width="150" Content="定位物件" Margin="10,0,10,0" Click="bt_locate_Click" ToolTip="点击这里，在 Unity Editor 的 Scene View 内定位并选中对应的物件。" />
             </StackPanel>
         </ScrollViewer>
         

@@ -14,7 +14,7 @@
         </mui:LinkGroup>
         <mui:LinkGroup DisplayName="realtime">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="data" Source="/Pages/Realtime.xaml" />
+                <mui:Link DisplayName="data" Source="/Pages/Realtime/Realtime.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
         <mui:LinkGroup DisplayName="history">
