@@ -73,53 +73,57 @@ public class UsNet : IDisposable {
 		}
 		
 		try {
-			if (_tcpClient.Available > 0) {
-				
-				byte[] buffer = new byte[8192];
-				int len = _tcpClient.GetStream().Read(buffer, 0, buffer.Length);
-				
-				UsCmd cmd = new UsCmd(buffer);
-				eNetCmd netCmd = cmd.ReadNetCmd();
-				switch (netCmd) {
-				case eNetCmd.CL_Handshake:						
-				{
-					UsCmd reply = new UsCmd();
-					reply.WriteNetCmd(eNetCmd.SV_HandshakeResponse);
-					SendCommand(reply);
-					break;
+			while (_tcpClient.Available > 0) {
+				byte[] cmdLenBuf = new byte[2];
+				int cmdLenRead = _tcpClient.GetStream().Read(cmdLenBuf, 0, cmdLenBuf.Length);
+				ushort cmdLen = BitConverter.ToUInt16(cmdLenBuf, 0);
+				if (cmdLenRead > 0 && cmdLen > 0) {
+					byte[] buffer = new byte[cmdLen];
+					int len = _tcpClient.GetStream().Read(buffer, 0, buffer.Length);
+					
+					UsCmd cmd = new UsCmd(buffer);
+					eNetCmd netCmd = cmd.ReadNetCmd();
+					switch (netCmd) {
+					case eNetCmd.CL_Handshake:						
+					{
+						UsCmd reply = new UsCmd();
+						reply.WriteNetCmd(eNetCmd.SV_HandshakeResponse);
+						SendCommand(reply);
+						break;
+					}
+					case eNetCmd.CL_KeepAlive:						
+					{
+						UsCmd reply = new UsCmd();
+						reply.WriteNetCmd(eNetCmd.SV_KeepAliveResponse);
+						SendCommand(reply);
+						break;
+					}
+					case eNetCmd.CL_ExecCommand:						
+					{
+						string read = cmd.ReadString();
+						UsCmd reply = new UsCmd();
+						reply.WriteNetCmd(eNetCmd.SV_ExecCommandResponse);
+						reply.WriteString(string.Format("str: {0}, len: {1}", read, read.Length));
+						SendCommand(reply);
+						break;
+					}
+					case eNetCmd.CL_RequestFrameData:						
+					{
+						SendCommand(UsPerfManager.Instance.CreateMeshCmd());
+						SendCommand(UsPerfManager.Instance.CreateMaterialCmd());
+						SendCommand(UsPerfManager.Instance.CreateTextureCmd());
+						break;
+					}
+					case eNetCmd.CL_FlyToObject:						
+					{
+						int instID = cmd.ReadInt32();
+						UsPerfManager.Instance.GotoObject(instID);
+						break;
+					}
+					default:
+						break;
+					}
 				}
-				case eNetCmd.CL_KeepAlive:						
-				{
-					UsCmd reply = new UsCmd();
-					reply.WriteNetCmd(eNetCmd.SV_KeepAliveResponse);
-					SendCommand(reply);
-					break;
-				}
-				case eNetCmd.CL_ExecCommand:						
-				{
-					UsCmd reply = new UsCmd();
-					reply.WriteNetCmd(eNetCmd.SV_ExecCommandResponse);
-					reply.WriteInt32(15);
-					SendCommand(reply);
-					break;
-				}
-				case eNetCmd.CL_RequestFrameData:						
-				{
-					SendCommand(UsPerfManager.Instance.CreateMeshCmd());
-					SendCommand(UsPerfManager.Instance.CreateMaterialCmd());
-					SendCommand(UsPerfManager.Instance.CreateTextureCmd());
-					break;
-				}
-				case eNetCmd.CL_FlyToObject:						
-				{
-					int instID = cmd.ReadInt32();
-					UsPerfManager.Instance.GotoObject(instID);
-					break;
-				}
-				default:
-					break;
-				}
-				
 			}
 		} catch (Exception ex) {
 			Debug.LogException(ex);
@@ -128,8 +132,7 @@ public class UsNet : IDisposable {
 	}
 
 	private void SendCommand(UsCmd cmd) {
-		ushort cmdLen = (ushort)cmd.WrittenLen;
-		byte[] cmdLenBytes = BitConverter.GetBytes (cmdLen);
+		byte[] cmdLenBytes = BitConverter.GetBytes ((ushort)cmd.WrittenLen);
 		_tcpClient.GetStream().Write(cmdLenBytes, 0, cmdLenBytes.Length);
 		_tcpClient.GetStream().Write(cmd.Buffer, 0, cmd.WrittenLen);
 		//Debug.Log (string.Format("cmd written, len ({0})", cmd.WrittenLen));
