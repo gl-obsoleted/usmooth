@@ -131,7 +131,6 @@ public class UsPerfManager {
 			MeshFilter mf = (MeshFilter)gameobject.GetComponent (typeof(MeshFilter));
 			cmd.WriteInt32 (gameobject.GetInstanceID());
 			cmd.WriteString (gameobject.name);
-			cmd.WriteString (mf.mesh.name);
 			cmd.WriteInt32 (mf.mesh.vertexCount);
 			cmd.WriteInt32 (gameobject.renderer.sharedMaterials.Length);
 			cmd.WriteInt32 ((int)mf.mesh.bounds.size.magnitude);

@@ -48,7 +48,6 @@ namespace usmooth.app.Pages
                     var m = new MeshObject();
                     m.InstID = c.ReadInt32();
                     m.Name = c.ReadString();
-                    m.MeshName = c.ReadString();
                     m.VertCnt = c.ReadInt32();
                     m.MatCnt = c.ReadInt32();
                     m.Size = (float)c.ReadInt32();
