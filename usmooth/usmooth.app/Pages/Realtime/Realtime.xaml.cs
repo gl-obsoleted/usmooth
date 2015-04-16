@@ -57,9 +57,7 @@ namespace usmooth.app.Pages
         {
             InitializeComponent();
 
-            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Mesh, NetHandle_FrameData_Mesh);
-            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Material, NetHandle_FrameData_Material);
-            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Texture, NetHandle_FrameData_Texture);
+            SetNetHandlers();
         }
 
         public void OnFragmentNavigation(FragmentNavigationEventArgs e)

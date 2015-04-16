@@ -12,6 +12,15 @@ namespace usmooth.app.Pages
 {
     public partial class Realtime
     {
+        private void SetNetHandlers()
+        {
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Mesh, NetHandle_FrameData_Mesh);
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Material, NetHandle_FrameData_Material);
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Texture, NetHandle_FrameData_Texture);
+
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_Editor_SelectionChanged, NetHandle_Editor_SelectionChanged);
+        }
+
         private void NetRequest_FrameData()
         {
             ClearAllSelectionsAndHighlightedObjects();
@@ -125,6 +134,28 @@ namespace usmooth.app.Pages
             {
                 TextureGrid.DataContext = textures;
             }));
+            return true;
+        }
+
+        List<int> _instances = new List<int>();
+
+        private bool NetHandle_Editor_SelectionChanged(eNetCmd cmd, UsCmd c)
+        {
+            int count = c.ReadInt32();
+            UsLogging.Printf("eNetCmd.SV_Editor_SelectionChanged received ({0}, inst count: {1}).", c.Buffer.Length, count);
+
+            _instances.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                int instID = c.ReadInt32();
+                _instances.Add(instID);                                              
+            }
+
+            MeshGrid.Dispatcher.Invoke(new Action(() =>
+            {
+                HighlightMeshByEditorSelection(_instances);
+            }));
+
             return true;
         }
     }

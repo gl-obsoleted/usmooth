@@ -22,18 +22,28 @@ namespace usmooth.app
 
         public static void MarkAsHighlighted(DataGrid dg, object item)
         {
+            MarkAsGivenColor(dg, item, Colors.Chartreuse);
+        }
+
+        public static void MarkAsGivenColor(DataGrid dg, object item, Color c)
+        {
             var row = dg.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
             if (row != null)
-                row.Background = Brushes.Chartreuse;
+                row.Background = new SolidColorBrush(c);
+        }
+
+        public static void ClearHighlighted(DataGrid dg, object item)
+        {
+            var row = dg.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
+            if (row != null)
+                row.Background = dg.RowBackground;
         }
 
         public static void ClearAllHighlighted(DataGrid dg)
         {
             foreach (var item in dg.Items)
             {
-                var row = dg.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
-                if (row != null)
-                    row.Background = dg.RowBackground;
+                ClearHighlighted(dg, item);
             }
         }
     }

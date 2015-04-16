@@ -19,7 +19,7 @@ public class UsMain : MonoBehaviour {
 
 		UsPerfManager.Instance = new UsPerfManager();
 
-		_net = new UsNet(_serverPort);
+		UsNet.Instance = new UsNet(_serverPort);
 	}
 	
 	// Update is called once per frame
@@ -33,8 +33,8 @@ public class UsMain : MonoBehaviour {
 				// UsPerfManager.Instance.DumpAllInfo();
 			}
 
-			if (_net != null) {
-				_net.Update ();
+			if (UsNet.Instance != null) {
+				UsNet.Instance.Update ();
 			}
 
 			_tickNetLast = _currentTimeInMilliseconds;

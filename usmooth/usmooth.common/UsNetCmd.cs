@@ -24,6 +24,7 @@ namespace usmooth.common
         SV_FrameData_Mesh,
         SV_FrameData_Material,
         SV_FrameData_Texture,
+        SV_Editor_SelectionChanged,
         SV_CmdEnd,
     }
 }

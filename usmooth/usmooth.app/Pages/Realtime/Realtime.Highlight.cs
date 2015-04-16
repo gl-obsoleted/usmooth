@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace usmooth.app.Pages
 {
@@ -16,6 +17,25 @@ namespace usmooth.app.Pages
                 if (mo != null && material.RefList.Contains(mo.InstID))
                 {
                     DataGridUtil.MarkAsHighlighted(MeshGrid, item);
+                }
+            }
+        }
+
+        private void HighlightMeshByEditorSelection(List<int> selection)
+        {
+            foreach (var item in MeshGrid.Items)
+            {
+                MeshObject mo = item as MeshObject;
+                if (mo != null)
+                {
+                    if (selection.Contains(mo.InstID))
+                    {
+                        DataGridUtil.MarkAsGivenColor(MeshGrid, item, Colors.PaleTurquoise);
+                    }
+                    else
+                    {
+                        DataGridUtil.ClearHighlighted(MeshGrid, item);
+                    }
                 }
             }
         }

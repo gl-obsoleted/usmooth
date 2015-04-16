@@ -115,7 +115,7 @@ namespace usmooth.app
 
         private bool Handle_KeepAliveResponse(eNetCmd cmd, UsCmd c)
         {
-            UsLogging.Printf("'KeepAlive' received.");
+            //UsLogging.Printf("'KeepAlive' received.");
             return true;
         }
 

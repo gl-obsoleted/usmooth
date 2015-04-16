@@ -11,6 +11,9 @@ using System.IO;
 using usmooth.common;
 
 public class UsNet : IDisposable {
+
+	public static UsNet Instance;
+	
 	// TcpListener instance, encapsulating 
 	// typical socket server interactions
 	private TcpListener _tcpListener;
@@ -131,7 +134,11 @@ public class UsNet : IDisposable {
 		}
 	}
 
-	private void SendCommand(UsCmd cmd) {
+	public void SendCommand(UsCmd cmd) {
+		if (_tcpClient == null || _tcpClient.GetStream() == null) {
+			return;				
+		}
+
 		byte[] cmdLenBytes = BitConverter.GetBytes ((ushort)cmd.WrittenLen);
 		_tcpClient.GetStream().Write(cmdLenBytes, 0, cmdLenBytes.Length);
 		_tcpClient.GetStream().Write(cmd.Buffer, 0, cmd.WrittenLen);
