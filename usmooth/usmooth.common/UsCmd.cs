@@ -7,6 +7,7 @@ namespace usmooth.common
 {
     public class UsCmd
     {
+        public const int STRIP_NAME_MAX_LEN = 64;
         public const int DefaultCmdSize = 32 * 1024;
         //public const int DefaultCmdSize = 8192;
 
@@ -60,9 +61,9 @@ namespace usmooth.common
                 throw new System.Exception("无法读取，已到达消息末尾。");
             }
 
-            float cmd = BitConverter.ToSingle(m_buffer, m_readOffset);
+            float val = BitConverter.ToSingle(m_buffer, m_readOffset);
             m_readOffset += sizeof(float);
-            return cmd;
+            return val;
         }
 
         public string ReadString()
@@ -118,6 +119,34 @@ namespace usmooth.common
             byteArray.CopyTo(m_buffer, m_writeOffset);
 
             m_writeOffset += sizeof(int);
+        }
+
+        public void WriteFloat(float value)
+        {
+            if (m_writeOffset + sizeof(float) > m_buffer.Length)
+            {
+                throw new System.Exception("无法写入，已到达消息末尾。");
+            }
+
+            byte[] byteArray = BitConverter.GetBytes(value);
+
+            byteArray.CopyTo(m_buffer, m_writeOffset);
+
+            m_writeOffset += sizeof(float);
+        }
+
+        public void WriteStringStripped(string value)
+        {
+            string toBeWritten = value;
+            if (value.Length > STRIP_NAME_MAX_LEN)
+                toBeWritten = value.Substring(0, STRIP_NAME_MAX_LEN);
+
+            short len = (short)toBeWritten.Length;
+            WriteInt16(len);
+
+            byte[] byteArray = Encoding.Default.GetBytes(toBeWritten);
+            byteArray.CopyTo(m_buffer, m_writeOffset);
+            m_writeOffset += toBeWritten.Length;
         }
 
         public void WriteString(string value)

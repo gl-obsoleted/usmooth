@@ -130,10 +130,10 @@ public class UsPerfManager {
 		foreach (GameObject gameobject in VisibleObjects) {
 			MeshFilter mf = (MeshFilter)gameobject.GetComponent (typeof(MeshFilter));
 			cmd.WriteInt32 (gameobject.GetInstanceID());
-			cmd.WriteString (gameobject.name);
+			cmd.WriteStringStripped (gameobject.name);
 			cmd.WriteInt32 (mf.mesh.vertexCount);
 			cmd.WriteInt32 (gameobject.renderer.sharedMaterials.Length);
-			cmd.WriteInt32 ((int)mf.mesh.bounds.size.magnitude);
+			cmd.WriteFloat (mf.mesh.bounds.size.magnitude);
 		}
 		return cmd;
 	}
@@ -146,8 +146,8 @@ public class UsPerfManager {
 		foreach (KeyValuePair<Material, HashSet<GameObject>> kv in VisibleMaterials) {
 			//Debug.Log (string.Format("current_material: {0} - {1} - {2}", kv.Key.GetInstanceID(), kv.Key.name.Length, kv.Key.name));
 			cmd.WriteInt32 (kv.Key.GetInstanceID());
-			cmd.WriteString (kv.Key.name);
-			cmd.WriteString (kv.Key.shader.name);
+			cmd.WriteStringStripped (kv.Key.name);
+			cmd.WriteStringStripped (kv.Key.shader.name);
 
 			cmd.WriteInt32 (kv.Value.Count);
 			foreach (var item in kv.Value) {
@@ -164,7 +164,7 @@ public class UsPerfManager {
 		
 		foreach (KeyValuePair<Texture, HashSet<Material>> kv in VisibleTextures) {
 			cmd.WriteInt32 (kv.Key.GetInstanceID());
-			cmd.WriteString (kv.Key.name);
+			cmd.WriteStringStripped (kv.Key.name);
 			cmd.WriteString (string.Format("{0}x{1}", kv.Key.width, kv.Key.height));
 			cmd.WriteString (UsTextureUtil.FormatSizeString(m_textureSizeLut[kv.Key] / 1024));
 

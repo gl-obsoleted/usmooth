@@ -59,7 +59,7 @@ namespace usmooth.app.Pages
                     m.Name = c.ReadString();
                     m.VertCnt = c.ReadInt32();
                     m.MatCnt = c.ReadInt32();
-                    m.Size = (float)c.ReadInt32();
+                    m.Size = (float)c.ReadFloat();
                     meshes.Add(m);
                 }
             }
