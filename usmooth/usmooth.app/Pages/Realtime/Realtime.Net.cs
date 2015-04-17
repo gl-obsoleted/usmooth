@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using usmooth.common;
 
 namespace usmooth.app.Pages
@@ -194,7 +195,14 @@ namespace usmooth.app.Pages
 
             MeshGrid.Dispatcher.Invoke(new Action(() =>
             {
-                HighlightMeshByEditorSelection(_instances);
+                ClearAllSelectionsAndHighlightedObjects();
+                var meshes = HighlightMeshes(_instances, Colors.PaleTurquoise);
+                foreach (var mesh in meshes)
+                {
+                    var matLst = HighlightMaterialByMesh(mesh, Colors.PaleTurquoise);
+                    foreach (var mat in matLst)
+                        HighlightTextureByMaterial(mat, Colors.PaleTurquoise);
+                }
             }));
 
             return true;

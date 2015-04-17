@@ -19,13 +19,7 @@ namespace usmooth.app
             return selected[0].Item as T;
         }
 
-
-        public static void MarkAsHighlighted(DataGrid dg, object item)
-        {
-            MarkAsGivenColor(dg, item, Colors.Chartreuse);
-        }
-
-        public static void MarkAsGivenColor(DataGrid dg, object item, Color c)
+        public static void MarkAsHighlighted(DataGrid dg, object item, Color c)
         {
             var row = dg.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
             if (row != null)

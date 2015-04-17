@@ -93,10 +93,10 @@ namespace usmooth.app.Pages
                 return;
             ClearAllSelectionsAndHighlightedObjects();
 
-            DataGridUtil.MarkAsHighlighted(MeshGrid, mesh);
-            var matLst = HighlightMaterialByMesh(mesh);
+            DataGridUtil.MarkAsHighlighted(MeshGrid, mesh, Colors.Chartreuse);
+            var matLst = HighlightMaterialByMesh(mesh, Colors.Chartreuse);
             foreach (var mat in matLst)
-                HighlightTextureByMaterial(mat);
+                HighlightTextureByMaterial(mat, Colors.Chartreuse);
         }
 
         private void MaterialGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -106,9 +106,9 @@ namespace usmooth.app.Pages
                 return;
             ClearAllSelectionsAndHighlightedObjects();
 
-            DataGridUtil.MarkAsHighlighted(MaterialGrid, mat);
-            HighlightMeshByMaterial(mat);
-            HighlightTextureByMaterial(mat);
+            DataGridUtil.MarkAsHighlighted(MaterialGrid, mat, Colors.Chartreuse);
+            HighlightMeshByMaterial(mat, Colors.Chartreuse);
+            HighlightTextureByMaterial(mat, Colors.Chartreuse);
         }
 
         private void TextureGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -118,10 +118,10 @@ namespace usmooth.app.Pages
                 return;
             ClearAllSelectionsAndHighlightedObjects();
 
-            DataGridUtil.MarkAsHighlighted(TextureGrid, texture);
-            var matLst = HighlightMaterialByTexture(texture);
+            DataGridUtil.MarkAsHighlighted(TextureGrid, texture, Colors.Chartreuse);
+            var matLst = HighlightMaterialByTexture(texture, Colors.Chartreuse);
             foreach (var mat in matLst)
-                HighlightMeshByMaterial(mat);
+                HighlightMeshByMaterial(mat, Colors.Chartreuse);
         }
 
         private void bt_refresh_Click(object sender, RoutedEventArgs e)
