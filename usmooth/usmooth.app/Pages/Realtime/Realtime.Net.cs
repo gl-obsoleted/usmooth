@@ -44,30 +44,71 @@ namespace usmooth.app.Pages
             NetManager.Instance.Send(cmd);
         }
 
+        int _meshExpectedCount = 0;
+        ObservableCollection<MeshObject> _meshes;
         private bool NetHandle_FrameData_Mesh(eNetCmd cmd, UsCmd c)
         {
-            UsLogging.Printf("eNetCmd.Handle_FrameData_Mesh received ({0}).", c.Buffer.Length);
-
-            var meshes = new ObservableCollection<MeshObject>();
-            int count = c.ReadInt32();
-            if (count > 0)
+            short subCmd = c.ReadInt16();
+            switch ((eSubCmd_TransmitStage)subCmd)
             {
-                for (int i = 0; i < count; i++)
-                {
-                    var m = new MeshObject();
-                    m.InstID = c.ReadInt32();
-                    m.Name = c.ReadString();
-                    m.VertCnt = c.ReadInt32();
-                    m.MatCnt = c.ReadInt32();
-                    m.Size = (float)c.ReadFloat();
-                    meshes.Add(m);
-                }
+                case eSubCmd_TransmitStage.DataBegin:
+                    {
+                        MeshGrid.Dispatcher.Invoke(new Action(() =>
+                        {
+                            if (_meshes == null)
+                            {
+                                _meshes = new ObservableCollection<MeshObject>();
+                            }
+                            else
+                            {
+                                _meshes.Clear();
+                            }
+                            _meshExpectedCount = c.ReadInt32();
+                            UsLogging.Printf("eNetCmd.NetHandle_FrameData_Mesh [b](DataBegin)[/b] ({0}).", _meshExpectedCount);
+                        }));
+                    }
+                    break;
+
+                case eSubCmd_TransmitStage.DataSlice:
+                    {
+                        int count = c.ReadInt32();
+                        UsLogging.Printf("eNetCmd.NetHandle_FrameData_Mesh [b](DataSlice)[/b] ({0}).", count);
+                        if (count > 0)
+                        {
+                            MeshGrid.Dispatcher.Invoke(new Action(() =>
+                            {
+                                for (int i = 0; i < count; i++)
+                                {
+                                    var m = new MeshObject();
+                                    m.InstID = c.ReadInt32();
+                                    m.Name = c.ReadString();
+                                    m.VertCnt = c.ReadInt32();
+                                    m.MatCnt = c.ReadInt32();
+                                    m.Size = (float)c.ReadFloat();
+                                    _meshes.Add(m);
+                                }
+                            }));
+                        }
+                    }
+                    break;
+
+                case eSubCmd_TransmitStage.DataEnd:
+                    {
+                        UsLogging.Printf("eNetCmd.NetHandle_FrameData_Mesh [b](DataEnd)[/b] (expected: {0} actual: {1}).", _meshExpectedCount, _meshes.Count);
+                        if (_meshExpectedCount != _meshes.Count)
+                        {
+                            UsLogging.Printf(LogWndOpt.Bold, "The actually received mesh count is mismatched with expected.");
+                        }
+
+                        MeshGrid.Dispatcher.Invoke(new Action(() =>
+                        {
+                            MeshGrid.DataContext = _meshes;
+                        }));
+                    }
+                    break;
+                default:
+                    break;
             }
-
-            MeshGrid.Dispatcher.Invoke(new Action(() =>
-            {
-                MeshGrid.DataContext = meshes;
-            }));
             return true;
         }
         private bool NetHandle_FrameData_Material(eNetCmd cmd, UsCmd c)

@@ -27,4 +27,11 @@ namespace usmooth.common
         SV_Editor_SelectionChanged,
         SV_CmdEnd,
     }
+
+    public enum eSubCmd_TransmitStage
+    {
+        DataBegin,
+        DataSlice,
+        DataEnd,
+    }
 }
