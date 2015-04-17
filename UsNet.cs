@@ -19,6 +19,8 @@ public class UsNet : IDisposable {
 	private TcpListener _tcpListener;
 
 	private TcpClient _tcpClient;
+
+	private UsCmdParsing _cmdExec = new UsCmdParsing(); 
 	
 	// QOTD server constructor
 	public UsNet(int port) {
@@ -69,7 +71,11 @@ public class UsNet : IDisposable {
 			_tcpClient = null;
 		}
 	}
-	
+
+	public void RegisterHander(eNetCmd cmd, EtCmdHandler handler) {
+		_cmdExec.RegisterHandler (cmd, handler);
+	}
+
 	public void Update() {
 		if (_tcpClient == null) {
 			return;
@@ -110,13 +116,6 @@ public class UsNet : IDisposable {
 						SendCommand(reply);
 						break;
 					}
-					case eNetCmd.CL_RequestFrameData:						
-					{
-						SendCommand(UsPerfManager.Instance.CreateMeshCmd());
-						SendCommand(UsPerfManager.Instance.CreateMaterialCmd());
-						SendCommand(UsPerfManager.Instance.CreateTextureCmd());
-						break;
-					}
 					case eNetCmd.CL_FlyToObject:						
 					{
 						int instID = cmd.ReadInt32();
@@ -124,7 +123,11 @@ public class UsNet : IDisposable {
 						break;
 					}
 					default:
+					{
+						UsCmd secondPass = new UsCmd(buffer);
+						_cmdExec.Execute(secondPass);
 						break;
+					}
 					}
 				}
 			}

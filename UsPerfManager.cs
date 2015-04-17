@@ -25,6 +25,25 @@ public class UsPerfManager {
 
 	#endregion Gathered GameObjects/Materials/Textures
 
+	#region begin utilities
+	public void WriteMesh(GameObject gobj, UsCmd cmd)
+	{
+		if (gobj == null || cmd == null)
+			return;
+
+		MeshFilter mf = (MeshFilter)gobj.GetComponent (typeof(MeshFilter));
+		if (mf == null)
+			return;
+
+		cmd.WriteInt32 (gobj.GetInstanceID());
+		cmd.WriteStringStripped (gobj.name);
+		cmd.WriteInt32 (mf.mesh.vertexCount);
+		cmd.WriteInt32 (gobj.renderer.sharedMaterials.Length);
+		cmd.WriteFloat (mf.mesh.bounds.size.magnitude);
+	}
+
+	#endregion end utilities
+
 	public void GotoObject(int instID) {
 		foreach (var obj in VisibleObjects) {
 			if (obj.GetInstanceID() == instID) {
@@ -120,22 +139,6 @@ public class UsPerfManager {
 			texInfo += string.Format ("{0} {1} {2} {3} {4}\n", tex.name, tex.width, tex.height, kv.Value.Count, UsTextureUtil.FormatSizeString(m_textureSizeLut[tex] / 1024));
 		}
 		Debug.Log (texInfo);
-	}
-	
-	public UsCmd CreateMeshCmd() {
-		UsCmd cmd = new UsCmd();
-		cmd.WriteNetCmd(eNetCmd.SV_FrameData_Mesh);
-		Debug.Log (string.Format("mesh count: {0}", VisibleObjects.Count));
-		cmd.WriteInt32 (VisibleObjects.Count);
-		foreach (GameObject gameobject in VisibleObjects) {
-			MeshFilter mf = (MeshFilter)gameobject.GetComponent (typeof(MeshFilter));
-			cmd.WriteInt32 (gameobject.GetInstanceID());
-			cmd.WriteStringStripped (gameobject.name);
-			cmd.WriteInt32 (mf.mesh.vertexCount);
-			cmd.WriteInt32 (gameobject.renderer.sharedMaterials.Length);
-			cmd.WriteFloat (mf.mesh.bounds.size.magnitude);
-		}
-		return cmd;
 	}
 	
 	public UsCmd CreateMaterialCmd() {
