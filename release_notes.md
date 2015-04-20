@@ -18,7 +18,7 @@
 - (internal) 移除对 ucore 的依赖，简化结构
 - (internal) 简化和分拆 Realtime 页面内的代码，降低复杂度
 
-## v0.1 [2015-04-13] 首个公开版本
+## v0.1 [2015-04-13] 
 
 - (new feature) 可获取游戏运行时当前屏幕内可见的 Mesh / Material / Texture 三级信息
 - (net) 基本的 Protocol/Packet 实现
