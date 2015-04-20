@@ -13,8 +13,7 @@ Unity 已有的 Profiling 机制非常强大，以程序员为目标用户，缺
 - (编辑器互动) 使用 “定位物件” 功能可在编辑器的场景视图内定位并查看当前选中的物件
 - (编辑器互动) 当在编辑器的场景视图内选中物件时，在 usmooth 内所有对应的依赖项都会浅蓝色高亮显示
 
-- 更多的功能细节请参考 [Release Notes](/release_notes.md)。
-- 后续开发计划请看[这里(v0.2)](/milestones/0.2)
+更多的功能细节请参考 [Release Notes](/release_notes.md)，后续开发计划请看[这里(v0.2)](/milestones/0.2)。
 
 ## 运行情况截图
 
