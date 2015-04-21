@@ -28,7 +28,7 @@
 
             <ScrollViewer Margin="{StaticResource SplitLeft}">
                 <StackPanel>
-                    <TextBlock Text="Meshes" Style="{StaticResource Heading2}" />
+                    <TextBlock x:Name="title_mesh" Text="Meshes" Style="{StaticResource Heading2}" />
                     <DataGrid Name="MeshGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" MouseDoubleClick="MeshGrid_MouseDoubleClick" >
                         <DataGrid.Columns>
                             <mui:DataGridTextColumn Header="物件" Binding="{Binding Name}" IsReadOnly="True"/>
@@ -42,7 +42,7 @@
             <GridSplitter Grid.Column="1" />
             <ScrollViewer Grid.Column="2 " Margin="{StaticResource SplitRight}">
                 <StackPanel>
-                    <TextBlock Text="Materials" Style="{StaticResource Heading2}" />
+                    <TextBlock x:Name="title_material" Text="Materials" Style="{StaticResource Heading2}" />
                     <DataGrid Name="MaterialGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" MouseDoubleClick="MaterialGrid_MouseDoubleClick" >
                         <DataGrid.Columns>
                             <mui:DataGridTextColumn Header="材质" Binding="{Binding Name}" IsReadOnly="True"/>
@@ -55,7 +55,7 @@
             <GridSplitter Grid.Column="3" />
             <ScrollViewer Grid.Column="4 " Margin="{StaticResource SplitRight}">
                 <StackPanel>
-                    <TextBlock Text="Textures" Style="{StaticResource Heading2}" />
+                    <TextBlock x:Name="title_texture" Text="Textures" Style="{StaticResource Heading2}" />
                     <DataGrid Name="TextureGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" MouseDoubleClick="TextureGrid_MouseDoubleClick" >
                         <DataGrid.Columns>
                             <mui:DataGridTextColumn Header="贴图" Binding="{Binding Name}" IsReadOnly="True"/>

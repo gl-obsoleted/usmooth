@@ -103,6 +103,7 @@ namespace usmooth.app.Pages
 
                         MeshGrid.Dispatcher.Invoke(new Action(() =>
                         {
+                            title_mesh.Text = string.Format("Meshes ({0})", _meshes.Count);
                             MeshGrid.DataContext = _meshes;
                         }));
                     }
@@ -141,6 +142,7 @@ namespace usmooth.app.Pages
 
             MaterialGrid.Dispatcher.Invoke(new Action(() =>
             {
+                title_material.Text = string.Format("Materials ({0})", materials.Count);
                 MaterialGrid.DataContext = materials;
             }));
             return true;
@@ -174,6 +176,7 @@ namespace usmooth.app.Pages
 
             TextureGrid.Dispatcher.Invoke(new Action(() =>
             {
+                title_texture.Text = string.Format("Textures ({0})", textures.Count);
                 TextureGrid.DataContext = textures;
             }));
             return true;
