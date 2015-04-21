@@ -1,4 +1,4 @@
-# usmooth
+﻿# usmooth
 
 ## 设计目标
 
@@ -17,6 +17,6 @@ Unity 已有的 Profiling 机制非常强大，以程序员为目标用户，缺
 
 ## 运行情况截图
 
-![running_screen](/images/running_screen.png?raw=true)
+![running_screen](/docs/images/running_screen.png?raw=true)
 
 
