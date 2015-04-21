@@ -37,7 +37,7 @@ public class UsNet : IDisposable {
 			throw;
 		}
 		
-		AddToLog("Listening started.");
+		AddToLog("usmooth listening started.");
 	}
 	
 	~UsNet() {
