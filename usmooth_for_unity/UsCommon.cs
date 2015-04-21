@@ -5,11 +5,41 @@ using System.Text;
 
 namespace usmooth.common
 {
+    public enum eNetCmd
+    {
+        None,
+
+        CL_CmdBegin             = 1000,
+        CL_Handshake,
+        CL_KeepAlive,
+        CL_ExecCommand,
+        CL_RequestFrameData,
+        CL_FlyToObject,
+        CL_CmdEnd,
+
+        SV_CmdBegin             = 2000,
+        SV_HandshakeResponse,
+        SV_KeepAliveResponse,
+        SV_ExecCommandResponse,
+        SV_FrameData_Mesh,
+        SV_FrameData_Material,
+        SV_FrameData_Texture,
+        SV_Editor_SelectionChanged,
+        SV_CmdEnd,
+    }
+
+    public enum eSubCmd_TransmitStage
+    {
+        DataBegin,
+        DataSlice,
+        DataEnd,
+    }
+
+
     public class UsCmd
     {
         public const int STRIP_NAME_MAX_LEN = 64;
-        public const int DefaultCmdSize = 32 * 1024;
-        //public const int DefaultCmdSize = 8192;
+        public const int DefaultCmdSize = 16 * 1024;
 
         public UsCmd()
         {
@@ -177,5 +207,51 @@ namespace usmooth.common
         int m_writeOffset = 0;
         int m_readOffset = 0;
         byte[] m_buffer;
+    }
+
+    public delegate bool EtCmdHandler(eNetCmd cmd, UsCmd c);
+
+    public enum UsCmdExecResult
+    {
+        Succ,
+        Failed,
+        HandlerNotFound,
+    }
+
+    public class UsCmdParsing
+    {
+        public void RegisterHandler(eNetCmd cmd, EtCmdHandler handler)
+        {
+            m_handlers[cmd] = handler;
+        }
+
+        public UsCmdExecResult Execute(UsCmd c)
+        {
+            try
+            {
+                eNetCmd cmd = c.ReadNetCmd();
+                EtCmdHandler handler;
+                if (!m_handlers.TryGetValue(cmd, out handler))
+                {
+                    return UsCmdExecResult.HandlerNotFound;
+                }
+
+                if (handler(cmd, c))
+                {
+                    return UsCmdExecResult.Succ;
+                }
+                else
+                {
+                    return UsCmdExecResult.Failed;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[cmd] Execution failed. ({0})", ex.Message);
+                return UsCmdExecResult.Failed;
+            }
+        }
+
+        Dictionary<eNetCmd, EtCmdHandler> m_handlers = new Dictionary<eNetCmd, EtCmdHandler>();
     }
 }

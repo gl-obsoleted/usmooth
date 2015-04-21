@@ -45,7 +45,7 @@ class UsWindow : EditorWindow {
 			UsCmd cmd = new UsCmd();
 			cmd.WriteNetCmd(eNetCmd.SV_Editor_SelectionChanged);
 			cmd.WriteInt32 (_selectedIDs.Length);
-			Debug.Log(string.Format("selection count: {0}", _selectedIDs.Length));
+			//Debug.Log(string.Format("selection count: {0}", _selectedIDs.Length));
 			foreach (int item in _selectedIDs) {
 				cmd.WriteInt32 (item);
 			}

@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
-namespace usmooth.common
+namespace usmooth.app
 {
     public enum LogWndOpt
     {

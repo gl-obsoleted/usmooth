@@ -93,6 +93,9 @@
     </Compile>
     <Compile Include="Net\NetClient.cs" />
     <Compile Include="Util\DataGridUtil.cs" />
+    <Compile Include="Util\UsCommon.cs" />
+    <Compile Include="Util\UsLogging.cs" />
+    <Compile Include="Util\UsUtil.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -147,12 +150,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\usmooth.common\usmooth.common.csproj">
-      <Project>{eb918101-869a-4419-9498-4d81603c6003}</Project>
-      <Name>usmooth.common</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
