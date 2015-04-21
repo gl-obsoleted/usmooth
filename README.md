@@ -1,6 +1,6 @@
 ﻿# usmooth
 
-- [__下载页面 (0.1.2r)__](https://github.com/SeaSunOpenSource/usmooth/releases/tag/0.1.2r)  
+- [__下载发布包 (v0.1.2r)__](https://github.com/SeaSunOpenSource/usmooth/releases/tag/0.1.2r)  
 - [__上手指南__](https://github.com/SeaSunOpenSource/usmooth/wiki/tutorial)
 
 ## 设计目标
