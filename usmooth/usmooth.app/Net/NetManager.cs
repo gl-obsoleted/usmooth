@@ -121,8 +121,8 @@ namespace usmooth.app
 
         private bool Handle_ExecCommandResponse(eNetCmd cmd, UsCmd c)
         {
-            int retVal = c.ReadInt32();
-            UsLogging.Printf(string.Format("command executing result: [b]{0}[/b]", retVal));
+            string ret = c.ReadString();
+            UsLogging.Printf(string.Format("command executing result: [b]{0}[/b]", ret));
 
             return true;
         }
