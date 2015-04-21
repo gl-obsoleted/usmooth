@@ -1,5 +1,8 @@
 ﻿# usmooth
 
+## [下载页面 (0.1.2r)](https://github.com/SeaSunOpenSource/usmooth/releases/tag/0.1.2r)  
+## [上手指南](https://github.com/SeaSunOpenSource/usmooth/wiki/tutorial)
+
 ## 设计目标
 
 Unity 已有的 Profiling 机制非常强大，以程序员为目标用户，缺乏对美术和测试等非程序员的支持。而 usmooth 的目的在于帮助__非程序员__提高对游戏实时性能的消耗情况的理解，帮助美术更好地去做场景/角色/特效等资源的规划。
@@ -15,7 +18,6 @@ Unity 已有的 Profiling 机制非常强大，以程序员为目标用户，缺
 
 更多的功能细节请参考 [Release Notes](/release_notes.md)，后续开发计划请看[这里(v0.2)](https://github.com/SeaSunOpenSource/usmooth/milestones/0.2)。
 
-[这里(wiki/tutorial)是一份简单的快速上手指南](https://github.com/SeaSunOpenSource/usmooth/wiki/tutorial)。
 
 ## 运行情况截图
 
