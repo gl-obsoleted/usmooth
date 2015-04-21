@@ -31,15 +31,11 @@ public class UsPerfManager {
 		if (gobj == null || cmd == null)
 			return;
 
-		MeshFilter mf = (MeshFilter)gobj.GetComponent (typeof(MeshFilter));
-		if (mf == null)
-			return;
-
 		cmd.WriteInt32 (gobj.GetInstanceID());
 		cmd.WriteStringStripped (gobj.name);
-		cmd.WriteInt32 (mf.mesh.vertexCount);
+		cmd.WriteInt32 (0);
 		cmd.WriteInt32 (gobj.renderer.sharedMaterials.Length);
-		cmd.WriteFloat (mf.mesh.bounds.size.magnitude);
+		cmd.WriteFloat (0.0f);
 	}
 
 	#endregion end utilities
