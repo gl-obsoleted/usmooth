@@ -15,10 +15,10 @@ Unity 已有的 Profiling 机制非常强大，以程序员为目标用户，缺
 
 更多的功能细节请参考 [Release Notes](/release_notes.md)，后续开发计划请看[这里(v0.2)](https://github.com/SeaSunOpenSource/usmooth/milestones/0.2)。
 
-[这里(wiki/tutorial)](/wiki/tutorial)是一份简单的教程，供上手用。
+[这里(wiki/tutorial)](usmooth.wiki/tutorial)是一份简单的教程，供上手用。
 
 ## 运行情况截图
 
-![running_screen](/wiki/images/running_screen.png?raw=true)
+![running_screen](usmooth.wiki/images/running_screen.png?raw=true)
 
 
