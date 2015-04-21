@@ -27,15 +27,16 @@
 ## 功能展示
 
 1. __双击任一 Mesh / Material / Texture，可看到相关的引用和被引用关系 (浅绿色)__   
-
+    ![tut6](/docs/images/usmooth_tutor_06.png?raw=true)
 
 2. __选中 Mesh 后使用 “定位物件” 可在编辑器的场景视图内定位并查看当前选中的物件__   
-
+    ![tut7](/docs/images/usmooth_tutor_07.png?raw=true)
 
 3. __当在编辑器的场景视图内选中物件时，usmooth 内所有对应的依赖项都会浅蓝色高亮显示__
-
+    ![tut8](/docs/images/usmooth_tutor_08.png?raw=true)
 
 4. __所有列表中的信息都是可排序的，在 Texture 一栏可查到每张贴图的实际内存开销__
+    ![tut9](/docs/images/usmooth_tutor_09.png?raw=true)
 
 
 
