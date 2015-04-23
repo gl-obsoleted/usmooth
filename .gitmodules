@@ -1,0 +1,3 @@
+[submodule "usmooth_for_unity"]
+	path = usmooth_for_unity
+	url = https://github.com/SeaSunOpenSource/usmooth_for_unity.git
