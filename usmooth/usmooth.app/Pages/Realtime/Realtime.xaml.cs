@@ -68,7 +68,7 @@ namespace usmooth.app.Pages
         }
         public void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (!NetManager.Instance.IsConnected)
+            if (!AppNetManager.Instance.IsConnected)
             {
                 if (ModernDialog.ShowMessage("usmooth is [b]offline[/b], connect to a running game first.", "offline", MessageBoxButton.OK) == MessageBoxResult.OK)
                 {

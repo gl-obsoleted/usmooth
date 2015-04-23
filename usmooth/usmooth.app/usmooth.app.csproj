@@ -77,9 +77,9 @@
     </Compile>
     <Compile Include="Pages\Realtime\Realtime.Highlight.cs" />
     <Compile Include="Pages\Realtime\Realtime.Net.cs" />
-    <Compile Include="Util\AppSettingsUtil.cs" />
+    <Compile Include="AppSettingsUtil.cs" />
     <Compile Include="Net\NetGuardTimer.cs" />
-    <Compile Include="Net\NetManager.cs" />
+    <Compile Include="AppNetManager.cs" />
     <Compile Include="Pages\History.xaml.cs">
       <DependentUpon>History.xaml</DependentUpon>
     </Compile>
@@ -92,10 +92,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Net\NetClient.cs" />
-    <Compile Include="Util\DataGridUtil.cs" />
-    <Compile Include="Util\UsCommon.cs" />
-    <Compile Include="Util\UsLogging.cs" />
-    <Compile Include="Util\UsUtil.cs" />
+    <Compile Include="Pages\Realtime\DataGridUtil.cs" />
+    <Compile Include="Common\UsCommon.cs" />
+    <Compile Include="Common\UsUtil.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

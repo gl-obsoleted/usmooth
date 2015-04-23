@@ -8,6 +8,8 @@ namespace usmooth.app
 {
     public class AppSettingsUtil
     {
+        public static string Localhost = "127.0.0.1";
+
         public static bool AppendAsRecentlyConnected(string remoteAddr)
         {
             if (Properties.Settings.Default.RecentAddrList == null)
@@ -16,7 +18,7 @@ namespace usmooth.app
             }
             else
             {
-                if (Properties.Settings.Default.RecentAddrList.Contains(remoteAddr))
+                if (remoteAddr == Localhost || Properties.Settings.Default.RecentAddrList.Contains(remoteAddr))
                     return false;
             }
 

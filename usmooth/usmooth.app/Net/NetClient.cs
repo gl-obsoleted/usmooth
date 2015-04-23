@@ -11,38 +11,16 @@ using usmooth.common;
 
 namespace usmooth.app
 {
-    public class LogEventArgs : EventArgs
-    {
-        public LogEventArgs(string text) 
-        {
-            Text = text;
-        }
-
-        public string Text { get; set; }
-    }
-
     public class NetClient : IDisposable
     {
-        string _host;
-        ushort _port;
-
-        private TcpClient _tcpClient;
-
-        private UsCmdParsing m_cmdParser = new UsCmdParsing();
-
         public event SysPost.StdMulticastDelegation Connected;
         public event SysPost.StdMulticastDelegation Disconnected;
-        public event SysPost.StdMulticastDelegation LogEmitted;
-
-        public NetClient()
-        {
-        }
 
         public bool IsConnected { get { return _tcpClient != null; } }
 
-        public string RemoteAddr { get { return _tcpClient.Client.RemoteEndPoint.ToString(); } }
+        public string RemoteAddr { get { return IsConnected ? _tcpClient.Client.RemoteEndPoint.ToString() : ""; } }
 
-        public void Connect(string host, ushort port)
+        public void Connect(string host, int port)
         {
             _host = host;
             _port = port;
@@ -57,6 +35,9 @@ namespace usmooth.app
             {
                 _tcpClient.Close();
                 _tcpClient = null;
+
+                _host = "";
+                _port = 0;
 
                 UsLogging.Printf("connection closed.");
                 SysPost.InvokeMulticast(this, Disconnected);
@@ -74,22 +55,24 @@ namespace usmooth.app
             {
                 if (!_tcpClient.Connected)
                 {
+                    UsLogging.Printf("disconnection detected. (_tcpClient.Connected == false).");
                     throw new Exception();
                 }
 
-                // check if the remote client is still connected
+                // check if the client socket is still readable
                 if (_tcpClient.Client.Poll(0, SelectMode.SelectRead))
                 {
                     byte[] checkConn = new byte[1];
                     if (_tcpClient.Client.Receive(checkConn, SocketFlags.Peek) == 0)
                     {
+                        UsLogging.Printf("disconnection detected. (failed to read by Poll/Receive).");
                         throw new IOException();
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Disconnect();
+                DisconnectOnError("disconnection detected while checking connection status.", ex);
             }
         }
 
@@ -114,18 +97,18 @@ namespace usmooth.app
                             case UsCmdExecResult.Succ:
                                 break;
                             case UsCmdExecResult.Failed:
-                                AddToLog(string.Format("server cmd execution failed: {0}.", new UsCmd(buffer).ReadNetCmd()));
+                                UsLogging.Printf("net cmd execution failed: {0}.", new UsCmd(buffer).ReadNetCmd());
                                 break;
                             case UsCmdExecResult.HandlerNotFound:
-                                AddToLog(string.Format("unknown server msg: {0}.", Encoding.UTF8.GetString(buffer, 0, len)));
+                                UsLogging.Printf("net unknown cmd: {0}.", new UsCmd(buffer).ReadNetCmd());
                                 break;
                         }
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Disconnect();
+                DisconnectOnError("error detected while receiving data.", ex);
             }
         }
 
@@ -142,9 +125,9 @@ namespace usmooth.app
                 _tcpClient.GetStream().Write(cmdLenBytes, 0, cmdLenBytes.Length);
                 _tcpClient.GetStream().Write(cmd.Buffer, 0, cmd.WrittenLen);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Disconnect();
+                DisconnectOnError("error detected while sending data.", ex);
             }
         }
 
@@ -158,7 +141,7 @@ namespace usmooth.app
             {
                 if (tcpClient.Connected) // may throw NullReference
                 {
-                    AddToLog(string.Format("Connected successfully."));
+                    UsLogging.Printf("connected successfully.");
                     SysPost.InvokeMulticast(this, Connected);
                 }
                 else
@@ -166,18 +149,23 @@ namespace usmooth.app
                     throw new Exception();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                AddToLog(string.Format("Connection failed."));
-                Disconnect();
-                return;
+                DisconnectOnError("connection failed while handling OnConnect().", ex);
             }
         }
 
-        // Adds a formatted entry to the log
-        private void AddToLog(string text)
+        private void DisconnectOnError(string info, Exception ex)
         {
-            SysPost.InvokeMulticast(this, LogEmitted, new LogEventArgs(text));
+            UsLogging.Printf(LogWndOpt.Bold, info);
+            UsLogging.Printf(ex.ToString());
+
+            Disconnect();
         }
+
+        private string _host = "";
+        private int _port = 0;
+        private TcpClient _tcpClient;
+        private UsCmdParsing m_cmdParser = new UsCmdParsing();
     }
 }

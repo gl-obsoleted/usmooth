@@ -25,15 +25,15 @@ namespace usmooth.app
         {
             InitializeComponent();
 
-            NetManager.Instance.LogicallyConnected += OnLogicallyConnected;
-            NetManager.Instance.LogicallyDisconnected += OnLogicallyDisconnected;
+            AppNetManager.Instance.LogicallyConnected += OnLogicallyConnected;
+            AppNetManager.Instance.LogicallyDisconnected += OnLogicallyDisconnected;
         }
 
         private void OnLogicallyConnected(object sender, EventArgs e)
         {
             this.Dispatcher.Invoke(new Action(() =>
             {
-                this.Title = string.Format("usmooth ({0})", NetManager.Instance.RemoteAddr);
+                this.Title = string.Format("usmooth ({0})", AppNetManager.Instance.RemoteAddr);
             }));
         }
 

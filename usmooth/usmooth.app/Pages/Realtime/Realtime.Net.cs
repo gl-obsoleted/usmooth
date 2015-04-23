@@ -15,11 +15,11 @@ namespace usmooth.app.Pages
     {
         private void SetNetHandlers()
         {
-            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Mesh, NetHandle_FrameData_Mesh);
-            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Material, NetHandle_FrameData_Material);
-            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Texture, NetHandle_FrameData_Texture);
+            AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Mesh, NetHandle_FrameData_Mesh);
+            AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Material, NetHandle_FrameData_Material);
+            AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Texture, NetHandle_FrameData_Texture);
 
-            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_Editor_SelectionChanged, NetHandle_Editor_SelectionChanged);
+            AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_Editor_SelectionChanged, NetHandle_Editor_SelectionChanged);
         }
 
         private void NetRequest_FrameData()
@@ -28,7 +28,7 @@ namespace usmooth.app.Pages
 
             UsCmd cmd = new UsCmd();
             cmd.WriteNetCmd(eNetCmd.CL_RequestFrameData);
-            NetManager.Instance.Send(cmd);
+            AppNetManager.Instance.Send(cmd);
         }
 
         private void NetRequest_FlyToMesh(MeshObject mesh)
@@ -42,7 +42,7 @@ namespace usmooth.app.Pages
             UsCmd cmd = new UsCmd();
             cmd.WriteNetCmd(eNetCmd.CL_FlyToObject);
             cmd.WriteInt32(mesh.InstID);
-            NetManager.Instance.Send(cmd);
+            AppNetManager.Instance.Send(cmd);
         }
 
         int _meshExpectedCount = 0;

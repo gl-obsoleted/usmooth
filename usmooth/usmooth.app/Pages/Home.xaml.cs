@@ -25,7 +25,7 @@ namespace usmooth.app.Pages
     {
         public Home()
         {
-            if (NetManager.Instance == null)
+            if (AppNetManager.Instance == null)
                 throw new Exception();
 
             InitializeComponent();
@@ -46,8 +46,8 @@ namespace usmooth.app.Pages
             UsLogging.Receivers += Impl_PrintLogToWnd;
             UsLogging.Printf("usmooth is initialized successfully.");
 
-            NetManager.Instance.LogicallyConnected += OnLogicallyConnected;
-            NetManager.Instance.LogicallyDisconnected += OnLogicallyDisconnected;
+            AppNetManager.Instance.LogicallyConnected += OnLogicallyConnected;
+            AppNetManager.Instance.LogicallyDisconnected += OnLogicallyDisconnected;
         }
 
         private void OnLogicallyConnected(object sender, EventArgs e)
@@ -79,14 +79,13 @@ namespace usmooth.app.Pages
 
         private void bt_connect_Click(object sender, RoutedEventArgs e)
         {
-            if (NetManager.Instance == null)
+            if (AppNetManager.Instance == null)
             {
                 UsLogging.Printf(LogWndOpt.Bold, "NetManager not available, connecting failed.");
                 return;
             }
 
-            ushort port = (ushort)EzConv.ToInt(Properties.Settings.Default.ServerPort);
-            if (!NetManager.Instance.Connect(cb_targetIP.Text))
+            if (!AppNetManager.Instance.Connect(cb_targetIP.Text))
             {
                 UsLogging.Printf(LogWndOpt.Bold, "connecting failed.");
                 return;
@@ -137,7 +136,7 @@ namespace usmooth.app.Pages
 
         private void ExecInputCmd()
         {
-            if (!NetManager.Instance.IsConnected)
+            if (!AppNetManager.Instance.IsConnected)
             {
                 UsLogging.Printf(LogWndOpt.Bold, "not connected to server, command ignored.");
                 return;
@@ -152,7 +151,7 @@ namespace usmooth.app.Pages
             UsCmd cmd = new UsCmd();
             cmd.WriteNetCmd(eNetCmd.CL_ExecCommand);
             cmd.WriteString(tb_cmdbox.Text);
-            NetManager.Instance.Send(cmd);
+            AppNetManager.Instance.Send(cmd);
 
             UsLogging.Printf(string.Format("command executed: [b]{0}[/b]", tb_cmdbox.Text));
             tb_cmdbox.Clear();
@@ -162,7 +161,7 @@ namespace usmooth.app.Pages
         private void bt_disconnect_Click(object sender, RoutedEventArgs e)
         {
             UsLogging.Printf(LogWndOpt.Error, "[b]disconnecting manually...[/b]");
-            NetManager.Instance.Disconnect();
+            AppNetManager.Instance.Disconnect();
         }
     }
 }

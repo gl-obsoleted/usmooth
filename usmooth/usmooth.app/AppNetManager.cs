@@ -8,9 +8,9 @@ using Timer = System.Timers.Timer;
 
 namespace usmooth.app
 {
-    public class NetManager : IDisposable
+    public class AppNetManager : IDisposable
     {
-        public static NetManager Instance;
+        public static AppNetManager Instance;
 
         public bool IsConnected { get { return _client.IsConnected; } }
         public string RemoteAddr { get { return _client.RemoteAddr; } }
@@ -18,11 +18,10 @@ namespace usmooth.app
         public event SysPost.StdMulticastDelegation LogicallyConnected;
         public event SysPost.StdMulticastDelegation LogicallyDisconnected;
 
-        public NetManager()
+        public AppNetManager()
         {
             _client.Connected += OnConnected;
             _client.Disconnected += OnDisconnected;
-            _client.LogEmitted += OnLogEmitted;
 
             _client.RegisterCmdHandler(eNetCmd.SV_HandshakeResponse, Handle_HandshakeResponse);
             _client.RegisterCmdHandler(eNetCmd.SV_KeepAliveResponse, Handle_KeepAliveResponse);
@@ -41,10 +40,10 @@ namespace usmooth.app
 
         public bool Connect(string addr)
         {
-            ushort port = (ushort)EzConv.ToInt(Properties.Settings.Default.ServerPort);
-            if (port == 0)
+            int port = 0;
+            if (!int.TryParse(Properties.Settings.Default.ServerPort, out port))
             {
-                UsLogging.Printf(LogWndOpt.Error, "port '{0}' invalid, connection aborted.", port);
+                UsLogging.Printf(LogWndOpt.Error, "Properties.Settings.Default.ServerPort '{0}' invalid, connection aborted.", Properties.Settings.Default.ServerPort);
                 return false;
             }
 
@@ -88,15 +87,6 @@ namespace usmooth.app
             SysPost.InvokeMulticast(this, LogicallyDisconnected);
         }
 
-        private void OnLogEmitted(object sender, EventArgs e)
-        {
-            LogEventArgs lea = e as LogEventArgs;
-            if (lea != null)
-            {
-                UsLogging.Printf(LogWndOpt.Info, lea.Text);
-            }
-        }
-          
         private void OnGuardingTimeout(object sender, EventArgs e)
         {
             UsLogging.Printf(LogWndOpt.Error, "guarding timeout, closing connection...");
