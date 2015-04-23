@@ -1,8 +1,13 @@
 ﻿# usmooth
 
+- [__Download (v0.1.2r)__](https://github.com/SeaSunOpenSource/usmooth/releases/tag/0.1.2r)  
+- [__Tutorial__](https://github.com/SeaSunOpenSource/usmooth/wiki/tutorial)
+- [Release Notes](/release_notes.md)
+- [Roadmap](https://github.com/SeaSunOpenSource/usmooth/milestones/0.2)
+
 ## 设计目标
 
-Unity 已有的 Profiling 机制非常强大，以程序员为目标用户，缺乏对美术和测试等非程序员的支持。而 usmooth 的目的在于帮助__非程序员__提高对游戏实时性能的消耗情况的理解，帮助美术更好地去做场景/角色/特效等资源的规划。
+Unity 已有的性能剖析机制已经很强大了，可是它主要以程序员为目标用户，缺乏对美术和测试等非程序员的支持。而 usmooth 的目的在于帮助__非程序员__提高对游戏实时性能的消耗情况的理解，帮助美术更好地去做场景/角色/特效等资源的规划。
 
 ## 功能列表
 
@@ -12,10 +17,6 @@ Unity 已有的 Profiling 机制非常强大，以程序员为目标用户，缺
 - (依赖关系) 当双击这三个列表中的任意一项时，所有依赖项和被依赖项都会浅绿色高亮显示
 - (编辑器互动) 使用 “定位物件” 功能可在编辑器的场景视图内定位并查看当前选中的物件
 - (编辑器互动) 当在编辑器的场景视图内选中物件时，在 usmooth 内所有对应的依赖项都会浅蓝色高亮显示
-
-更多的功能细节请参考 [Release Notes](/release_notes.md)，后续开发计划请看[这里(v0.2)](https://github.com/SeaSunOpenSource/usmooth/milestones/0.2)。
-
-[这里(wiki/tutorial)是一份简单的快速上手指南](https://github.com/SeaSunOpenSource/usmooth/wiki/tutorial)。
 
 ## 运行情况截图
 
