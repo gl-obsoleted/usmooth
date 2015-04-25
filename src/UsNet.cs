@@ -104,21 +104,6 @@ public class UsNet : IDisposable {
 						SendCommand(reply);
 						break;
 					}
-					case eNetCmd.CL_ExecCommand:						
-					{
-						string read = cmd.ReadString();
-						UsCmd reply = new UsCmd();
-						reply.WriteNetCmd(eNetCmd.SV_ExecCommandResponse);
-						reply.WriteString(string.Format("str: {0}, len: {1}", read, read.Length));
-						SendCommand(reply);
-						break;
-					}
-					case eNetCmd.CL_FlyToObject:						
-					{
-						int instID = cmd.ReadInt32();
-						UsPerfManager.Instance.GotoObject(instID);
-						break;
-					}
 					default:
 					{
 						UsCmd secondPass = new UsCmd(buffer);

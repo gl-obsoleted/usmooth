@@ -3,14 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using usmooth.common;
 
-public class MeshData {
-	public int _instID;
-	public int _vertCount;
-	public int _triCount;
-	public int _materialCount;
-	public float _boundSize;
-}
-
 public class MeshLut {
 	public bool AddMesh(GameObject go) {
 		if (_lut.ContainsKey(go.GetInstanceID())) {
@@ -41,11 +33,7 @@ public class MeshLut {
 	public void WriteMesh(int instID, UsCmd cmd) {
 		MeshData data;
 		if (_lut.TryGetValue(instID, out data)) {
-			cmd.WriteInt32 (data._instID);
-			cmd.WriteInt32 (data._vertCount);
-			cmd.WriteInt32 (data._triCount);
-			cmd.WriteInt32 (data._materialCount);
-			cmd.WriteFloat (data._boundSize);
+			data.Write(cmd);
 		}
 	}
 

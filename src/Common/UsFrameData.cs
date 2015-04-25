@@ -22,19 +22,26 @@ public class FrameData {
 		cmd.WriteFloat (_frameDeltaTime);
 		cmd.WriteFloat (_frameRealTime);
 		cmd.WriteFloat (_frameStartTime);
-
-		cmd.WriteInt32 (_frameMeshes.Count);
-		foreach (var item in _frameMeshes) {
-			cmd.WriteInt32 (item);
-		}
-		cmd.WriteInt32 (_frameMaterials.Count);
-		foreach (var item in _frameMaterials) {
-			cmd.WriteInt32 (item);
-		}
-		cmd.WriteInt32 (_frameTextures.Count);
-		foreach (var item in _frameMaterials) {
-			cmd.WriteInt32 (item);
-		}
+		UsCmdUtil.WriteIntList (cmd, _frameMeshes);
+		UsCmdUtil.WriteIntList (cmd, _frameMaterials);
+		UsCmdUtil.WriteIntList (cmd, _frameTextures);
 		return cmd;
 	}
 }
+
+public class MeshData {
+	public int _instID;
+	public int _vertCount;
+	public int _triCount;
+	public int _materialCount;
+	public float _boundSize;
+	
+	public void Write(UsCmd cmd) {
+		cmd.WriteInt32 (_instID);
+		cmd.WriteInt32 (_vertCount);
+		cmd.WriteInt32 (_triCount);
+		cmd.WriteInt32 (_materialCount);
+		cmd.WriteFloat (_boundSize);
+	}
+}
+

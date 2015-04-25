@@ -10,8 +10,27 @@ class UsWindow : EditorWindow {
 		if (win != null) {
 			win.autoRepaintOnSceneChange = true;
 			win.Show();
+
+			UsEditorNotifer.Instance.OnFlyToObject += HandleOnFlyToObject;
 		}
 	}
+
+	static void HandleOnFlyToObject (object sender, EventArgs e)
+	{
+		UsFlyToObjectEventArgs fto = e as UsFlyToObjectEventArgs;
+		if (fto == null) {
+			return;
+		}
+
+		MeshRenderer[] meshRenderers = UnityEngine.Object.FindObjectsOfType(typeof(MeshRenderer)) as MeshRenderer[];
+		foreach (MeshRenderer mr in meshRenderers) {
+			if (mr.isVisible && mr.gameObject.GetInstanceID () == fto._instID) {
+				SceneView.currentDrawingSceneView.LookAt(mr.gameObject.transform.position);
+				Selection.activeGameObject=mr.gameObject;
+			}
+		}
+	}
+
 	public void OnGUI() {
 		float width = Mathf.Min(390f, Screen.width);
 		float height = Mathf.Min(650f, Screen.height);
