@@ -4,6 +4,7 @@ using LostPolygon.GoodOldSockets.Examples;
 using System;
 using UnityEditor;
 using usmooth.common;
+using System.Collections.Generic;
 
 public class UsMain : MonoBehaviour {
 
@@ -18,10 +19,13 @@ public class UsMain : MonoBehaviour {
 	void Start () {
 		Application.runInBackground = true;
 
+		DataCollector.Instance = new DataCollector ();
+
 		UsPerfManager.Instance = new UsPerfManager();
 
 		UsNet.Instance = new UsNet(_serverPort);
-		UsNet.Instance.RegisterHander (eNetCmd.CL_RequestFrameData, NetHandle_RequestFrameData); 
+
+		UsMainHandlers.Instance.RegisterHandlers (UsNet.Instance.CmdExecutor);
 	}
 	
 	// Update is called once per frame
@@ -34,7 +38,7 @@ public class UsMain : MonoBehaviour {
 				UsPerfManager.Instance.RefreshVisibleMeshes();
 				// UsPerfManager.Instance.DumpAllInfo();
 			}
-
+			
 			if (UsNet.Instance != null) {
 				UsNet.Instance.Update ();
 			}
@@ -78,6 +82,11 @@ public class UsMain : MonoBehaviour {
 
 		UsNet.Instance.SendCommand(UsPerfManager.Instance.CreateMaterialCmd());
 		UsNet.Instance.SendCommand(UsPerfManager.Instance.CreateTextureCmd());
+		
+		if (DataCollector.Instance != null) {
+			FrameData data = DataCollector.Instance.CollectFrameData();
+			UsNet.Instance.SendCommand (data.CreatePacket());
+		}
 
 		return true;
 	}

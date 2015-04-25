@@ -20,6 +20,7 @@ public class UsNet : IDisposable {
 
 	private TcpClient _tcpClient;
 
+	public UsCmdParsing CmdExecutor { get { return _cmdExec; } }
 	private UsCmdParsing _cmdExec = new UsCmdParsing(); 
 	
 	// QOTD server constructor
@@ -70,10 +71,6 @@ public class UsNet : IDisposable {
 			_tcpClient.Close();
 			_tcpClient = null;
 		}
-	}
-
-	public void RegisterHander(eNetCmd cmd, EtCmdHandler handler) {
-		_cmdExec.RegisterHandler (cmd, handler);
 	}
 
 	public void Update() {
