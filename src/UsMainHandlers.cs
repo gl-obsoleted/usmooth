@@ -54,6 +54,7 @@ public class UsMainHandlers : MonoBehaviour {
 		if (DataCollector.Instance != null) {
 			FrameData data = DataCollector.Instance.CollectFrameData();
 			UsNet.Instance.SendCommand (data.CreatePacket());
+			//Debug.Log(string.Format("creating frame packet: id {0} mesh count {1}", eNetCmd.SV_FrameDataV2, data._frameMeshes.Count));
 		}
 
 		return true;
@@ -62,6 +63,7 @@ public class UsMainHandlers : MonoBehaviour {
 	private bool NetHandle_FrameV2_RequestMeshes(eNetCmd cmd, UsCmd c) {
 		if (DataCollector.Instance != null) {
 			List<int> meshIDs = UsCmdUtil.ReadIntList(c);
+			//Debug.Log(string.Format("requesting meshes - count ({0})", meshIDs.Count));
 			foreach (var slice in UsGeneric.Slice(meshIDs, SLICE_COUNT)) {
 				UsCmd fragment = new UsCmd();
 				fragment.WriteNetCmd(eNetCmd.SV_FrameDataV2_Meshes);
