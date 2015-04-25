@@ -1,15 +1,14 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using usmooth.common;
 
 public class FrameData {
-	public int _frameCount = Time.frameCount;
+	public int _frameCount = 0;
 	
 	// time info
-	public float _frameDeltaTime = Time.deltaTime;
-	public float _frameRealTime = Time.realtimeSinceStartup;
-	public float _frameStartTime = Time.time;
+	public float _frameDeltaTime = 0.0f;
+	public float _frameRealTime = 0.0f;
+	public float _frameStartTime = 0.0f;
 	
 	// actual data
 	public List<int> _frameMeshes = new List<int>();
