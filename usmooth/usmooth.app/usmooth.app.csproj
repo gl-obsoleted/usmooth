@@ -75,6 +75,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Common\UsFrameData.cs" />
+    <Compile Include="Common\UsGeneric.cs" />
     <Compile Include="Pages\Realtime\Realtime.Highlight.cs" />
     <Compile Include="Pages\Realtime\Realtime.Net.cs" />
     <Compile Include="AppSettingsUtil.cs" />

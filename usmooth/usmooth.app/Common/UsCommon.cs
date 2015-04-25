@@ -15,7 +15,11 @@ namespace usmooth.common
         CL_ExecCommand,
         CL_RequestFrameData,
         CL_FlyToObject,
-        CL_CmdEnd,
+
+		CL_FrameV2_RequestMeshes,
+		CL_FrameV2_RequestNames,
+
+		CL_CmdEnd,
 
         SV_CmdBegin             = 2000,
         SV_HandshakeResponse,
@@ -25,6 +29,11 @@ namespace usmooth.common
         SV_FrameData_Material,
         SV_FrameData_Texture,
         SV_Editor_SelectionChanged,
+
+        SV_FrameDataV2,
+        SV_FrameDataV2_Meshes,
+        SV_FrameDataV2_Names,
+		
         SV_CmdEnd,
     }
 
@@ -217,6 +226,25 @@ namespace usmooth.common
         Failed,
         HandlerNotFound,
     }
+
+	public class UsCmdUtil 
+	{
+		public static List<int> ReadIntList(UsCmd c) {
+			List<int> ret = new List<int>();
+			int count = c.ReadInt32 ();
+			for (int i = 0; i < count; i++) {
+				ret.Add(c.ReadInt32());
+			}
+			return ret;
+		}
+
+		public static void WriteIntList(UsCmd c, List<int> l) {
+			c.WriteInt32 (l.Count);
+			foreach (var item in l) {
+				c.WriteInt32 (item);
+			}
+		}
+	}
 
     public class UsCmdParsing
     {

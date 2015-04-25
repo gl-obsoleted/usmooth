@@ -31,8 +31,12 @@
                     <TextBlock x:Name="title_mesh" Text="Meshes" Style="{StaticResource Heading2}" />
                     <DataGrid Name="MeshGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" MouseDoubleClick="MeshGrid_MouseDoubleClick" >
                         <DataGrid.Columns>
-                            <mui:DataGridTextColumn Header="物件" Binding="{Binding Name}" IsReadOnly="True"/>
+                            <mui:DataGridTextColumn Header="ID" Binding="{Binding InstID}" IsReadOnly="True"/>
+                            <mui:DataGridTextColumn Header="物件名" Binding="{Binding Name}"/>
+                            <mui:DataGridTextColumn Header="顶点数" Binding="{Binding VertCnt}" IsReadOnly="True"/>
+                            <mui:DataGridTextColumn Header="面数" Binding="{Binding TriCnt}" IsReadOnly="True"/>
                             <mui:DataGridTextColumn Header="材质数" Binding="{Binding MatCnt}" IsReadOnly="True"/>
+                            <mui:DataGridTextColumn Header="尺寸" Binding="{Binding Size}" IsReadOnly="True"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </StackPanel>

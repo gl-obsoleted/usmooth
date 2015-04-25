@@ -19,6 +19,10 @@ namespace usmooth.app.Pages
             AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Material, NetHandle_FrameData_Material);
             AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Texture, NetHandle_FrameData_Texture);
 
+            AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameDataV2, NetHandle_FrameDataV2);
+            AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameDataV2_Meshes, NetHandle_FrameDataV2_Meshes);
+            AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameDataV2_Names, NetHandle_FrameDataV2_Names);
+
             AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_Editor_SelectionChanged, NetHandle_Editor_SelectionChanged);
         }
 
@@ -119,25 +123,22 @@ namespace usmooth.app.Pages
 
             var materials = new ObservableCollection<MaterialObject>();
             int count = c.ReadInt32();
-            if (count > 0)
+            for (int i = 0; i < count; i++)
             {
-                for (int i = 0; i < count; i++)
+                var m = new MaterialObject();
+                m.InstID = c.ReadInt32();
+                m.Name = c.ReadString();
+                m.ShaderName = c.ReadString();
+                m.RefCnt = c.ReadInt32();
+
+                m.RefList = new List<int>();
+                for (int k = 0; k < m.RefCnt; k++)
                 {
-                    var m = new MaterialObject();
-                    m.InstID = c.ReadInt32();
-                    m.Name = c.ReadString();
-                    m.ShaderName = c.ReadString();
-                    m.RefCnt = c.ReadInt32();
-
-                    m.RefList = new List<int>();
-                    for (int k = 0; k < m.RefCnt; k++)
-                    {
-                        int owner = c.ReadInt32();
-                        m.RefList.Add(owner);
-                    }
-
-                    materials.Add(m);
+                    int owner = c.ReadInt32();
+                    m.RefList.Add(owner);
                 }
+
+                materials.Add(m);
             }
 
             MaterialGrid.Dispatcher.Invoke(new Action(() =>
@@ -153,25 +154,22 @@ namespace usmooth.app.Pages
 
             var textures = new ObservableCollection<TextureObject>();
             int count = c.ReadInt32();
-            if (count > 0)
+            for (int i = 0; i < count; i++)
             {
-                for (int i = 0; i < count; i++)
+                var m = new TextureObject();
+                m.InstID = c.ReadInt32();
+                m.Name = c.ReadString();
+                m.PixelSize = c.ReadString();
+                m.MemSize = c.ReadString();
+                m.RefCnt = c.ReadInt32();
+                m.RefList = new List<int>();
+                for (int k = 0; k < m.RefCnt; k++)
                 {
-                    var m = new TextureObject();
-                    m.InstID = c.ReadInt32();
-                    m.Name = c.ReadString();
-                    m.PixelSize = c.ReadString();
-                    m.MemSize = c.ReadString();
-                    m.RefCnt = c.ReadInt32();
-                    m.RefList = new List<int>();
-                    for (int k = 0; k < m.RefCnt; k++)
-                    {
-                        int owner = c.ReadInt32();
-                        m.RefList.Add(owner);
-                    }
-
-                    textures.Add(m);
+                    int owner = c.ReadInt32();
+                    m.RefList.Add(owner);
                 }
+
+                textures.Add(m);
             }
 
             TextureGrid.Dispatcher.Invoke(new Action(() =>
@@ -179,6 +177,94 @@ namespace usmooth.app.Pages
                 title_texture.Text = string.Format("Textures ({0})", textures.Count);
                 TextureGrid.DataContext = textures;
             }));
+            return true;
+        }
+
+        private bool NetHandle_FrameDataV2(eNetCmd cmd, UsCmd c)
+        {
+            int var = c.ReadInt32();
+            float f1 = c.ReadFloat();
+            f1 = c.ReadFloat();
+            f1 = c.ReadFloat(); 
+            var meshList = UsCmdUtil.ReadIntList(c);
+            var materialList = UsCmdUtil.ReadIntList(c);
+            var textureList = UsCmdUtil.ReadIntList(c);
+
+            MeshGrid.Dispatcher.Invoke(new Action(() =>
+            {
+                if (MeshGrid.DataContext == null)
+                {
+                    MeshGrid.DataContext = new ObservableCollection<MeshObject>();
+                }
+                else
+                {
+                    ((ObservableCollection<MeshObject>)(MeshGrid.DataContext)).Clear();
+                }
+            }));
+
+            {
+                UsCmd req = new UsCmd();
+                req.WriteNetCmd(eNetCmd.CL_FrameV2_RequestMeshes);
+                UsCmdUtil.WriteIntList(req, meshList);
+                AppNetManager.Instance.Send(req);
+                UsLogging.Printf("eNetCmd.NetHandle_FrameDataV2 [b]({0} meshes expected)[/b].", meshList.Count);
+            }
+
+            {
+                UsCmd req = new UsCmd();
+                req.WriteNetCmd(eNetCmd.CL_FrameV2_RequestNames);
+                UsCmdUtil.WriteIntList(req, meshList);
+                AppNetManager.Instance.Send(req);
+                UsLogging.Printf("eNetCmd.NetHandle_FrameDataV2 [b]({0} names expected)[/b].", meshList.Count);
+            }
+
+            return true;
+        }
+
+        private bool NetHandle_FrameDataV2_Meshes(eNetCmd cmd, UsCmd c)
+        {
+            MeshGrid.Dispatcher.Invoke(new Action(() =>
+            {
+                int count = c.ReadInt32();
+                UsLogging.Printf("eNetCmd.NetHandle_FrameDataV2_Meshes [b]({0} got)[/b].", count);
+                for (int i = 0; i < count; i++)
+                {
+                    var m = new MeshObject();
+                    m.InstID = c.ReadInt32();
+                    m.VertCnt = c.ReadInt32();
+                    m.TriCnt = c.ReadInt32();
+                    m.MatCnt = c.ReadInt32();
+                    m.Size = c.ReadFloat();
+                    ((ObservableCollection<MeshObject>)(MeshGrid.DataContext)).Add(m);
+                }
+            }));
+
+            return true;
+        }
+
+        private bool NetHandle_FrameDataV2_Names(eNetCmd cmd, UsCmd c)
+        {
+            MeshGrid.Dispatcher.Invoke(new Action(() =>
+            {
+                int count = c.ReadInt32();
+                UsLogging.Printf("eNetCmd.NetHandle_FrameDataV2_Names [b]({0} got)[/b].", count);
+                for (int i = 0; i < count; i++)
+                {
+                    int instID = c.ReadInt32();
+                    string instName = c.ReadString();
+                    foreach (var item in MeshGrid.Items)
+                    {
+                        MeshObject mo = item as MeshObject;
+                        if (mo != null && mo.InstID == instID)
+                        {
+                            mo.Name = instName;
+                        }
+                    }
+                }
+
+                MeshGrid.Items.Refresh();
+            }));
+
             return true;
         }
 

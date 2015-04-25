@@ -46,7 +46,7 @@ namespace usmooth.app
 
         public void RegisterCmdHandler(eNetCmd cmd, EtCmdHandler handler)
         {
-            m_cmdParser.RegisterHandler(cmd, handler);
+            _cmdParser.RegisterHandler(cmd, handler);
         }
 
         public void Tick_CheckConnectionStatus()
@@ -91,7 +91,7 @@ namespace usmooth.app
                         int len = _tcpClient.GetStream().Read(buffer, 0, buffer.Length);
 
                         UsCmd cmd = new UsCmd(buffer);
-                        UsCmdExecResult result = m_cmdParser.Execute(cmd);
+                        UsCmdExecResult result = _cmdParser.Execute(cmd);
                         switch (result)
                         {
                             case UsCmdExecResult.Succ:
@@ -166,6 +166,6 @@ namespace usmooth.app
         private string _host = "";
         private int _port = 0;
         private TcpClient _tcpClient;
-        private UsCmdParsing m_cmdParser = new UsCmdParsing();
+        private UsCmdParsing _cmdParser = new UsCmdParsing();
     }
 }

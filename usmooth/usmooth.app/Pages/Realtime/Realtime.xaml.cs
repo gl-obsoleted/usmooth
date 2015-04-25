@@ -25,6 +25,7 @@ namespace usmooth.app.Pages
         public int InstID { get; set; }
         public string Name { get; set; }
         public int VertCnt { get; set; }
+        public int TriCnt { get; set; }
         public int MatCnt { get; set; }
         public float Size { get; set; }
     }
