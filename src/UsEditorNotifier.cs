@@ -23,3 +23,18 @@ public class UsEditorNotifer {
 
 	public event SysPost.StdMulticastDelegation OnFlyToObject;
 }
+
+public delegate List<Texture> GetAllTexturesOfMaterial(Material mat);
+
+public class UsEditorQuery {
+
+	public static GetAllTexturesOfMaterial Func_GetAllTexturesOfMaterial; 
+	 
+	public static List<Texture> GetAllTexturesOfMaterial(Material mat) {
+		if (mat == null || Func_GetAllTexturesOfMaterial == null) {
+			return null;
+		}
+
+		return Func_GetAllTexturesOfMaterial (mat);
+	}
+}

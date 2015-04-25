@@ -86,30 +86,10 @@ public class UsNet : IDisposable {
 				if (cmdLenRead > 0 && cmdLen > 0) {
 					byte[] buffer = new byte[cmdLen];
 					int len = _tcpClient.GetStream().Read(buffer, 0, buffer.Length);
-					
-					UsCmd cmd = new UsCmd(buffer);
-					eNetCmd netCmd = cmd.ReadNetCmd();
-					switch (netCmd) {
-					case eNetCmd.CL_Handshake:						
-					{
-						UsCmd reply = new UsCmd();
-						reply.WriteNetCmd(eNetCmd.SV_HandshakeResponse);
-						SendCommand(reply);
-						break;
-					}
-					case eNetCmd.CL_KeepAlive:						
-					{
-						UsCmd reply = new UsCmd();
-						reply.WriteNetCmd(eNetCmd.SV_KeepAliveResponse);
-						SendCommand(reply);
-						break;
-					}
-					default:
-					{
-						UsCmd secondPass = new UsCmd(buffer);
-						_cmdExec.Execute(secondPass);
-						break;
-					}
+					if (len == buffer.Length) {
+						_cmdExec.Execute(new UsCmd(buffer));
+					} else {
+						AddToLog(string.Format("corrupted cmd received - len: {0}", len));
 					}
 				}
 			}

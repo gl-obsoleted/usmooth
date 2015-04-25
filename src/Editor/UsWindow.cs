@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using System;
 using usmooth.common;
+using System.Collections.Generic;
 
 class UsWindow : EditorWindow {
 	[MenuItem("Tools/usmooth")]
@@ -12,6 +13,7 @@ class UsWindow : EditorWindow {
 			win.Show();
 
 			UsEditorNotifer.Instance.OnFlyToObject += HandleOnFlyToObject;
+			UsEditorQuery.Func_GetAllTexturesOfMaterial = GetAllTexturesOfMaterial;
 		}
 	}
 
@@ -31,6 +33,22 @@ class UsWindow : EditorWindow {
 		}
 	}
 
+	static List<Texture> GetAllTexturesOfMaterial(Material mat) {
+		if (!Application.isEditor) {
+			return null;
+		}
+
+		List<Texture> ret = new List<Texture> ();
+		int cnt = ShaderUtil.GetPropertyCount(mat.shader);
+		for (int i = 0; i < cnt; i++) {
+			if (ShaderUtil.GetPropertyType(mat.shader, i) == ShaderUtil.ShaderPropertyType.TexEnv) {
+				string propName = ShaderUtil.GetPropertyName(mat.shader, i);
+				ret.Add(mat.GetTexture(propName));
+			}
+		}
+		return ret;
+	}
+	
 	public void OnGUI() {
 		float width = Mathf.Min(390f, Screen.width);
 		float height = Mathf.Min(650f, Screen.height);

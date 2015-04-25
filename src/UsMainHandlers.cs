@@ -8,11 +8,27 @@ public class UsMainHandlers : MonoBehaviour {
 	public static UsMainHandlers Instance = new UsMainHandlers();
 
 	public void RegisterHandlers(UsCmdParsing exec) {
+		exec.RegisterHandler (eNetCmd.CL_Handshake, NetHandle_Handshake); 
+		exec.RegisterHandler (eNetCmd.CL_KeepAlive, NetHandle_KeepAlive); 
 		exec.RegisterHandler (eNetCmd.CL_ExecCommand, NetHandle_ExecCommand); 
 		exec.RegisterHandler (eNetCmd.CL_FlyToObject, NetHandle_FlyToObject); 
 		exec.RegisterHandler (eNetCmd.CL_RequestFrameData, NetHandle_RequestFrameData); 
 		exec.RegisterHandler (eNetCmd.CL_FrameV2_RequestMeshes, NetHandle_FrameV2_RequestMeshes); 
 		exec.RegisterHandler (eNetCmd.CL_FrameV2_RequestNames, NetHandle_FrameV2_RequestNames); 
+	}
+	
+	private bool NetHandle_Handshake(eNetCmd cmd, UsCmd c) {
+		UsCmd reply = new UsCmd();
+		reply.WriteNetCmd(eNetCmd.SV_HandshakeResponse);
+		UsNet.Instance.SendCommand(reply);
+		return true;
+	}
+	
+	private bool NetHandle_KeepAlive(eNetCmd cmd, UsCmd c) {
+		UsCmd reply = new UsCmd();
+		reply.WriteNetCmd(eNetCmd.SV_KeepAliveResponse);
+		UsNet.Instance.SendCommand(reply);
+		return true;
 	}
 
 	private bool NetHandle_ExecCommand(eNetCmd cmd, UsCmd c) {
