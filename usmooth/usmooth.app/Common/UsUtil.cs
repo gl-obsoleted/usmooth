@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
-namespace usmooth.app
+namespace usmooth.common
 {
     public class SysPost
     {
