@@ -24,10 +24,14 @@ public class DataCollector {
 			if (mr.isVisible) {
 				GameObject go = mr.gameObject;
 				if (_meshLut.AddMesh(go)) {
-					//Debug.Log(string.Format("CollectFrameData(): adding game object. {0}", go.GetInstanceID()));
 					_currentFrame._frameMeshes.Add (go.GetInstanceID());
 					_nameLut[go.GetInstanceID()] = go.name;
 
+//					Debug.Log(string.Format("CollectFrameData(): adding game object. {0}, name {1}, name count {2}", 
+//					                        go.GetInstanceID(),
+//					                        go.name,
+//					                        _nameLut.Count));
+					
 					foreach (var mat in mr.sharedMaterials) {
 						AddVisibleMaterial(mat, mr.gameObject);
 						

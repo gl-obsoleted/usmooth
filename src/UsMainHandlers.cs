@@ -18,6 +18,7 @@ public class UsMainHandlers : MonoBehaviour {
 	}
 	
 	private bool NetHandle_Handshake(eNetCmd cmd, UsCmd c) {
+		Debug.Log ("executing handshake.");
 		UsCmd reply = new UsCmd();
 		reply.WriteNetCmd(eNetCmd.SV_HandshakeResponse);
 		UsNet.Instance.SendCommand(reply);
@@ -33,9 +34,12 @@ public class UsMainHandlers : MonoBehaviour {
 
 	private bool NetHandle_ExecCommand(eNetCmd cmd, UsCmd c) {
 		string read = c.ReadString();
+		var result = UsUserCommands.Instance.Execute (read);
+
 		UsCmd reply = new UsCmd();
 		reply.WriteNetCmd(eNetCmd.SV_ExecCommandResponse);
-		reply.WriteString(string.Format("str: {0}, len: {1}", read, read.Length));
+		reply.WriteInt32 ((int)result.Key);
+		reply.WriteString (result.Value);
 		UsNet.Instance.SendCommand(reply);
 		return true;
 	}
@@ -56,7 +60,11 @@ public class UsMainHandlers : MonoBehaviour {
 		UsNet.Instance.SendCommand(data.CreatePacket());
 		UsNet.Instance.SendCommand(DataCollector.Instance.CreateMaterialCmd());
 		UsNet.Instance.SendCommand(DataCollector.Instance.CreateTextureCmd());
-		
+
+		UsCmd end = new UsCmd();
+		end.WriteNetCmd(eNetCmd.SV_FrameDataEnd);
+		UsNet.Instance.SendCommand (end);
+
 		//Debug.Log(string.Format("creating frame packet: id {0} mesh count {1}", eNetCmd.SV_FrameDataV2, data._frameMeshes.Count));
 
 		return true;

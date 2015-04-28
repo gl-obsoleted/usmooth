@@ -90,10 +90,13 @@ public class UsCmd
 	{
 		string stripped = value.Length > stripLen ? value.Substring(0, stripLen) : value;
 		WritePrimitive ((short)stripped.Length);
-		WritePrimitive (stripped);
+
+		byte[] byteArray = Encoding.Default.GetBytes(stripped);
+		byteArray.CopyTo(_buffer, _writeOffset);
+		_writeOffset += stripped.Length;
 	}
 	
-	public eNetCmd ReadNetCmd() 			{ return (eNetCmd)ReadPrimitive<short>(); }
+	public eNetCmd ReadNetCmd() 			{ return (eNetCmd)ReadInt16(); }
 	public short ReadInt16() 				{ return (short)ReadPrimitive<short>();	}
 	public int ReadInt32() 					{ return (int)ReadPrimitive<int>();	}
 	public float ReadFloat()				{ return (float)ReadPrimitive<float>();	}

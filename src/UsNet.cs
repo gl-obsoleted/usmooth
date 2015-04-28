@@ -87,6 +87,10 @@ public class UsNet : IDisposable {
 					byte[] buffer = new byte[cmdLen];
 					int len = _tcpClient.GetStream().Read(buffer, 0, buffer.Length);
 					if (len == buffer.Length) {
+//						UsCmd c = new UsCmd(buffer);
+//					    eNetCmd nc = c.ReadNetCmd();
+//						AddToLog(string.Format("cmd {0} - len: {1}", nc, len));
+
 						_cmdExec.Execute(new UsCmd(buffer));
 					} else {
 						AddToLog(string.Format("corrupted cmd received - len: {0}", len));
@@ -143,7 +147,7 @@ public class UsNet : IDisposable {
 		if (_tcpClient != null) {
 			Debug.Log(string.Format("<color=green>{0}</color> <color=black>{1}</color>", _tcpClient.Client.RemoteEndPoint, text));
 		} else {
-			Debug.Log(string.Format("<color=black>{0}</color>", text));
+			Debug.Log(string.Format("<color=green>{0}</color>", text));
 		}
 	}
 }

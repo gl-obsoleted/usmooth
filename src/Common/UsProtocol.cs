@@ -32,6 +32,7 @@ namespace usmooth.common
         SV_FrameDataV2_Names,
         SV_FrameData_Material,
         SV_FrameData_Texture,
+        SV_FrameDataEnd,
 		
         SV_App_Logging,
 
