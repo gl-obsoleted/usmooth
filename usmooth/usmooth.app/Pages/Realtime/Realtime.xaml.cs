@@ -22,6 +22,7 @@ namespace usmooth.app.Pages
 {
     public class MeshObject
     {
+        public bool Visible { get; set; }
         public int InstID { get; set; }
         public string Name { get; set; }
         public int VertCnt { get; set; }
@@ -134,6 +135,20 @@ namespace usmooth.app.Pages
         {
             var mesh = DataGridUtil.GetSelectedObject<MeshObject>(MeshGrid);
             NetRequest_FlyToMesh(mesh);
+        }
+
+        private void MeshGrid_OnVisibleChecked(object sender, EventArgs e)
+        {
+            CheckBox cb = sender as CheckBox;
+
+            MeshObject mo = MeshGrid.SelectedItem as MeshObject;
+            if (mo == null)
+                return;
+
+            if (mo.Name == null)    // is in initialization process
+                return;
+
+            AppNetManager.Instance.ExecuteCmd(string.Format("{0} {1}", ((bool)cb.IsChecked ? "showmesh" : "hidemesh"), mo.InstID));
         }
     }
 }

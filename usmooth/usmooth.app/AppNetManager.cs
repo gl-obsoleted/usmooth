@@ -61,9 +61,31 @@ namespace usmooth.app
             _client.SendPacket(cmd);
         }
 
-        public void RegisterCmdHandler(eNetCmd cmd, EtCmdHandler handler)
+        public void RegisterCmdHandler(eNetCmd cmd, UsCmdHandler handler)
         {
             _client.RegisterCmdHandler(cmd, handler);
+        }
+
+        public void ExecuteCmd(string cmdText)
+        {
+            if (!IsConnected)
+            {
+                UsLogging.Printf(LogWndOpt.Bold, "not connected to server, command ignored.");
+                return;
+            }
+
+            if (cmdText.Length == 0)
+            {
+                UsLogging.Printf(LogWndOpt.Bold, "the command bar is empty, try 'help' to list all supported commands.");
+                return;
+            }
+
+            UsCmd cmd = new UsCmd();
+            cmd.WriteNetCmd(eNetCmd.CL_ExecCommand);
+            cmd.WriteString(cmdText);
+            Send(cmd);
+
+            UsLogging.Printf(string.Format("command executed: [b]{0}[/b]", cmdText));
         }
 
         private void OnConnected(object sender, EventArgs e)
@@ -111,8 +133,9 @@ namespace usmooth.app
 
         private bool Handle_ExecCommandResponse(eNetCmd cmd, UsCmd c)
         {
+            int code = c.ReadInt32();
             string ret = c.ReadString();
-            UsLogging.Printf(string.Format("command executing result: [b]{0}[/b]", ret));
+            UsLogging.Printf(string.Format("command executing result: [b]{0}[/b], [b]{1}[/b]", code, ret));
 
             return true;
         }

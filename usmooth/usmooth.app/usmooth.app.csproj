@@ -75,8 +75,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Common\UsCmd.cs" />
+    <Compile Include="Common\UsCmdParsing.cs" />
+    <Compile Include="Common\UsCmdUtil.cs" />
     <Compile Include="Common\UsFrameData.cs" />
     <Compile Include="Common\UsGeneric.cs" />
+    <Compile Include="Common\UsProtocol.cs" />
     <Compile Include="Pages\Realtime\Realtime.Highlight.cs" />
     <Compile Include="Pages\Realtime\Realtime.Net.cs" />
     <Compile Include="AppSettingsUtil.cs" />
@@ -95,7 +99,6 @@
     </Compile>
     <Compile Include="Net\NetClient.cs" />
     <Compile Include="Pages\Realtime\DataGridUtil.cs" />
-    <Compile Include="Common\UsCommon.cs" />
     <Compile Include="Common\UsUtil.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

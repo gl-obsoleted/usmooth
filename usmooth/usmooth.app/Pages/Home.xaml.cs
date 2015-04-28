@@ -136,27 +136,9 @@ namespace usmooth.app.Pages
 
         private void ExecInputCmd()
         {
-            if (!AppNetManager.Instance.IsConnected)
-            {
-                UsLogging.Printf(LogWndOpt.Bold, "not connected to server, command ignored.");
-                return;
-            }
-
-            if (tb_cmdbox.Text.Length == 0)
-            {
-                UsLogging.Printf(LogWndOpt.Bold, "the command bar is empty, try 'help' to list all supported commands.");
-                return;
-            }
-
-            UsCmd cmd = new UsCmd();
-            cmd.WriteNetCmd(eNetCmd.CL_ExecCommand);
-            cmd.WriteString(tb_cmdbox.Text);
-            AppNetManager.Instance.Send(cmd);
-
-            UsLogging.Printf(string.Format("command executed: [b]{0}[/b]", tb_cmdbox.Text));
+            AppNetManager.Instance.ExecuteCmd(tb_cmdbox.Text);
             tb_cmdbox.Clear();
         }
-
 
         private void bt_disconnect_Click(object sender, RoutedEventArgs e)
         {

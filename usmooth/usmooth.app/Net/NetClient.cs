@@ -44,7 +44,7 @@ namespace usmooth.app
             }
         }
 
-        public void RegisterCmdHandler(eNetCmd cmd, EtCmdHandler handler)
+        public void RegisterCmdHandler(eNetCmd cmd, UsCmdHandler handler)
         {
             _cmdParser.RegisterHandler(cmd, handler);
         }
