@@ -1,7 +1,7 @@
 
 # Release Notes
 
-## v0.2a [2015-04-28] ([下载页面](https://github.com/SeaSunOpenSource/usmooth/releases/tag/0.2a))
+## v0.2a [2015-04-28]  ([下载页面](https://github.com/SeaSunOpenSource/usmooth/releases/tag/0.2a))
 
 - (new feature) 可使用复选框单独控制任意一个 Mesh 是否渲染
 - (internal) 使用增量更新来降低监控数据的传输量，为后面实时刷新做性能准备
