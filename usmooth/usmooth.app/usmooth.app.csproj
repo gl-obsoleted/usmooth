@@ -71,16 +71,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\..\usmooth_for_unity\src\Common\UsCmd.cs">
+      <Link>Common\UsCmd.cs</Link>
+    </Compile>
+    <Compile Include="..\..\usmooth_for_unity\src\Common\UsCmdParsing.cs">
+      <Link>Common\UsCmdParsing.cs</Link>
+    </Compile>
+    <Compile Include="..\..\usmooth_for_unity\src\Common\UsCmdUtil.cs">
+      <Link>Common\UsCmdUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\..\usmooth_for_unity\src\Common\UsFrameData.cs">
+      <Link>Common\UsFrameData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\usmooth_for_unity\src\Common\UsGeneric.cs">
+      <Link>Common\UsGeneric.cs</Link>
+    </Compile>
+    <Compile Include="..\..\usmooth_for_unity\src\Common\UsProtocol.cs">
+      <Link>Common\UsProtocol.cs</Link>
+    </Compile>
+    <Compile Include="..\..\usmooth_for_unity\src\Common\UsUtil.cs">
+      <Link>Common\UsUtil.cs</Link>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Common\UsCmd.cs" />
-    <Compile Include="Common\UsCmdParsing.cs" />
-    <Compile Include="Common\UsCmdUtil.cs" />
-    <Compile Include="Common\UsFrameData.cs" />
-    <Compile Include="Common\UsGeneric.cs" />
-    <Compile Include="Common\UsProtocol.cs" />
     <Compile Include="Pages\Realtime\Realtime.Highlight.cs" />
     <Compile Include="Pages\Realtime\Realtime.Net.cs" />
     <Compile Include="AppSettingsUtil.cs" />
@@ -99,7 +114,6 @@
     </Compile>
     <Compile Include="Net\NetClient.cs" />
     <Compile Include="Pages\Realtime\DataGridUtil.cs" />
-    <Compile Include="Common\UsUtil.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
