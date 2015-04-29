@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class UsvLogging
 {
-    private UsNet _net;
-    private int _assertCount = 0;
-    private int _errorCount = 0;
-    private int _exceptionCount = 0;
-
     public UsvLogging(UsNet net)
     {
         if (net == null)
@@ -53,4 +48,9 @@ public class UsvLogging
 
         _net.SendCommand(pkt.CreatePacket());
     }
+
+    private UsNet _net;
+    private int _assertCount = 0;
+    private int _errorCount = 0;
+    private int _exceptionCount = 0;
 }

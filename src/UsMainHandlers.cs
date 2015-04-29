@@ -34,7 +34,10 @@ public class UsMainHandlers {
 
 	private bool NetHandle_ExecCommand(eNetCmd cmd, UsCmd c) {
 		string read = c.ReadString();
-		var result = UsUserCommands.Instance.Execute (read);
+
+        var result = new KeyValuePair<eUserCmdResult, string>(eUserCmdResult.OK, "");
+        if (!UsvStart.Instance.Console.ExecuteCommand(read))
+            result = UsUserCommands.Instance.Execute(read);
 
 		UsCmd reply = new UsCmd();
 		reply.WriteNetCmd(eNetCmd.SV_ExecCommandResponse);

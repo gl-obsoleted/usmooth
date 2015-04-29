@@ -14,17 +14,10 @@ public enum UsLogType
 
 public class UsLogPacket
 {
-    public static List<UsLogType> s_boldTypes = new List<UsLogType>() {
-        UsLogType.Error,
-        UsLogType.Assert,
-        UsLogType.Exception,
-    };
-
     public static Dictionary<UsLogType, string> s_type2color = new Dictionary<UsLogType, string>() {
         { UsLogType.Error,      "Red" },
         { UsLogType.Assert,     "Orange" },
-        { UsLogType.Warning,    "Gold" },
-        { UsLogType.Log,        "DarkGray" },
+        { UsLogType.Warning,    "Orange" },
         { UsLogType.Exception,  "Purple" },
     };
 
@@ -84,11 +77,17 @@ public class UsLogPacket
 
     private string GetLogTypeDecorated()
     {
-        string ret = string.Format("[color={0}]{1}[/color]", s_type2color[LogType], LogType);
-        if (s_boldTypes.Contains(LogType))
+        switch (LogType)
         {
-            ret = string.Format("[b]{0}[/b]", ret);
+            case UsLogType.Error:
+            case UsLogType.Assert:
+            case UsLogType.Warning:
+            case UsLogType.Exception:
+                return string.Format("[b][color={0}]({1})[/color][/b]", s_type2color[LogType], LogType);
+
+            case UsLogType.Log:
+            default:
+                return "";
         }
-        return ret;
     }
 }

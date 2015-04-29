@@ -17,10 +17,10 @@ public class UsMain : MonoBehaviour {
 		Application.runInBackground = true;
 
 		UsNet.Instance = new UsNet(_serverPort);
-
         UsvStart.Instance = new UsvStart(UsNet.Instance);
-
+        
 		UsMainHandlers.Instance.RegisterHandlers (UsNet.Instance.CmdExecutor);
+        UsUserCommands.Instance.RegisterHandlers(UsvStart.Instance.Console);
 	}
 	
 	void Update () {
@@ -28,8 +28,6 @@ public class UsMain : MonoBehaviour {
 
 		if (_currentTimeInMilliseconds - _tickNetLast > _tickNetInterval)
 		{
-            Debug.LogWarning(string.Format("warning r-{0:0.00}", Time.realtimeSinceStartup));
-
 			if (UsNet.Instance != null) {
 				UsNet.Instance.Update ();
 			}
