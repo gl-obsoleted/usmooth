@@ -13,29 +13,29 @@ namespace usmooth.app.Pages
 {
     public partial class Realtime
     {
-        private void SetNetHandlers()
+        public void SetNetHandlers()
         {
-            AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Material, NetHandle_FrameData_Material);
-            AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Texture, NetHandle_FrameData_Texture);
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Material, NetHandle_FrameData_Material);
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameData_Texture, NetHandle_FrameData_Texture);
 
-            AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameDataV2, NetHandle_FrameDataV2);
-            AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameDataV2_Meshes, NetHandle_FrameDataV2_Meshes);
-            AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameDataV2_Names, NetHandle_FrameDataV2_Names);
-            AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameDataEnd, NetHandle_FrameDataEnd);
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameDataV2, NetHandle_FrameDataV2);
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameDataV2_Meshes, NetHandle_FrameDataV2_Meshes);
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameDataV2_Names, NetHandle_FrameDataV2_Names);
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_FrameDataEnd, NetHandle_FrameDataEnd);
 
-            AppNetManager.Instance.RegisterCmdHandler(eNetCmd.SV_Editor_SelectionChanged, NetHandle_Editor_SelectionChanged);
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_Editor_SelectionChanged, NetHandle_Editor_SelectionChanged);
         }
 
-        private void NetRequest_FrameData()
+        public void NetRequest_FrameData()
         {
             ClearAllSelectionsAndHighlightedObjects();
 
             UsCmd cmd = new UsCmd();
             cmd.WriteNetCmd(eNetCmd.CL_RequestFrameData);
-            AppNetManager.Instance.Send(cmd);
+            NetManager.Instance.Send(cmd);
         }
 
-        private void NetRequest_FlyToMesh(MeshObject mesh)
+        public void NetRequest_FlyToMesh(MeshObject mesh)
         {
             if (mesh == null)
             {
@@ -46,10 +46,10 @@ namespace usmooth.app.Pages
             UsCmd cmd = new UsCmd();
             cmd.WriteNetCmd(eNetCmd.CL_FlyToObject);
             cmd.WriteInt32(mesh.InstID);
-            AppNetManager.Instance.Send(cmd);
+            NetManager.Instance.Send(cmd);
         }
 
-        private bool NetHandle_FrameData_Material(eNetCmd cmd, UsCmd c)
+        public bool NetHandle_FrameData_Material(eNetCmd cmd, UsCmd c)
         {
             UsLogging.Printf("eNetCmd.Handle_FrameData_Material received ({0}).", c.Buffer.Length);
 
@@ -80,7 +80,7 @@ namespace usmooth.app.Pages
             }));
             return true;
         }
-        private bool NetHandle_FrameData_Texture(eNetCmd cmd, UsCmd c)
+        public bool NetHandle_FrameData_Texture(eNetCmd cmd, UsCmd c)
         {
             UsLogging.Printf("eNetCmd.Handle_FrameData_Texture received ({0}).", c.Buffer.Length);
 
@@ -112,7 +112,7 @@ namespace usmooth.app.Pages
             return true;
         }
 
-        private bool NetHandle_FrameDataV2(eNetCmd cmd, UsCmd c)
+        public bool NetHandle_FrameDataV2(eNetCmd cmd, UsCmd c)
         {
             int var = c.ReadInt32();
             float f1 = c.ReadFloat();
@@ -138,7 +138,7 @@ namespace usmooth.app.Pages
                 UsCmd req = new UsCmd();
                 req.WriteNetCmd(eNetCmd.CL_FrameV2_RequestMeshes);
                 UsCmdUtil.WriteIntList(req, meshList);
-                AppNetManager.Instance.Send(req);
+                NetManager.Instance.Send(req);
                 UsLogging.Printf("eNetCmd.NetHandle_FrameDataV2 [b]({0} meshes expected)[/b].", meshList.Count);
             }
 
@@ -146,14 +146,14 @@ namespace usmooth.app.Pages
                 UsCmd req = new UsCmd();
                 req.WriteNetCmd(eNetCmd.CL_FrameV2_RequestNames);
                 UsCmdUtil.WriteIntList(req, meshList);
-                AppNetManager.Instance.Send(req);
+                NetManager.Instance.Send(req);
                 UsLogging.Printf("eNetCmd.NetHandle_FrameDataV2 [b]({0} names expected)[/b].", meshList.Count);
             }
 
             return true;
         }
 
-        private bool NetHandle_FrameDataV2_Meshes(eNetCmd cmd, UsCmd c)
+        public bool NetHandle_FrameDataV2_Meshes(eNetCmd cmd, UsCmd c)
         {
             MeshGrid.Dispatcher.Invoke(new Action(() =>
             {
@@ -175,7 +175,7 @@ namespace usmooth.app.Pages
             return true;
         }
 
-        private bool NetHandle_FrameDataV2_Names(eNetCmd cmd, UsCmd c)
+        public bool NetHandle_FrameDataV2_Names(eNetCmd cmd, UsCmd c)
         {
             MeshGrid.Dispatcher.Invoke(new Action(() =>
             {
@@ -201,14 +201,14 @@ namespace usmooth.app.Pages
             return true;
         }
 
-        private bool NetHandle_FrameDataEnd(eNetCmd cmd, UsCmd c)
+        public bool NetHandle_FrameDataEnd(eNetCmd cmd, UsCmd c)
         {
             return true;
         }
 
         List<int> _instances = new List<int>();
 
-        private bool NetHandle_Editor_SelectionChanged(eNetCmd cmd, UsCmd c)
+        public bool NetHandle_Editor_SelectionChanged(eNetCmd cmd, UsCmd c)
         {
             int count = c.ReadInt32();
             UsLogging.Printf("eNetCmd.SV_Editor_SelectionChanged received ({0}, inst count: {1}).", c.Buffer.Length, count);

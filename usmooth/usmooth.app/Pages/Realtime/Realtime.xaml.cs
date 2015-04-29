@@ -70,7 +70,7 @@ namespace usmooth.app.Pages
         }
         public void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (!AppNetManager.Instance.IsConnected)
+            if (!NetManager.Instance.IsConnected)
             {
                 if (ModernDialog.ShowMessage("usmooth is [b]offline[/b], connect to a running game first.", "offline", MessageBoxButton.OK) == MessageBoxResult.OK)
                 {
@@ -148,7 +148,7 @@ namespace usmooth.app.Pages
             if (mo.Name == null)    // is in initialization process
                 return;
 
-            AppNetManager.Instance.ExecuteCmd(string.Format("{0} {1}", ((bool)cb.IsChecked ? "showmesh" : "hidemesh"), mo.InstID));
+            NetManager.Instance.ExecuteCmd(string.Format("{0} {1}", ((bool)cb.IsChecked ? "showmesh" : "hidemesh"), mo.InstID));
         }
     }
 }

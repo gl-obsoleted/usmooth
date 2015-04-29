@@ -25,7 +25,7 @@ namespace usmooth.app.Pages
     {
         public Home()
         {
-            if (AppNetManager.Instance == null)
+            if (NetManager.Instance == null)
                 throw new Exception();
 
             InitializeComponent();
@@ -46,14 +46,15 @@ namespace usmooth.app.Pages
             UsLogging.Receivers += Impl_PrintLogToWnd;
             UsLogging.Printf("usmooth is initialized successfully.");
 
-            AppNetManager.Instance.LogicallyConnected += OnLogicallyConnected;
-            AppNetManager.Instance.LogicallyDisconnected += OnLogicallyDisconnected;
+            NetManager.Instance.LogicallyConnected += OnLogicallyConnected;
+            NetManager.Instance.LogicallyDisconnected += OnLogicallyDisconnected;
         }
 
         private void OnLogicallyConnected(object sender, EventArgs e)
         {
             this.Dispatcher.Invoke(new Action(() =>
             {
+                cb_targetIP.IsEnabled = false;
                 bt_connect.IsEnabled = false;
                 bt_disconnect.IsEnabled = true;
 
@@ -72,6 +73,7 @@ namespace usmooth.app.Pages
         {
             this.Dispatcher.Invoke(new Action(() =>
             {
+                cb_targetIP.IsEnabled = true;
                 bt_connect.IsEnabled = true;
                 bt_disconnect.IsEnabled = false;
             }));
@@ -79,19 +81,20 @@ namespace usmooth.app.Pages
 
         private void bt_connect_Click(object sender, RoutedEventArgs e)
         {
-            if (AppNetManager.Instance == null)
+            if (NetManager.Instance == null)
             {
                 UsLogging.Printf(LogWndOpt.Bold, "NetManager not available, connecting failed.");
                 return;
             }
 
-            if (!AppNetManager.Instance.Connect(cb_targetIP.Text))
+            if (!NetManager.Instance.Connect(cb_targetIP.Text))
             {
                 UsLogging.Printf(LogWndOpt.Bold, "connecting failed.");
                 return;
             }
 
             // temporarily disable all connection buttons to prevent double submitting
+            cb_targetIP.IsEnabled = false;
             bt_connect.IsEnabled = false;
             bt_disconnect.IsEnabled = false;
         }
@@ -112,6 +115,9 @@ namespace usmooth.app.Pages
                         break;
                     case LogWndOpt.Error:
                         content = string.Format("{0} [color=Red]{1}[/color]\r\n", time, text);
+                        break;
+                    case LogWndOpt.GameLog:
+                        content = string.Format("{0} ([color=SeaGreen]{1}[/color]) {2}\r\n", time, cb_targetIP.Text, text);
                         break;
                     default:
                         break;
@@ -136,14 +142,14 @@ namespace usmooth.app.Pages
 
         private void ExecInputCmd()
         {
-            AppNetManager.Instance.ExecuteCmd(tb_cmdbox.Text);
+            NetManager.Instance.ExecuteCmd(tb_cmdbox.Text);
             tb_cmdbox.Clear();
         }
 
         private void bt_disconnect_Click(object sender, RoutedEventArgs e)
         {
             UsLogging.Printf(LogWndOpt.Error, "[b]disconnecting manually...[/b]");
-            AppNetManager.Instance.Disconnect();
+            NetManager.Instance.Disconnect();
         }
     }
 }

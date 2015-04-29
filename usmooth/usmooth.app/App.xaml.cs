@@ -19,12 +19,12 @@ namespace usmooth.app
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            AppNetManager.Instance = new AppNetManager();
+            NetManager.Instance = new NetManager();
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
-            AppNetManager.Instance.Dispose();
+            NetManager.Instance.Dispose();
         }
     }
 }
