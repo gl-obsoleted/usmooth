@@ -62,6 +62,9 @@ public class UsCmd
 	public string ReadString()
 	{
 		short strLen = ReadInt16();
+        if (strLen == 0)
+            return "";
+
 		if (_readOffset + (int)strLen > _buffer.Length)
 			throw new UsCmdIOError(UsCmdIOErrorCode.ReadOverflow);
 		
@@ -88,12 +91,19 @@ public class UsCmd
 
 	public void WriteStringStripped(string value, short stripLen)
 	{
-		string stripped = value.Length > stripLen ? value.Substring(0, stripLen) : value;
-		WritePrimitive ((short)stripped.Length);
+        if (string.IsNullOrEmpty(value))
+        {
+            WritePrimitive((short)0);
+        }
+        else
+        {
+            string stripped = value.Length > stripLen ? value.Substring(0, stripLen) : value;
+            WritePrimitive((short)stripped.Length);
 
-		byte[] byteArray = Encoding.Default.GetBytes(stripped);
-		byteArray.CopyTo(_buffer, _writeOffset);
-		_writeOffset += stripped.Length;
+            byte[] byteArray = Encoding.Default.GetBytes(stripped);
+            byteArray.CopyTo(_buffer, _writeOffset);
+            _writeOffset += stripped.Length;
+        }
 	}
 	
 	public eNetCmd ReadNetCmd() 			{ return (eNetCmd)ReadInt16(); }

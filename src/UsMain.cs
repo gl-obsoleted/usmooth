@@ -12,10 +12,13 @@ public class UsMain : MonoBehaviour {
 	private long _tickNetLast = 0;
 	private long _tickNetInterval = 200;
 
-	void Start () {
+	void Start () 
+    {
 		Application.runInBackground = true;
 
 		UsNet.Instance = new UsNet(_serverPort);
+
+        UsvStart.Instance = new UsvStart(UsNet.Instance);
 
 		UsMainHandlers.Instance.RegisterHandlers (UsNet.Instance.CmdExecutor);
 	}
@@ -25,6 +28,8 @@ public class UsMain : MonoBehaviour {
 
 		if (_currentTimeInMilliseconds - _tickNetLast > _tickNetInterval)
 		{
+            Debug.LogWarning(string.Format("warning t-{0}", _currentTimeInMilliseconds));
+
 			if (UsNet.Instance != null) {
 				UsNet.Instance.Update ();
 			}

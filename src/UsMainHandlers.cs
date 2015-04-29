@@ -4,7 +4,7 @@ using System;
 using usmooth.common;
 using System.Collections.Generic;
 
-public class UsMainHandlers : MonoBehaviour {
+public class UsMainHandlers {
 	public static UsMainHandlers Instance = new UsMainHandlers();
 
 	public void RegisterHandlers(UsCmdParsing exec) {

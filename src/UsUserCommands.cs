@@ -10,7 +10,7 @@ public enum eUserCmdResult
 	Error,
 }
 
-public class UsUserCommands : MonoBehaviour {
+public class UsUserCommands {
 	public static UsUserCommands Instance = new UsUserCommands();
 
 	public KeyValuePair<eUserCmdResult, string> Execute(string cmd) {
