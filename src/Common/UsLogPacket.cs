@@ -65,7 +65,7 @@ public class UsLogPacket
         string ret = string.Format("{0} {1} {2}", GetTimeDecorated(), GetLogTypeDecorated(), Content);
         if (!string.IsNullOrEmpty(Callstack))
         {
-            ret += string.Format("\n{0}", Callstack);
+            ret += string.Format("\n[color=DarkGray]{0}[/color]", Callstack);
         }
         return ret;
     }
