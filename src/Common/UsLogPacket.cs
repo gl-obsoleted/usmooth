@@ -27,10 +27,17 @@ public class UsLogPacket
 
     // time info
     public float RealtimeSinceStartup;
-    public float Time;
 
     // debugging info
     public string Callstack;
+
+    public UsLogPacket(UsCmd c)
+    {
+        LogType = (UsLogType)c.ReadInt32();
+        Content = c.ReadString();
+        RealtimeSinceStartup = c.ReadFloat();
+        Callstack = c.ReadString();
+    }
 
     public UsCmd CreatePacket()
     {
@@ -39,27 +46,17 @@ public class UsLogPacket
         c.WriteInt32((int)LogType);
         c.WriteStringStripped(Content, MAX_CONTENT_LEN);
         c.WriteFloat(RealtimeSinceStartup);
-        c.WriteFloat(Time);
         c.WriteStringStripped(Callstack, MAX_CALLSTACK_LEN);
         return c;
     }
 
     public string Print()
     {
-        string ret = string.Format("[usl] (rt-{0}, t-{1}) [{2}] {3}", RealtimeSinceStartup, Time, LogType, Content);
+        string ret = string.Format("[color=DarkSeaGreen]{0:0.00}[/color] [color=LightGray]{1}[/color] {2}", RealtimeSinceStartup, LogType, Content);
         if (!string.IsNullOrEmpty(Callstack))
         {
             ret += string.Format("\n{0}", Callstack);
         }
         return ret;
-    }
-
-    public void LoadPacket(UsCmd c)
-    {
-        LogType = (UsLogType)c.ReadInt32();
-        Content = c.ReadString();
-        RealtimeSinceStartup = c.ReadFloat();
-        Time = c.ReadFloat();
-        Callstack = c.ReadString();
     }
 }
