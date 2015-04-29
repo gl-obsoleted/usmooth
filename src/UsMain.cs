@@ -28,7 +28,7 @@ public class UsMain : MonoBehaviour {
 
 		if (_currentTimeInMilliseconds - _tickNetLast > _tickNetInterval)
 		{
-            Debug.LogWarning(string.Format("warning t-{0}", _currentTimeInMilliseconds));
+            Debug.LogWarning(string.Format("warning r-{0:0.00}", Time.realtimeSinceStartup));
 
 			if (UsNet.Instance != null) {
 				UsNet.Instance.Update ();

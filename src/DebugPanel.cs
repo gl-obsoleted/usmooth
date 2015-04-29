@@ -17,7 +17,7 @@ public class DebugPanel : MonoBehaviour {
     int m_UpdateCount = 0;
 
     bool m_ShowDebugPanel = false;
-    GlowEffect m_GlowEffectScript;
+    //GlowEffect m_GlowEffectScript;
 
     //---------------------------------------------------------------------------
     // Detail info
@@ -37,8 +37,8 @@ public class DebugPanel : MonoBehaviour {
     ////////////////////////////////////////////////////////////////////////////
     // Use this for initialization
     void Start() {
-        if (Camera.main)
-            m_GlowEffectScript = Camera.main.GetComponent<GlowEffect>();
+        //if (Camera.main)
+        //    m_GlowEffectScript = Camera.main.GetComponent<GlowEffect>();
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -163,14 +163,14 @@ public class DebugPanel : MonoBehaviour {
         }
         GUILayout.EndHorizontal();
 
-        GUILayout.BeginVertical();
-        if (m_GlowEffectScript)
-            m_GlowEffectScript.enabled = GUILayout.Toggle(m_GlowEffectScript.enabled, "Glow Effect");
-        GUILayout.EndVertical();
+        //GUILayout.BeginVertical();
+        //if (m_GlowEffectScript)
+        //    m_GlowEffectScript.enabled = GUILayout.Toggle(m_GlowEffectScript.enabled, "Glow Effect");
+        //GUILayout.EndVertical();
 
-        GUILayout.BeginVertical();
-        GUILayout.Label("编译时间：" + BuildInformation.GetBuildTimestamp(), LabelMinHeight);
-        GUILayout.EndVertical();
+        //GUILayout.BeginVertical();
+        //GUILayout.Label("编译时间：" + BuildInformation.GetBuildTimestamp(), LabelMinHeight);
+        //GUILayout.EndVertical();
 
         if (m_ShowDetailInfo == false && m_UpdateStatisticsCount > 0)
         {
