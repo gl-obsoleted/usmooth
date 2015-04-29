@@ -21,7 +21,6 @@ public class UsLogging : MonoBehaviour
 
         UsLogPacket pkt = new UsLogPacket();
         pkt.RealtimeSinceStartup = Time.realtimeSinceStartup;
-        pkt.Time = Time.time;
         pkt.Content = condition;
         pkt.LogType = (UsLogType)type;
 

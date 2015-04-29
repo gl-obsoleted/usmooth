@@ -31,6 +31,11 @@ public class UsLogPacket
     // debugging info
     public string Callstack;
 
+    public UsLogPacket()
+    {
+
+    }
+
     public UsLogPacket(UsCmd c)
     {
         LogType = (UsLogType)c.ReadInt32();
