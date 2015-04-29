@@ -60,7 +60,7 @@ namespace usmooth.common
         Info,
         Bold,
         Error,
-        ServerLog,
+        GameLog,
     }
 
     public delegate void LoggingHandler(LogWndOpt opt, string text);

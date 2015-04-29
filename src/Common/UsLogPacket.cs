@@ -14,16 +14,28 @@ public enum UsLogType
 
 public class UsLogPacket
 {
+    public static List<UsLogType> s_boldTypes = new List<UsLogType>() {
+        UsLogType.Error,
+        UsLogType.Assert,
+        UsLogType.Exception,
+    };
+
+    public static Dictionary<UsLogType, string> s_type2color = new Dictionary<UsLogType, string>() {
+        { UsLogType.Error,      "Red" },
+        { UsLogType.Assert,     "Orange" },
+        { UsLogType.Warning,    "Gold" },
+        { UsLogType.Log,        "DarkGray" },
+        { UsLogType.Exception,  "Purple" },
+    };
+
+    public static string s_gameLogTimeColor = "DarkSeaGreen";
+
     public const int MAX_CONTENT_LEN = 1024;
     public const int MAX_CALLSTACK_LEN = 1024;
 
     // main info
     public UsLogType LogType;
     public string Content;
-
-    // thread info
-    //public int ThreadID;
-    //public string ThreadName;
 
     // time info
     public float RealtimeSinceStartup;
@@ -52,10 +64,25 @@ public class UsLogPacket
 
     public string Print()
     {
-        string ret = string.Format("[color=DarkSeaGreen]{0:0.00}[/color] [color=LightGray]{1}[/color] {2}", RealtimeSinceStartup, LogType, Content);
+        string ret = string.Format("{0} {1} {2}", GetTimeDecorated(), GetLogTypeDecorated(), Content);
         if (!string.IsNullOrEmpty(Callstack))
         {
             ret += string.Format("\n{0}", Callstack);
+        }
+        return ret;
+    }
+
+    private string GetTimeDecorated()
+    {
+        return string.Format("[color={0}]{1:0.00}[/color]", s_gameLogTimeColor, RealtimeSinceStartup);
+    }
+
+    private string GetLogTypeDecorated()
+    {
+        string ret = string.Format("[color={0}]{1}[/color]", s_type2color[LogType], LogType);
+        if (s_boldTypes.Contains(LogType))
+        {
+            ret = string.Format("[b]{0}[/b]", ret);
         }
         return ret;
     }
