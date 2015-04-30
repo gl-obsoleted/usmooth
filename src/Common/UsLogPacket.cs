@@ -46,7 +46,7 @@ public class UsLogPacket
 
     public UsLogPacket(UsCmd c)
     {
-        SeqID = (ushort)c.ReadPrimitive<ushort>();
+        SeqID = (ushort)c.ReadInt16();
         LogType = (UsLogType)c.ReadInt32();
         Content = c.ReadString();
         RealtimeSinceStartup = c.ReadFloat();
@@ -57,7 +57,7 @@ public class UsLogPacket
     {
         UsCmd c = new UsCmd();
         c.WriteNetCmd(eNetCmd.SV_App_Logging);
-        c.WritePrimitive(SeqID);
+        c.WriteInt16((short)SeqID);
         c.WriteInt32((int)LogType);
         c.WriteStringStripped(Content, MAX_CONTENT_LEN);
         c.WriteFloat(RealtimeSinceStartup);
