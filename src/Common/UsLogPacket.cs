@@ -15,15 +15,6 @@ public enum UsLogType
 public class UsLogPacket
 {
     #region Constants
-    public static Dictionary<UsLogType, string> s_type2color = new Dictionary<UsLogType, string>() {
-        { UsLogType.Error,      "Red" },
-        { UsLogType.Assert,     "Orange" },
-        { UsLogType.Warning,    "Orange" },
-        { UsLogType.Exception,  "Purple" },
-    };
-
-    public static string s_gameLogTimeColor = "DarkSeaGreen";
-
     public const int MAX_CONTENT_LEN = 1024;
     public const int MAX_CALLSTACK_LEN = 1024;
     #endregion
@@ -63,36 +54,5 @@ public class UsLogPacket
         c.WriteFloat(RealtimeSinceStartup);
         c.WriteStringStripped(Callstack, MAX_CALLSTACK_LEN);
         return c;
-    }
-
-    public string Print()
-    {
-        string ret = string.Format("{0} {1} {2}", GetTimeDecorated(), GetLogTypeDecorated(), Content);
-        if (!string.IsNullOrEmpty(Callstack))
-        {
-            ret += string.Format("\n[color=DarkGray]{0}[/color]", Callstack);
-        }
-        return ret;
-    }
-
-    private string GetTimeDecorated()
-    {
-        return string.Format("[color={0}]{1:0.00}[/color]", s_gameLogTimeColor, RealtimeSinceStartup);
-    }
-
-    private string GetLogTypeDecorated()
-    {
-        switch (LogType)
-        {
-            case UsLogType.Error:
-            case UsLogType.Assert:
-            case UsLogType.Warning:
-            case UsLogType.Exception:
-                return string.Format("[b][color={0}]({1})[/color][/b]", s_type2color[LogType], LogType);
-
-            case UsLogType.Log:
-            default:
-                return "";
-        }
     }
 }
