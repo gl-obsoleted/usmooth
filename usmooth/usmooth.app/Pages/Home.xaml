@@ -38,12 +38,18 @@
         <ScrollViewer Grid.Row="3">
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
-
-                <TextBox x:Name="tb_cmdbox" Height="25" Width="Auto" KeyDown="tb_cmdbox_KeyDown" />
-                <Button Grid.Column="1" x:Name="bt_exec_cmd" Height="25" Content="Execute" Margin="20,0,0,0" Click="bt_exec_cmd_Click" />
+                <Expander x:Name="_logSettingsExpander" ExpandDirection="Right" HorizontalAlignment="Center" VerticalAlignment="Center" Height="25" IsExpanded="True" Cursor="" FlowDirection="RightToLeft" ToolTip="Logging Options">
+                    <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight">
+                        <ComboBox x:Name="cb_logLevel" Margin="10,0" ToolTip="Logging Level (Higher level means more output)" SelectionChanged="cb_logLevel_SelectionChanged" />
+                        <ComboBox x:Name="cb_logCallstackLevel" Margin="10,0" ToolTip="Callstack Logging Level" SelectionChanged="cb_logCallstackLevel_SelectionChanged" />
+                    </StackPanel>
+                </Expander>
+                <TextBox Grid.Column="1" x:Name="tb_cmdbox" Height="25" Width="Auto" KeyDown="tb_cmdbox_KeyDown" Margin="20,0,0,0" GotFocus="tb_cmdbox_GotFocus" />
+                <Button Grid.Column="2" x:Name="bt_exec_cmd" Height="25" Content="Execute" Margin="20,0,0,0" Click="bt_exec_cmd_Click" />
             </Grid>
         </ScrollViewer>
     </Grid>

@@ -66,17 +66,75 @@ namespace usmooth.app
         public static string s_gameLogTimeColor = "DarkSeaGreen";
         #endregion
 
+        #region Control-Vars
+
+        // (later) these control-vars could be sent across the net
+        // to prevent the game from emitting in the first place (to lower the network usage)
+
+        public enum eLogLevel   // based on Unity logging categories 
+        {
+            Lv0_Silent,
+            Lv1_ErrorsAndExceptions,
+            Lv2_WarningsAndAsserts,
+            Lv3_Logs,
+        }
+
+        public enum eLogCallstackLevel
+        {
+            Lv0_Hidden,
+            Lv1_ShownOnExceptionsOnly,
+            Lv2_ShownIfPossible,
+        }
+
+        public static eLogLevel s_logLevel = eLogLevel.Lv3_Logs;
+        public static eLogCallstackLevel s_logCallstackLevel = eLogCallstackLevel.Lv2_ShownIfPossible;
+        #endregion
+
+        private static bool IsLogFiltered(UsLogType type)
+        {
+            switch (s_logLevel)
+            {
+                case eLogLevel.Lv0_Silent:
+                    return true;
+                case eLogLevel.Lv1_ErrorsAndExceptions:
+                    return type == UsLogType.Assert || type == UsLogType.Warning || type == UsLogType.Log;
+                case eLogLevel.Lv2_WarningsAndAsserts:
+                    return type == UsLogType.Log;
+
+                case eLogLevel.Lv3_Logs:
+                default:
+                    return false;
+            }
+        }
+
+        private static bool IsCallstackFiltered(UsLogType type)
+        {
+            switch (s_logCallstackLevel)
+            {
+                case eLogCallstackLevel.Lv0_Hidden:
+                    return true;
+                case eLogCallstackLevel.Lv1_ShownOnExceptionsOnly:
+                    return type != UsLogType.Exception;
+                case eLogCallstackLevel.Lv2_ShownIfPossible:
+                    return false;
+
+                default:
+                    return true;
+            }
+        }
+
         public static void Print(UsLogPacket packet)
         {
-            string timeStr = string.Format("[color={0}]{1:0.00}({2})[/color]", s_gameLogTimeColor, packet.RealtimeSinceStartup, packet.SeqID);
+            if (IsLogFiltered(packet.LogType))
+                return;
 
             string logTypeStr = "";
             switch (packet.LogType)
             {
                 case UsLogType.Error:
+                case UsLogType.Exception:
                 case UsLogType.Assert:
                 case UsLogType.Warning:
-                case UsLogType.Exception:
                     logTypeStr = string.Format("[b][color={0}]({1})[/color][/b]", s_type2color[packet.LogType], packet.LogType);
                     break;
 
@@ -85,8 +143,11 @@ namespace usmooth.app
                     break;
             }
 
+            string timeStr = string.Format("[color={0}]{1:0.00}({2})[/color]", s_gameLogTimeColor, packet.RealtimeSinceStartup, packet.SeqID);
+
             string ret = string.Format("{0} {1} {2}", timeStr, logTypeStr, packet.Content);
-            if (!string.IsNullOrEmpty(packet.Callstack))
+
+            if (!IsCallstackFiltered(packet.LogType) && !string.IsNullOrEmpty(packet.Callstack))
             {
                 ret += string.Format("\n[color=DarkGray]{0}[/color]", packet.Callstack);
             }

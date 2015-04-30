@@ -43,6 +43,11 @@ namespace usmooth.app.Pages
 
             bb_logging.BBCode = string.Empty;
 
+            cb_logLevel.ItemsSource = Enum.GetValues(typeof(UsNetLogging.eLogLevel)).Cast<UsNetLogging.eLogLevel>();
+            cb_logLevel.SelectedItem = UsNetLogging.s_logLevel;
+            cb_logCallstackLevel.ItemsSource = Enum.GetValues(typeof(UsNetLogging.eLogCallstackLevel)).Cast<UsNetLogging.eLogCallstackLevel>();
+            cb_logCallstackLevel.SelectedItem = UsNetLogging.s_logCallstackLevel;
+
             UsLogging.Receivers += Impl_PrintLogToWnd;
             UsLogging.Printf("usmooth is initialized successfully.");
 
@@ -150,6 +155,21 @@ namespace usmooth.app.Pages
         {
             UsLogging.Printf(LogWndOpt.Error, "[b]disconnecting manually...[/b]");
             NetManager.Instance.Disconnect();
+        }
+
+        private void tb_cmdbox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            _logSettingsExpander.IsExpanded = false;
+        }
+
+        private void cb_logLevel_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UsNetLogging.s_logLevel = (UsNetLogging.eLogLevel)cb_logLevel.SelectedItem;
+        }
+
+        private void cb_logCallstackLevel_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UsNetLogging.s_logCallstackLevel = (UsNetLogging.eLogCallstackLevel)cb_logCallstackLevel.SelectedItem;
         }
     }
 }
