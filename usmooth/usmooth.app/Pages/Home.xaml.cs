@@ -116,7 +116,7 @@ namespace usmooth.app.Pages
                     case LogWndOpt.Error:
                         content = string.Format("{0} [color=Red]{1}[/color]\r\n", time, text);
                         break;
-                    case LogWndOpt.GameLog:
+                    case LogWndOpt.NetLog:
                         content = string.Format("{0} ([color=SeaGreen]{1}[/color]) {2}\r\n", time, cb_targetIP.Text, text);
                         break;
                     default:

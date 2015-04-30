@@ -135,7 +135,7 @@ namespace usmooth.app
         private bool Handle_ServerLogging(eNetCmd cmd, UsCmd c)
         {
             UsLogPacket pkt = new UsLogPacket(c);
-            UsLogging.Printf(LogWndOpt.GameLog, pkt.Print());
+            UsNetLogging.Print(pkt);
             return true;
         }
 

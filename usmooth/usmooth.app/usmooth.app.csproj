@@ -71,30 +71,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="..\..\usmooth_for_unity\src\Common\UsCmd.cs">
-      <Link>Common\UsCmd.cs</Link>
-    </Compile>
-    <Compile Include="..\..\usmooth_for_unity\src\Common\UsCmdParsing.cs">
-      <Link>Common\UsCmdParsing.cs</Link>
-    </Compile>
-    <Compile Include="..\..\usmooth_for_unity\src\Common\UsCmdUtil.cs">
-      <Link>Common\UsCmdUtil.cs</Link>
-    </Compile>
-    <Compile Include="..\..\usmooth_for_unity\src\Common\UsFrameData.cs">
-      <Link>Common\UsFrameData.cs</Link>
-    </Compile>
-    <Compile Include="..\..\usmooth_for_unity\src\Common\UsGeneric.cs">
-      <Link>Common\UsGeneric.cs</Link>
-    </Compile>
-    <Compile Include="..\..\usmooth_for_unity\src\Common\UsLogPacket.cs">
-      <Link>Common\UsLogPacket.cs</Link>
-    </Compile>
-    <Compile Include="..\..\usmooth_for_unity\src\Common\UsProtocol.cs">
-      <Link>Common\UsProtocol.cs</Link>
-    </Compile>
-    <Compile Include="..\..\usmooth_for_unity\src\Common\UsUtil.cs">
-      <Link>Common\UsUtil.cs</Link>
-    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -117,6 +93,7 @@
     </Compile>
     <Compile Include="Net\Impl\NetClient.cs" />
     <Compile Include="Pages\Realtime\DataGridUtil.cs" />
+    <Compile Include="Core\UsLoggingUtil.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -171,6 +148,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\usmooth.common\usmooth.common.csproj">
+      <Project>{fd3bfa29-031d-4cd9-b82b-653519423735}</Project>
+      <Name>usmooth.common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
