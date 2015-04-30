@@ -3,7 +3,7 @@
 - [__Download (v0.2a)__](https://github.com/SeaSunOpenSource/usmooth/releases/tag/0.2a)  
 - [__Tutorial__](https://github.com/SeaSunOpenSource/usmooth/wiki/tutorial)
 - [Release Notes](/release_notes.md)
-- [Roadmap](https://github.com/SeaSunOpenSource/usmooth/milestones/0.2)
+- [Roadmap](https://github.com/SeaSunOpenSource/usmooth/issues)
 
 ## 设计目标
 
