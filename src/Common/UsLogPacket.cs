@@ -14,6 +14,7 @@ public enum UsLogType
 
 public class UsLogPacket
 {
+    #region Constants
     public static Dictionary<UsLogType, string> s_type2color = new Dictionary<UsLogType, string>() {
         { UsLogType.Error,      "Red" },
         { UsLogType.Assert,     "Orange" },
@@ -25,8 +26,10 @@ public class UsLogPacket
 
     public const int MAX_CONTENT_LEN = 1024;
     public const int MAX_CALLSTACK_LEN = 1024;
+    #endregion
 
     // main info
+    public ushort SeqID;
     public UsLogType LogType;
     public string Content;
 
@@ -36,13 +39,14 @@ public class UsLogPacket
     // debugging info
     public string Callstack;
 
-    public UsLogPacket()
+    public UsLogPacket() 
     {
-
+        SeqID = ushort.MaxValue;
     }
 
     public UsLogPacket(UsCmd c)
     {
+        SeqID = (ushort)c.ReadPrimitive<ushort>();
         LogType = (UsLogType)c.ReadInt32();
         Content = c.ReadString();
         RealtimeSinceStartup = c.ReadFloat();
@@ -53,6 +57,7 @@ public class UsLogPacket
     {
         UsCmd c = new UsCmd();
         c.WriteNetCmd(eNetCmd.SV_App_Logging);
+        c.WritePrimitive(SeqID);
         c.WriteInt32((int)LogType);
         c.WriteStringStripped(Content, MAX_CONTENT_LEN);
         c.WriteFloat(RealtimeSinceStartup);

@@ -10,7 +10,7 @@ public class MeshLut {
 		}
 
 		// returns false if renderer is not available
-		if (go.renderer == null) {
+		if (go.GetComponent<Renderer>() == null) {
 			return false;
 		}
 		
@@ -24,8 +24,8 @@ public class MeshLut {
 		md._instID = go.GetInstanceID ();
 		md._vertCount = mf.mesh.vertexCount;
 		md._triCount = mf.mesh.triangles.Length / 3;
-		md._materialCount = go.renderer.sharedMaterials.Length;
-		md._boundSize = go.renderer.bounds.size.magnitude;
+		md._materialCount = go.GetComponent<Renderer>().sharedMaterials.Length;
+		md._boundSize = go.GetComponent<Renderer>().bounds.size.magnitude;
 		_lut.Add (md._instID, md);
 		return true;
 	}
