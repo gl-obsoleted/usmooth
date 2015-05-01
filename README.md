@@ -1,6 +1,4 @@
-﻿# usmooth
-
-- status: ![status](https://ci.appveyor.com/api/projects/status/github/SeaSunOpenSource/usmooth)
+﻿# usmooth ![status](https://ci.appveyor.com/api/projects/status/github/SeaSunOpenSource/usmooth)  
 
 - [__Download (v0.2a)__](https://github.com/SeaSunOpenSource/usmooth/releases/tag/0.2a)  
 - [__Tutorial__](https://github.com/SeaSunOpenSource/usmooth/wiki/tutorial)
