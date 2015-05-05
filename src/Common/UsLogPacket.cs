@@ -40,19 +40,13 @@ public enum UsLogType
 
 public class UsLogPacket
 {
-    public static Dictionary<UsLogType, string> s_type2color = new Dictionary<UsLogType, string>() {
-        { UsLogType.Error,      "Red" },
-        { UsLogType.Assert,     "Orange" },
-        { UsLogType.Warning,    "Orange" },
-        { UsLogType.Exception,  "Purple" },
-    };
-
-    public static string s_gameLogTimeColor = "DarkSeaGreen";
-
+    #region Constants
     public const int MAX_CONTENT_LEN = 1024;
     public const int MAX_CALLSTACK_LEN = 1024;
+    #endregion
 
     // main info
+    public ushort SeqID;
     public UsLogType LogType;
     public string Content;
 
@@ -62,13 +56,14 @@ public class UsLogPacket
     // debugging info
     public string Callstack;
 
-    public UsLogPacket()
+    public UsLogPacket() 
     {
-
+        SeqID = ushort.MaxValue;
     }
 
     public UsLogPacket(UsCmd c)
     {
+        SeqID = (ushort)c.ReadInt16();
         LogType = (UsLogType)c.ReadInt32();
         Content = c.ReadString();
         RealtimeSinceStartup = c.ReadFloat();
@@ -79,41 +74,11 @@ public class UsLogPacket
     {
         UsCmd c = new UsCmd();
         c.WriteNetCmd(eNetCmd.SV_App_Logging);
+        c.WriteInt16((short)SeqID);
         c.WriteInt32((int)LogType);
         c.WriteStringStripped(Content, MAX_CONTENT_LEN);
         c.WriteFloat(RealtimeSinceStartup);
         c.WriteStringStripped(Callstack, MAX_CALLSTACK_LEN);
         return c;
-    }
-
-    public string Print()
-    {
-        string ret = string.Format("{0} {1} {2}", GetTimeDecorated(), GetLogTypeDecorated(), Content);
-        if (!string.IsNullOrEmpty(Callstack))
-        {
-            ret += string.Format("\n[color=DarkGray]{0}[/color]", Callstack);
-        }
-        return ret;
-    }
-
-    private string GetTimeDecorated()
-    {
-        return string.Format("[color={0}]{1:0.00}[/color]", s_gameLogTimeColor, RealtimeSinceStartup);
-    }
-
-    private string GetLogTypeDecorated()
-    {
-        switch (LogType)
-        {
-            case UsLogType.Error:
-            case UsLogType.Assert:
-            case UsLogType.Warning:
-            case UsLogType.Exception:
-                return string.Format("[b][color={0}]({1})[/color][/b]", s_type2color[LogType], LogType);
-
-            case UsLogType.Log:
-            default:
-                return "";
-        }
     }
 }

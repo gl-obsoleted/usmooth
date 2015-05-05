@@ -48,6 +48,7 @@ public class UsvLogging
             return;
 
         UsLogPacket pkt = new UsLogPacket();
+        pkt.SeqID = _seqID++;
         pkt.RealtimeSinceStartup = Time.realtimeSinceStartup;
         pkt.Content = condition;
         pkt.LogType = (UsLogType)type;
@@ -76,6 +77,7 @@ public class UsvLogging
     }
 
     private UsNet _net;
+    private ushort _seqID = 0;
     private int _assertCount = 0;
     private int _errorCount = 0;
     private int _exceptionCount = 0;

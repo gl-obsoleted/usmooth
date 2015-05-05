@@ -44,7 +44,7 @@ public class UsvStart
         }
 
         Logging = new UsvLogging(net);
-        Application.RegisterLogCallbackThreaded(Logging.OnLogReceived);
+        Application.logMessageReceivedThreaded += Logging.OnLogReceived;
 
         Console = new UsvConsole();
     }
