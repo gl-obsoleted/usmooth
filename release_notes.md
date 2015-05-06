@@ -1,7 +1,14 @@
 
 # Release Notes
 
-## v0.2a [2015-04-28] [下载页面](https://github.com/SeaSunOpenSource/usmooth/releases/tag/0.2a)
+## v0.2b [2015-05-06] [下载页面](https://github.com/SeaSunOpenSource/usmooth/releases/)
+
+- (new feature) 游戏内的所有 Log 输出至
+    - 设备的 Application.persistentDataPath 下的 log 目录，以日期为目录名，时间戳为文件名
+    - usmooth Log 窗口（提供过滤选项：根据 Log Level 和输出 Exception 控制）
+- (new feature) 支持 Unity 5
+
+## v0.2a [2015-04-28] 
 
 - (new feature) 可使用复选框单独控制任意一个 Mesh 是否渲染
 - (internal) 使用增量更新来降低监控数据的传输量，为后面实时刷新做性能准备
