@@ -83,7 +83,7 @@ public class UsvLogging : IDisposable
     private void RegisterCallback()
     {
 #if UNITY_5_0
-        Application.logMessageReceivedThreaded += Logging.OnLogReceived;
+        Application.logMessageReceivedThreaded += OnLogReceived;
 #else
         Application.RegisterLogCallbackThreaded(OnLogReceived);
 #endif

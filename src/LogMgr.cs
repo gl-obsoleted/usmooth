@@ -60,13 +60,13 @@ public class LogMgr
 	
 	public static void Assert( bool condition )
 	{
-		assert( condition, string.Empty, true );
+		Assert( condition, string.Empty, true );
 	}
 
 	
 	public static void Assert( bool condition, string assertString )
 	{
-		assert( condition, assertString, false );
+		Assert( condition, assertString, false );
 	}
 	
 	public static void Assert( bool condition, string assertString, bool pauseOnFail )
