@@ -25,11 +25,7 @@ SOFTWARE.
 */
 
 ﻿using UnityEngine;
-using System.Collections;
-using LostPolygon.GoodOldSockets.Examples;
 using System;
-using usmooth.common;
-using System.Collections.Generic;
 
 public class UsMain : MonoBehaviour {
 
