@@ -7,6 +7,9 @@
     - 设备的 Application.persistentDataPath 下的 log 目录，以日期为目录名，时间戳为文件名
     - usmooth Log 窗口（提供过滤选项：根据 Log Level 和输出 Exception 控制）
 - (new feature) 支持 Unity 5
+- (new feature) 同时支持 Unity Pro 和 Unity 普通版使用不同的 Sockets 实现
+    - Unity Pro 中直接使用 System.Net 
+    - Unity 普通版中使用 GoodOldSockets
 
 ## v0.2a [2015-04-28] 
 
