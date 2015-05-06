@@ -45,6 +45,8 @@ public class UsMainHandlers {
 	
 	private bool NetHandle_Handshake(eNetCmd cmd, UsCmd c) {
 		Debug.Log ("executing handshake.");
+        UsvStart.Instance.Logging.DumpCurrentState();
+
 		UsCmd reply = new UsCmd();
 		reply.WriteNetCmd(eNetCmd.SV_HandshakeResponse);
 		UsNet.Instance.SendCommand(reply);

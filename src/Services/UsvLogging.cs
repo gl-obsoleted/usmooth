@@ -27,10 +27,11 @@ SOFTWARE.
 using System;
 using System.IO;
 using UnityEngine;
+using usmooth.common;
 
-public class UsvLogging
+public class UsvLogging : IDisposable
 {
-    public UsvLogging(UsNet net)
+    public UsvLogging(UsNet net, bool logIntoFile)
     {
         if (net == null)
         {
@@ -39,9 +40,56 @@ public class UsvLogging
         }
          
         _net = net;
+
+        if (logIntoFile)
+        {
+            DateTime dt = DateTime.Now;
+
+            string logDir = SysUtil.CombinePaths(Application.persistentDataPath, "log", SysUtil.FormatDateAsFileNameString(dt));
+            Directory.CreateDirectory(logDir);
+
+            string logPath = Path.Combine(logDir, SysUtil.FormatTimeAsFileNameString(dt) + ".txt");
+
+            _logWriter = new FileInfo(logPath).CreateText();
+            _logWriter.AutoFlush = true;
+            _logPath = logPath;
+        }
+
+        RegisterCallback();
+
+        DumpCurrentState();
     }
 
-    public void OnLogReceived(string condition, string stackTrace, LogType type)
+    public void Dispose()
+    {
+        if (_logWriter != null)
+        {
+            _logWriter.Close();
+        }
+    }
+
+    public void DumpCurrentState()
+    {
+        if (_logWriter != null)
+        {
+            Debug.Log(string.Format("Log file opened successfully. ('{0}')", _logPath));
+        }
+        else
+        {
+            Debug.Log(string.Format("Log file is disabled. (check out 'Log Into File' in 'UsMain.cs')"));
+        }
+    }
+
+    private void RegisterCallback()
+    {
+#if UNITY_5_0
+        Application.logMessageReceivedThreaded += Logging.OnLogReceived;
+#else
+        Application.RegisterLogCallbackThreaded(OnLogReceived);
+#endif
+    }
+
+    private void OnLogReceived(string condition, string stackTrace, LogType type)
     {
         // do nothing if usmooth connection is not available (yet)
         if (_net == null)
@@ -73,10 +121,19 @@ public class UsvLogging
                 break;
         }
 
+        if (_logWriter != null)
+        {
+            _logWriter.WriteLine("{0:0.00} {1} {2}", pkt.RealtimeSinceStartup, pkt.LogType, pkt.Content);
+        }
+        
         _net.SendCommand(pkt.CreatePacket());
     }
 
     private UsNet _net;
+
+    private string _logPath;
+    private StreamWriter _logWriter;
+
     private ushort _seqID = 0;
     private int _assertCount = 0;
     private int _errorCount = 0;

@@ -33,6 +33,8 @@ using System.Collections.Generic;
 
 public class UsMain : MonoBehaviour {
 
+    public bool LogIntoFile = false;
+
 	private ushort _serverPort = 5555;
 	private long _currentTimeInMilliseconds = 0;
 	private long _tickNetLast = 0;
@@ -43,7 +45,7 @@ public class UsMain : MonoBehaviour {
 		Application.runInBackground = true;
 
 		UsNet.Instance = new UsNet(_serverPort);
-        UsvStart.Instance = new UsvStart(UsNet.Instance);
+        UsvStart.Instance = new UsvStart(new UsvStartParams() { net = UsNet.Instance, logIntoFile = LogIntoFile });
         
 		UsMainHandlers.Instance.RegisterHandlers (UsNet.Instance.CmdExecutor);
         UsUserCommands.Instance.RegisterHandlers(UsvStart.Instance.Console);
@@ -61,4 +63,10 @@ public class UsMain : MonoBehaviour {
 			_tickNetLast = _currentTimeInMilliseconds;
 		}
 	}
+
+    void OnApplicationQuit()
+    {
+        UsvStart.Instance.Logging.Dispose();
+        UsNet.Instance.Dispose();
+    }
 }

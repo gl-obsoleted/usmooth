@@ -28,6 +28,12 @@ using System;
 using System.IO;
 using UnityEngine;
 
+public class UsvStartParams
+{
+    public UsNet net;
+    public bool logIntoFile;
+}
+
 public class UsvStart
 {
     public static UsvStart Instance;
@@ -35,17 +41,17 @@ public class UsvStart
     public UsvLogging Logging;
     public UsvConsole Console;
 
-    public UsvStart(UsNet net)
+    public UsvStart(UsvStartParams sp)
     {
-        if (net == null)
+        if (sp.net == null)
         {
-            Debug.Break();
-            return;
+            throw new ArgumentNullException("UsvStartParams.net");
         }
 
-        Logging = new UsvLogging(net);
-        Application.logMessageReceivedThreaded += Logging.OnLogReceived;
+        Logging = new UsvLogging(sp.net, sp.logIntoFile);
 
         Console = new UsvConsole();
+
+        Debug.Log("usmooth services started successfully.");
     }
 }
