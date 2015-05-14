@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>usmooth.runtimeplugin</RootNamespace>
-    <AssemblyName>usmooth.runtimeplugin</AssemblyName>
+    <AssemblyName>usmooth</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -43,14 +43,38 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\usmooth.common\UsCmd.cs">
+      <Link>Common\UsCmd.cs</Link>
+    </Compile>
+    <Compile Include="..\usmooth.common\UsCmdParsing.cs">
+      <Link>Common\UsCmdParsing.cs</Link>
+    </Compile>
+    <Compile Include="..\usmooth.common\UsCmdUtil.cs">
+      <Link>Common\UsCmdUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\usmooth.common\UsFrameData.cs">
+      <Link>Common\UsFrameData.cs</Link>
+    </Compile>
+    <Compile Include="..\usmooth.common\UsGeneric.cs">
+      <Link>Common\UsGeneric.cs</Link>
+    </Compile>
+    <Compile Include="..\usmooth.common\UsLogPacket.cs">
+      <Link>Common\UsLogPacket.cs</Link>
+    </Compile>
+    <Compile Include="..\usmooth.common\UsProtocol.cs">
+      <Link>Common\UsProtocol.cs</Link>
+    </Compile>
+    <Compile Include="..\usmooth.common\UsUtil.cs">
+      <Link>Common\UsUtil.cs</Link>
+    </Compile>
     <Compile Include="DebugPanel.cs" />
     <Compile Include="PerfData\DataCollector.cs" />
     <Compile Include="PerfData\MeshLut.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UsMain.cs" />
     <Compile Include="UsvConsole.cs" />
     <Compile Include="UsAppInfo.cs" />
     <Compile Include="UsEditorNotifier.cs" />
-    <Compile Include="UsMain.cs" />
     <Compile Include="UsMainHandlers.cs" />
     <Compile Include="UsNet.cs" />
     <Compile Include="UsTextureUtil.cs" />
@@ -60,10 +84,6 @@
     <ProjectReference Include="..\..\external\ulog\ulog\ulog.csproj">
       <Project>{89f36330-2685-4a23-be90-f37c35590672}</Project>
       <Name>ulog</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\usmooth.common\usmooth.common.csproj">
-      <Project>{fd3bfa29-031d-4cd9-b82b-653519423735}</Project>
-      <Name>usmooth.common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

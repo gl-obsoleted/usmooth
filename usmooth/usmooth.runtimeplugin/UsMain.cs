@@ -29,10 +29,9 @@ using System;
 using GameCommon;
 using usmooth.common;
 
-public class UsMain : MonoBehaviour {
-
-    public bool LogRemotely = false;
-    public bool LogIntoFile = false;
+public class UsMain : IDisposable
+{
+    public const int MAX_CONTENT_LEN = 1024;
 
 	private ushort _serverPort = 5555;
 	private long _currentTimeInMilliseconds = 0;
@@ -40,7 +39,7 @@ public class UsMain : MonoBehaviour {
 	private long _tickNetInterval = 200;
     private LogService _logServ;
 
-	void Start () 
+    public UsMain(bool LogRemotely, bool LogIntoFile) 
     {
 		Application.runInBackground = true;
 
@@ -58,8 +57,6 @@ public class UsMain : MonoBehaviour {
         UsUserCommands.Instance.RegisterHandlers(UsvConsole.Instance);
 	}
 
-    public const int MAX_CONTENT_LEN = 1024;
-
     void LogTarget_Remotely(object sender, LogEventArgs args)
     {
         if (UsNet.Instance != null)
@@ -73,8 +70,9 @@ public class UsMain : MonoBehaviour {
             UsNet.Instance.SendCommand(c);
         }
     }
-	
-	void Update () {
+
+    public void Update()
+    {
 		_currentTimeInMilliseconds = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
 		if (_currentTimeInMilliseconds - _tickNetLast > _tickNetInterval)
@@ -87,7 +85,7 @@ public class UsMain : MonoBehaviour {
 		}
 	}
 
-    void OnApplicationQuit()
+    public void Dispose()
     {
         UsNet.Instance.Dispose();
         _logServ.Dispose();
