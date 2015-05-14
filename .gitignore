@@ -1,22 +1,19 @@
 *.suo
 *.meta
 
-/usmooth_client/bin
-/usmooth_client/packages
-/usmooth_client/usmooth.app/obj
-/usmooth_client/usmooth.app/x64
-/usmooth_client/usmooth.app/x86
-/usmooth_client/usmooth.common/obj
-/usmooth_client/usmooth.testserver/obj
-/usmooth_client/usmooth.testserver/x64
-/usmooth_client/usmooth.testserver/x86
+/usmooth/bin
+/usmooth/packages
+/usmooth/usmooth.app/obj
+/usmooth/usmooth.app/x64
+/usmooth/usmooth.app/x86
+/usmooth/usmooth.common/obj
+/usmooth/usmooth.editorplugin/bin
+/usmooth/usmooth.editorplugin/obj
+/usmooth/usmooth.runtimeplugin/bin
+/usmooth/usmooth.runtimeplugin/obj
 
 /usmooth_test_unity/Temp
 /usmooth_test_unity/Library
 /usmooth_test_unity/UnityVS.usmooth_test_unity.CSharp.csproj
 /usmooth_test_unity/UnityVS.usmooth_test_unity.sln
 /usmooth_test_unity/Assets/UnityVS/Editor
-/usmooth_client/usmooth.editorplugin/bin
-/usmooth_client/usmooth.editorplugin/obj
-/usmooth_client/usmooth.runtimeplugin/bin
-/usmooth_client/usmooth.runtimeplugin/obj
