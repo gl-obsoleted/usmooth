@@ -1,3 +1,6 @@
 [submodule "usmooth_for_unity"]
 	path = usmooth_for_unity
 	url = https://github.com/SeaSunOpenSource/usmooth_for_unity.git
+[submodule "external/docopt"]
+	path = external/docopt
+	url = https://github.com/docopt/docopt.git
