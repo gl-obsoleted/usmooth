@@ -16,5 +16,7 @@
 /usmooth_test_unity/UnityVS.usmooth_test_unity.CSharp.csproj
 /usmooth_test_unity/UnityVS.usmooth_test_unity.sln
 /usmooth_test_unity/Assets/UnityVS/Editor
+/usmooth_client/usmooth.editorplugin/bin
 /usmooth_client/usmooth.editorplugin/obj
+/usmooth_client/usmooth.runtimeplugin/bin
 /usmooth_client/usmooth.runtimeplugin/obj

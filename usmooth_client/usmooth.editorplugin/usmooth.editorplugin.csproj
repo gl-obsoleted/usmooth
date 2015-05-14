@@ -37,10 +37,26 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEditor">
+      <HintPath>D:\Program Files (x86)\Unity\Editor\Data\Managed\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>D:\Program Files (x86)\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Editor\UsWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\usmooth.common\usmooth.common.csproj">
+      <Project>{fd3bfa29-031d-4cd9-b82b-653519423735}</Project>
+      <Name>usmooth.common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\usmooth.runtimeplugin\usmooth.runtimeplugin.csproj">
+      <Project>{2dfae221-f19b-427d-92ee-c8330eaa3065}</Project>
+      <Name>usmooth.runtimeplugin</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

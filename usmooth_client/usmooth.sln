@@ -18,8 +18,15 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "usmooth.common", "usmooth.common\usmooth.common.csproj", "{FD3BFA29-031D-4CD9-B82B-653519423735}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "usmooth.runtimeplugin", "usmooth.runtimeplugin\usmooth.runtimeplugin.csproj", "{2DFAE221-F19B-427D-92EE-C8330EAA3065}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FD3BFA29-031D-4CD9-B82B-653519423735} = {FD3BFA29-031D-4CD9-B82B-653519423735}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "usmooth.editorplugin", "usmooth.editorplugin\usmooth.editorplugin.csproj", "{919D1A59-3C94-4283-952A-47A7E786550D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2DFAE221-F19B-427D-92EE-C8330EAA3065} = {2DFAE221-F19B-427D-92EE-C8330EAA3065}
+		{FD3BFA29-031D-4CD9-B82B-653519423735} = {FD3BFA29-031D-4CD9-B82B-653519423735}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
