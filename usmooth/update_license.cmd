@@ -1,1 +1,0 @@
-python update_license.py -d src -e .cs
