@@ -32,6 +32,8 @@ public delegate bool UsvConsoleCmdHandler(string[] args);
 
 public class UsvConsole
 {
+    public static UsvConsole Instance;
+
     public void RegisterHandler(string cmd, UsvConsoleCmdHandler handler)
     {
         _handlers[cmd.ToLower()] = handler;

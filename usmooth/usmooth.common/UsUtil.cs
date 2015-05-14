@@ -69,7 +69,7 @@ namespace usmooth.common
                 try
                 {
                     if (SyncInvoke != null && SyncInvoke.InvokeRequired)
-                        SyncInvoke.Invoke(md, new object[] { sender, e });
+                        SyncInvoke.Invoke(Caster, new object[] { sender, e });
                     else
                         Caster(sender, e);
                 }
@@ -79,29 +79,6 @@ namespace usmooth.common
                     Console.WriteLine("{0}:\n", ex.ToString());
                 }
             }
-        }
-    }
-
-    public class SysUtil
-    {
-        public static string CombinePaths(params string[] paths)
-        {
-            if (paths == null)
-            {
-                throw new ArgumentNullException("paths");
-            }
-
-            return paths.Aggregate(Path.Combine);
-        }
-
-        public static string FormatDateAsFileNameString(DateTime dt)
-        {
-            return string.Format("{0:0000}-{1:00}-{2:00}", dt.Year, dt.Month, dt.Day);
-        }
-
-        public static string FormatTimeAsFileNameString(DateTime dt)
-        {
-            return string.Format("{0:00}-{1:00}-{2:00}", dt.Hour, dt.Minute, dt.Second);
         }
     }
 }

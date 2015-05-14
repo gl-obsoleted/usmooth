@@ -47,9 +47,7 @@
     <Compile Include="PerfData\DataCollector.cs" />
     <Compile Include="PerfData\MeshLut.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\UsvConsole.cs" />
-    <Compile Include="Services\UsvLogging.cs" />
-    <Compile Include="Services\UsvStart.cs" />
+    <Compile Include="UsvConsole.cs" />
     <Compile Include="UsAppInfo.cs" />
     <Compile Include="UsEditorNotifier.cs" />
     <Compile Include="UsMain.cs" />
@@ -59,6 +57,10 @@
     <Compile Include="UsUserCommands.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\external\ulog\ulog\ulog.csproj">
+      <Project>{89f36330-2685-4a23-be90-f37c35590672}</Project>
+      <Name>ulog</Name>
+    </ProjectReference>
     <ProjectReference Include="..\usmooth.common\usmooth.common.csproj">
       <Project>{fd3bfa29-031d-4cd9-b82b-653519423735}</Project>
       <Name>usmooth.common</Name>

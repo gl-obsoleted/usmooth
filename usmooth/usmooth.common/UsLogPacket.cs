@@ -67,7 +67,6 @@ public class UsLogPacket
         LogType = (UsLogType)c.ReadInt32();
         Content = c.ReadString();
         RealtimeSinceStartup = c.ReadFloat();
-        Callstack = c.ReadString();
     }
 
     public UsCmd CreatePacket()
@@ -78,7 +77,6 @@ public class UsLogPacket
         c.WriteInt32((int)LogType);
         c.WriteStringStripped(Content, MAX_CONTENT_LEN);
         c.WriteFloat(RealtimeSinceStartup);
-        c.WriteStringStripped(Callstack, MAX_CALLSTACK_LEN);
         return c;
     }
 }

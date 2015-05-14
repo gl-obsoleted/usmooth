@@ -45,7 +45,6 @@ public class UsMainHandlers {
 	
 	private bool NetHandle_Handshake(eNetCmd cmd, UsCmd c) {
 		Debug.Log ("executing handshake.");
-        UsvStart.Instance.Logging.DumpCurrentState();
 
 		UsCmd reply = new UsCmd();
 		reply.WriteNetCmd(eNetCmd.SV_HandshakeResponse);
@@ -64,7 +63,7 @@ public class UsMainHandlers {
 		string read = c.ReadString();
 
         var result = new KeyValuePair<eUserCmdResult, string>(eUserCmdResult.OK, "");
-        if (!UsvStart.Instance.Console.ExecuteCommand(read))
+        if (!UsvConsole.Instance.ExecuteCommand(read))
             result = UsUserCommands.Instance.Execute(read);
 
 		UsCmd reply = new UsCmd();

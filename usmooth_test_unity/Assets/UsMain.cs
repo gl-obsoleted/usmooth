@@ -26,26 +26,53 @@ SOFTWARE.
 
 ﻿using UnityEngine;
 using System;
+using GameCommon;
+using usmooth.common;
 
 public class UsMain : MonoBehaviour {
 
+    public bool LogRemotely = false;
     public bool LogIntoFile = false;
 
 	private ushort _serverPort = 5555;
 	private long _currentTimeInMilliseconds = 0;
 	private long _tickNetLast = 0;
 	private long _tickNetInterval = 200;
+    private LogService _logServ;
 
 	void Start () 
     {
 		Application.runInBackground = true;
 
+        _logServ = new LogService(LogIntoFile);
+
+        if (LogRemotely)
+        {
+            _logServ.LogTargets += LogTarget_Remotely;
+        }
+
 		UsNet.Instance = new UsNet(_serverPort);
-        UsvStart.Instance = new UsvStart(new UsvStartParams() { net = UsNet.Instance, logIntoFile = LogIntoFile });
-        
-		UsMainHandlers.Instance.RegisterHandlers (UsNet.Instance.CmdExecutor);
-        UsUserCommands.Instance.RegisterHandlers(UsvStart.Instance.Console);
+        UsvConsole.Instance = new UsvConsole();
+
+		UsMainHandlers.Instance.RegisterHandlers(UsNet.Instance.CmdExecutor);
+        UsUserCommands.Instance.RegisterHandlers(UsvConsole.Instance);
 	}
+
+    public const int MAX_CONTENT_LEN = 1024;
+
+    void LogTarget_Remotely(object sender, LogEventArgs args)
+    {
+        if (UsNet.Instance != null)
+        {
+            UsCmd c = new UsCmd();
+            c.WriteNetCmd(eNetCmd.SV_App_Logging);
+            c.WriteInt16((short)args.SeqID);
+            c.WriteInt32((int)args.LogType);
+            c.WriteStringStripped(args.Content, MAX_CONTENT_LEN);
+            c.WriteFloat(args.Time);
+            UsNet.Instance.SendCommand(c);
+        }
+    }
 	
 	void Update () {
 		_currentTimeInMilliseconds = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
@@ -62,7 +89,7 @@ public class UsMain : MonoBehaviour {
 
     void OnApplicationQuit()
     {
-        UsvStart.Instance.Logging.Dispose();
         UsNet.Instance.Dispose();
+        _logServ.Dispose();
     }
 }

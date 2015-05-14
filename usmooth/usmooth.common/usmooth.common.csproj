@@ -50,6 +50,12 @@
     <Compile Include="UsProtocol.cs" />
     <Compile Include="UsUtil.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\external\ulog\ulog\ulog.csproj">
+      <Project>{89f36330-2685-4a23-be90-f37c35590672}</Project>
+      <Name>ulog</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
