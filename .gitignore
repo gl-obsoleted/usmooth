@@ -1,4 +1,5 @@
 *.suo
+*.meta
 
 /usmooth_client/bin
 /usmooth_client/packages
@@ -9,3 +10,9 @@
 /usmooth_client/usmooth.testserver/obj
 /usmooth_client/usmooth.testserver/x64
 /usmooth_client/usmooth.testserver/x86
+
+/usmooth_test_unity/Temp
+/usmooth_test_unity/Library
+/usmooth_test_unity/UnityVS.usmooth_test_unity.CSharp.csproj
+/usmooth_test_unity/UnityVS.usmooth_test_unity.sln
+/usmooth_test_unity/Assets/UnityVS/Editor
