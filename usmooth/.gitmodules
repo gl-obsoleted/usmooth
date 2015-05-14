@@ -1,0 +1,3 @@
+[submodule "external/docopt"]
+	path = external/docopt
+	url = https://github.com/docopt/docopt.git
