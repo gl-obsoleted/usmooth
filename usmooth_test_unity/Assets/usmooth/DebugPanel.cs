@@ -1,29 +1,3 @@
-/*!lic_info
-
-The MIT License (MIT)
-
-Copyright (c) 2015 SeaSunOpenSource
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-*/
-
 ﻿using UnityEngine;
 using System.Collections;
 
@@ -60,11 +34,46 @@ public class DebugPanel : MonoBehaviour {
     bool m_UpdateLastFrameTime = false;
     bool m_ShowDetailInfo = false;
 
+    // Effect Control-------------------------------------------------------
+    bool activeAnimatorEffect = false;//AnimatorEffectEvent.ActiveAnimatorEffect;
+    private bool ActiveAnimatorEffect
+    {
+        get
+        {
+            return activeAnimatorEffect;
+        }
+        set
+        {
+            activeAnimatorEffect = value;
+            //AnimatorEffectEvent.ActiveAnimatorEffect = value;
+        }
+    }
+
+    bool activeSceneEffect = true;
+    GameObject currentEnvironment = null;
+    private bool ActiveSceneEffect
+    {
+        get
+        {
+            return activeSceneEffect;
+        }
+        set
+        {
+            if (activeSceneEffect == value)
+                return;
+            activeSceneEffect = value;
+            SetSceneEffectActive(activeSceneEffect);
+        }
+    }
+    // Effect Control End-----------------------------------------------
+
     ////////////////////////////////////////////////////////////////////////////
     // Use this for initialization
     void Start() {
         //if (Camera.main)
         //    m_GlowEffectScript = Camera.main.GetComponent<GlowEffect>();
+
+        currentEnvironment = GameObject.Find("Environment/SceneEffect");
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -189,14 +198,20 @@ public class DebugPanel : MonoBehaviour {
         }
         GUILayout.EndHorizontal();
 
-        //GUILayout.BeginVertical();
+        GUILayout.BeginVertical();
         //if (m_GlowEffectScript)
         //    m_GlowEffectScript.enabled = GUILayout.Toggle(m_GlowEffectScript.enabled, "Glow Effect");
-        //GUILayout.EndVertical();
+        GUILayout.EndVertical();
 
-        //GUILayout.BeginVertical();
+        GUILayout.BeginVertical();
+        GUILayout.Label("特效开关：", LabelMinHeight);
+        ActiveAnimatorEffect = GUILayout.Toggle(ActiveAnimatorEffect, "Animator Effect");
+        ActiveSceneEffect = GUILayout.Toggle(ActiveSceneEffect, "Scene Effect");
+        GUILayout.EndVertical();
+
+        GUILayout.BeginVertical();
         //GUILayout.Label("编译时间：" + BuildInformation.GetBuildTimestamp(), LabelMinHeight);
-        //GUILayout.EndVertical();
+        GUILayout.EndVertical();
 
         if (m_ShowDetailInfo == false && m_UpdateStatisticsCount > 0)
         {
@@ -258,5 +273,40 @@ public class DebugPanel : MonoBehaviour {
         }
 
         GUI.skin.button.fontSize = OldFontSize;
+    }
+
+    void SetAnimatorEffectActive(bool isActive)
+    {
+        ActiveAnimatorEffect = isActive;
+    }
+
+    void SetSceneEffectActive(bool isActive)
+    {
+        if (currentEnvironment == null)
+        {
+            currentEnvironment = GameObject.Find("Environment/SceneEffect");            
+            if (currentEnvironment == null)
+            {
+                Debug.LogError("Can not find GameObject(Environment/SceneEffect).");
+                return;
+            }    
+        }
+
+        if (currentEnvironment.activeSelf == isActive)
+            return;
+
+        currentEnvironment.SetActive(isActive);
+    }
+
+    void OnLevelWasLoaded()
+    {
+        if (Application.loadedLevelName == "Loading0") // 进度条加载场景
+            return;
+
+        currentEnvironment = null;
+
+        // 根据选项重新激活设置。
+        SetAnimatorEffectActive(ActiveAnimatorEffect);
+        SetSceneEffectActive(ActiveSceneEffect);
     }
 }

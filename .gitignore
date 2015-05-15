@@ -17,3 +17,6 @@
 /usmooth_test_unity/UnityVS.usmooth_test_unity.CSharp.csproj
 /usmooth_test_unity/UnityVS.usmooth_test_unity.sln
 /usmooth_test_unity/Assets/UnityVS/Editor
+/usmooth_test_unity/obj
+/usmooth_test_unity/*.csproj
+/usmooth_test_unity/*.sln
