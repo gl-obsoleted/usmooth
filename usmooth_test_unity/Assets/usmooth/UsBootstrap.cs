@@ -49,5 +49,19 @@ public class UsBootstrap : MonoBehaviour
         _usmooth.Dispose();
     }
 
+    void OnGUI() 
+    {
+        _usmooth.OnGUI();
+	}
+
+    void OnLevelWasLoaded()
+    {
+        if (Application.loadedLevelName == "Loading0")
+            return;
+
+        GameUtil.Log("on_level loaded.");
+        GameInterface.Instance.Init();
+    }
+
     private UsMain _usmooth;
 }
