@@ -19,7 +19,7 @@
         </mui:LinkGroup>
         <mui:LinkGroup DisplayName="history">
             <mui:LinkGroup.Links>
-                <mui:Link DisplayName="data" Source="/Pages/History.xaml" />
+                <mui:Link DisplayName="data" Source="/Pages/Effects.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
         <mui:LinkGroup DisplayName="settings" GroupKey="settings">

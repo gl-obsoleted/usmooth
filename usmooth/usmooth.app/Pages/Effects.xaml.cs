@@ -44,9 +44,9 @@ namespace usmooth.app.Pages
     /// <summary>
     /// Interaction logic for History.xaml
     /// </summary>
-    public partial class History : UserControl
+    public partial class Effects : UserControl
     {
-        public History()
+        public Effects()
         {
             InitializeComponent();
         }
