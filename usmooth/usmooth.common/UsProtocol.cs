@@ -46,6 +46,9 @@ namespace usmooth.common
 
         CL_FlyToObject,
 
+        CL_QuerySwitches,
+        CL_QuerySliders,
+
 		CL_CmdEnd,
 
         SV_CmdBegin             = 2000,
@@ -63,6 +66,9 @@ namespace usmooth.common
         SV_App_Logging,
 
         SV_Editor_SelectionChanged,
+
+        SV_QuerySwitchesResponse,
+        SV_QuerySlidersResponse,
 
         SV_CmdEnd,
     }

@@ -98,9 +98,6 @@
     <Compile Include="AppSettingsUtil.cs" />
     <Compile Include="Net\Impl\NetGuardTimer.cs" />
     <Compile Include="Net\NetManager.cs" />
-    <Compile Include="Pages\Effects.xaml.cs">
-      <DependentUpon>Effects.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\Realtime\Realtime.xaml.cs">
       <DependentUpon>Realtime.xaml</DependentUpon>
     </Compile>
@@ -120,10 +117,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Pages\Effects.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Pages\Realtime\Realtime.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -143,7 +136,7 @@
       <DependentUpon>Appearance.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Settings\AppearanceViewModel.cs" />
-    <Page Include="Pages\Home.xaml">
+    <Page Include="Pages\Home\Home.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -151,7 +144,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="Pages\Home.xaml.cs">
+    <Compile Include="Pages\Home\Home.xaml.cs">
       <DependentUpon>Home.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\SettingsPage.xaml.cs">
@@ -162,6 +155,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <Compile Include="Pages\Home\Home.Net.cs" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

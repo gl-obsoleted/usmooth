@@ -29,6 +29,7 @@ using System.Collections;
 using System;
 using usmooth.common;
 using System.Collections.Generic;
+using GameCommon;
 
 public class UsMainHandlers {
 	public static UsMainHandlers Instance = new UsMainHandlers();
@@ -39,8 +40,10 @@ public class UsMainHandlers {
 		exec.RegisterHandler (eNetCmd.CL_ExecCommand, NetHandle_ExecCommand); 
 		exec.RegisterHandler (eNetCmd.CL_FlyToObject, NetHandle_FlyToObject); 
 		exec.RegisterHandler (eNetCmd.CL_RequestFrameData, NetHandle_RequestFrameData); 
-		exec.RegisterHandler (eNetCmd.CL_FrameV2_RequestMeshes, NetHandle_FrameV2_RequestMeshes); 
-		exec.RegisterHandler (eNetCmd.CL_FrameV2_RequestNames, NetHandle_FrameV2_RequestNames); 
+		exec.RegisterHandler (eNetCmd.CL_FrameV2_RequestMeshes, NetHandle_FrameV2_RequestMeshes);
+        exec.RegisterHandler(eNetCmd.CL_FrameV2_RequestNames, NetHandle_FrameV2_RequestNames);
+        exec.RegisterHandler(eNetCmd.CL_QuerySwitches, NetHandle_QuerySwitches);
+        exec.RegisterHandler(eNetCmd.CL_QuerySliders, NetHandle_QuerySliders); 
 	}
 	
 	private bool NetHandle_Handshake(eNetCmd cmd, UsCmd c) {
@@ -134,4 +137,41 @@ public class UsMainHandlers {
 
 		return true;
 	}
+
+    private bool NetHandle_QuerySwitches(eNetCmd cmd, UsCmd c)
+    {
+        UsCmd pkt = new UsCmd();
+        pkt.WriteNetCmd(eNetCmd.SV_QuerySwitchesResponse);
+
+        pkt.WriteInt32(GameInterface.ObjectNames.Count);
+        foreach (var name in GameInterface.ObjectNames)
+        {
+            //Log.Info("{0} {1} switch added.", name.Key, name.Value);
+            pkt.WriteString(name.Key);
+            pkt.WriteString(name.Value);
+            pkt.WriteInt16(1);
+        }
+        UsNet.Instance.SendCommand(pkt);
+
+        return true;
+    }
+
+    private bool NetHandle_QuerySliders(eNetCmd cmd, UsCmd c)
+    {
+        UsCmd pkt = new UsCmd();
+        pkt.WriteNetCmd(eNetCmd.SV_QuerySlidersResponse);
+
+        pkt.WriteInt32(GameInterface.VisiblePercentages.Count);
+        foreach (var p in GameInterface.VisiblePercentages)
+        {
+            //Log.Info("{0} slider added.", p.Key);
+            pkt.WriteString(p.Key);
+            pkt.WriteFloat(0.0f);
+            pkt.WriteFloat(100.0f);
+            pkt.WriteFloat((float)p.Value);
+        }
+        UsNet.Instance.SendCommand(pkt);
+
+        return true;
+    }
 }
