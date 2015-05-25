@@ -38,12 +38,15 @@ public class UsMain : IDisposable
 	private long _tickNetLast = 0;
 	private long _tickNetInterval = 200;
     private LogService _logServ;
+    private utest _test;
 
     public UsMain(bool LogRemotely, bool LogIntoFile) 
     {
 		Application.runInBackground = true;
 
         _logServ = new LogService(LogIntoFile);
+
+        _test = new utest();
 
         if (LogRemotely)
         {
@@ -88,6 +91,17 @@ public class UsMain : IDisposable
     public void Dispose()
     {
         UsNet.Instance.Dispose();
+        _test.Dispose();
         _logServ.Dispose();
+    }
+
+    public void OnLevelWasLoaded()
+    {
+        _test.OnLevelWasLoaded();
+    }
+
+    public void OnGUI()
+    {
+        _test.OnGUI();
     }
 }

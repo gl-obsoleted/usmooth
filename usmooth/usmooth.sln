@@ -21,6 +21,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "usmooth.common", "usmooth.c
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "usmooth.runtimeplugin", "usmooth.runtimeplugin\usmooth.runtimeplugin.csproj", "{2DFAE221-F19B-427D-92EE-C8330EAA3065}"
+	ProjectSection(ProjectDependencies) = postProject
+		{89F36330-2685-4A23-BE90-F37C35590672} = {89F36330-2685-4A23-BE90-F37C35590672}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "usmooth.editorplugin", "usmooth.editorplugin\usmooth.editorplugin.csproj", "{919D1A59-3C94-4283-952A-47A7E786550D}"
 	ProjectSection(ProjectDependencies) = postProject
