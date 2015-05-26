@@ -58,6 +58,9 @@ public class UsMain : IDisposable
 
 		UsMainHandlers.Instance.RegisterHandlers(UsNet.Instance.CmdExecutor);
         UsUserCommands.Instance.RegisterHandlers(UsvConsole.Instance);
+
+        GameUtil.Log("on_level loaded.");
+        GameInterface.Instance.Init();
 	}
 
     void LogTarget_Remotely(object sender, LogEventArgs args)

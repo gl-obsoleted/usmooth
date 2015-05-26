@@ -30,6 +30,7 @@ using System;
 using usmooth.common;
 using System.Collections.Generic;
 using System.Reflection;
+using GameCommon;
 	
 public enum eUserCmdResult
 {
@@ -131,4 +132,33 @@ public class UsUserCommands
         return true;
     }
 
+    [ConsoleHandler("toggle")]
+    private bool ToggleSwitch(string[] args)
+    {
+        try
+        {
+            GameInterface.Instance.ToggleSwitch(args[1], int.Parse(args[2]) != 0);
+        }
+        catch (Exception ex)
+        {
+            Log.Exception(ex);
+            throw;
+        }
+        return true;
+    }
+
+    [ConsoleHandler("slide")]
+    private bool SlideChanged(string[] args)
+    {
+        try
+        {
+            GameInterface.Instance.ChangePercentage(args[1], double.Parse(args[2]));
+        }
+        catch (Exception ex)
+        {
+            Log.Exception(ex);
+            throw;
+        }
+        return true;
+    }
 }

@@ -74,40 +74,60 @@ namespace usmooth.app.Pages
             cb_logCallstackLevel.ItemsSource = Enum.GetValues(typeof(UsNetLogging.eLogCallstackLevel)).Cast<UsNetLogging.eLogCallstackLevel>();
             cb_logCallstackLevel.SelectedItem = UsNetLogging.s_logCallstackLevel;
 
+            //AddSwitcher("t1", "t1/t1/t1", true);
+            //AddSlider("t1", 0, 100, 50);
+
             UsLogging.Receivers += Impl_PrintLogToWnd;
             UsLogging.Printf("usmooth is initialized successfully.");
 
-            NetManager.Instance.LogicallyConnected += OnLogicallyConnected;
-            NetManager.Instance.LogicallyDisconnected += OnLogicallyDisconnected;
+            RegisterNetHandlers();
         }
 
-        private void OnLogicallyConnected(object sender, EventArgs e)
+        public void AddSwitcher(string name, string path, bool initialValue)
         {
-            this.Dispatcher.Invoke(new Action(() =>
+            RoutedEventHandler handler = (sender, e) =>
             {
-                cb_targetIP.IsEnabled = false;
-                bt_connect.IsEnabled = false;
-                bt_disconnect.IsEnabled = true;
+                CheckBox c = sender as CheckBox;
+                if (c == null || c.Tag == null || string.IsNullOrEmpty((string)c.Tag))
+                    return;
 
-                string remoteAddr = cb_targetIP.Text;
-                UsLogging.Printf(LogWndOpt.Bold, "connected to [u]{0}[/u].", remoteAddr);
+                NetManager.Instance.ExecuteCmd(string.Format("toggle {0} {1}", c.Tag, ((bool)c.IsChecked ? 1 : 0)));
+            };
 
-                if (AppSettingsUtil.AppendAsRecentlyConnected(remoteAddr))
-                {
-                    cb_targetIP.Items.Add(remoteAddr);
-                    UsLogging.Printf("{0} is appended into the recent connection list.", remoteAddr);
-                }
-            }));
+            CheckBox cb = new CheckBox();
+            cb.Tag = name;
+            cb.Margin = new Thickness(10, 5, 0, 5);
+            cb.Content = name;
+            cb.ToolTip = path;
+            cb.IsChecked = initialValue;
+            cb.Checked += handler;
+            cb.Unchecked += handler;
+            cb.MinWidth = 150;
+            _switchersPanel.Children.Add(cb);
         }
 
-        private void OnLogicallyDisconnected(object sender, EventArgs e)
+        public void AddSlider(string name, double minVal, double maxVal, double initialVal)
         {
-            this.Dispatcher.Invoke(new Action(() =>
-            {
-                cb_targetIP.IsEnabled = true;
-                bt_connect.IsEnabled = true;
-                bt_disconnect.IsEnabled = false;
-            }));
+            Label label = new Label();
+            label.Content = name;
+            label.MinWidth = 150;
+            _slidersPanel.Children.Add(label);
+
+            Slider slider = new Slider();
+            slider.Tag = name;
+            slider.Margin = new Thickness(10, 5, 0, 5);
+            slider.Minimum = minVal;
+            slider.Maximum = maxVal;
+            slider.Value = initialVal;
+            _slidersPanel.Children.Add(slider);
+
+            slider.ValueChanged += (sender, e) => {
+                Slider s = sender as Slider;
+                if (s == null || s.Tag == null || string.IsNullOrEmpty((string)s.Tag))
+                    return;
+
+                NetManager.Instance.ExecuteCmd(string.Format("slide {0} {1:0.00}", s.Tag, s.Value));
+            };
         }
 
         private void bt_connect_Click(object sender, RoutedEventArgs e)

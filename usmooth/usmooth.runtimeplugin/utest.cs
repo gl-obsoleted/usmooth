@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using GameCommon;
 
 public class GameUtil
 {
@@ -26,30 +27,57 @@ public class GameInterface
 {
     public static GameInterface Instance = new GameInterface();
 
-    public static string[] ObjectNames = new string[] 
+    public static Dictionary<string, string> ObjectNames = new Dictionary<string, string>
     { 
-        "Environment/Models", 
-        "Environment/Models/level_1", 
-        "Environment/Models/level_2", 
-        "Environment/Models/level_3", 
-        "Environment/SceneEffect", 
-        "Environment/Terrain", 
-        "Main/UIMgr", 
-        "Main/_Players", 
-        "Main/AnimationEffects", 
+        { "Scene_Objects", "Environment/Models" }, 
+        { "Scene_Objects_(Lv1)", "Environment/Models/level_1" }, 
+        { "Scene_Objects_(Lv2)", "Environment/Models/level_2" }, 
+        { "Scene_Objects_(Lv3)", "Environment/Models/level_3" }, 
+        { "Scene_Effects", "Environment/SceneEffect" }, 
+        { "Scene_Terrain", "Environment/Terrain" }, 
+        { "UI", "Main/UIMgr" }, 
+        { "Players", "Main/_Players" }, 
+        { "Effects", "Main/AnimationEffects" }, 
+    };
+
+    public static Dictionary<string, double> VisiblePercentages = new Dictionary<string, double>
+    {
+        { "Objects", 100 },
+        { "Effects", 100 },
     };
 
     public bool Init()
     {
         foreach (var name in ObjectNames)
         {
-            GameObject go = GameObject.Find(name);
+            GameObject go = GameObject.Find(name.Value);
             if (go != null)
             {
-                KeyNodes[name] = go;
+                Log.Info("KeyNode {0} added as {1}", name.Value, name.Key);
+                KeyNodes[name.Key] = go;
             }
         }
         return true;
+    }
+
+    public void ToggleSwitch(string name, bool on)
+    {
+        if (KeyNodes.ContainsKey(name))
+        {
+            Log.Info("{0} toggled as {1}", name, on);
+            KeyNodes[name].SetActive(on);
+        }
+    }
+
+    public void ChangePercentage(string name, double val)
+    {
+        if (VisiblePercentages.ContainsKey(name))
+        {
+            VisiblePercentages[name] = val;
+            Log.Info("{0} slided to {1:0.00}", name, val);
+
+            FilterVisibleObjects((float)VisiblePercentages["Objects"], (float)VisiblePercentages["Effects"]);
+        }
     }
 
     private void DoFilter<T>(List<T> visible, List<T> disabled, float percentage) where T : Renderer
@@ -172,7 +200,7 @@ public class utest : IDisposable
             }
             else
             {
-                if (GUI.Button(new Rect(50, Screen.height - 50 - 80, 80, 80), "utest"))
+                if (GUI.Button(new Rect(50, Screen.height * 0.5f - 40, 80, 80), "utest"))
                     m_enable = !m_enable;
             }
         }

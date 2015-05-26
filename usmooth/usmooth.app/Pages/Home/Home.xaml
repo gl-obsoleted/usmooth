@@ -27,13 +27,28 @@
                     </StackPanel>
                 </Grid>
             </StackPanel>
-
         </ScrollViewer>
-        <ScrollViewer x:Name="m_loggingPanel" Grid.Row="1">
-            <StackPanel>
-                <mui:BBCodeBlock x:Name="bb_logging" BBCode="[b]Modern UI for WPF[/b], a set of controls and styles converting your WPF application into a great looking Modern UI app.&#13;&#10;&#13;&#10;This open source project is a spin-off of [url=http://xamlspy.com]XAML Spy[/url], the visual runtime inspector for Silverlight, Windows Phone, Windows Store and WPF.&#13;&#10;&#13;&#10;See the [url=https://github.com/firstfloorsoftware/mui/wiki]online documentation[/url] to learn more about how to incorporate [b]Modern UI for WPF[/b] into your applications." Margin="0,0,0,32" />
-            </StackPanel>
-        </ScrollViewer>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="6"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ScrollViewer x:Name="m_loggingPanel">
+                <StackPanel>
+                    <mui:BBCodeBlock x:Name="bb_logging" BBCode="[b]Modern UI for WPF[/b], a set of controls and styles converting your WPF application into a great looking Modern UI app.&#13;&#10;&#13;&#10;This open source project is a spin-off of [url=http://xamlspy.com]XAML Spy[/url], the visual runtime inspector for Silverlight, Windows Phone, Windows Store and WPF.&#13;&#10;&#13;&#10;See the [url=https://github.com/firstfloorsoftware/mui/wiki]online documentation[/url] to learn more about how to incorporate [b]Modern UI for WPF[/b] into your applications." Margin="0,0,0,32" />
+                </StackPanel>
+            </ScrollViewer>
+            <GridSplitter Grid.Column="1" IsEnabled="False" />
+            <Expander Grid.Column="2" x:Name="_switchersExpander" ExpandDirection="Right" HorizontalAlignment="Center" VerticalAlignment="Top" IsExpanded="True" Cursor="" ToolTip="Switchers">
+                <StackPanel Orientation="Vertical" Width="200">
+                    <StackPanel x:Name="_switchersPanel" Orientation="Vertical" Margin="0,0,0,20">
+                    </StackPanel>
+                    <StackPanel x:Name="_slidersPanel" Orientation="Vertical" Margin="0,0,0,20">
+                    </StackPanel>
+                </StackPanel>
+            </Expander>
+        </Grid>
         <GridSplitter Grid.Row="2" IsEnabled="False" />
         <ScrollViewer Grid.Row="3">
             <Grid>

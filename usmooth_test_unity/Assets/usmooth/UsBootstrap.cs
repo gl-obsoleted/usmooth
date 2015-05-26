@@ -31,7 +31,7 @@ using usmooth.common;
 
 public class UsBootstrap : MonoBehaviour 
 {
-    public bool LogRemotely = false;
+    public bool LogRemotely = true;
     public bool LogIntoFile = false;
 
 	void Start() 
@@ -56,11 +56,7 @@ public class UsBootstrap : MonoBehaviour
 
     void OnLevelWasLoaded()
     {
-        if (Application.loadedLevelName == "Loading0")
-            return;
-
-        GameUtil.Log("on_level loaded.");
-        GameInterface.Instance.Init();
+        _usmooth.OnLevelWasLoaded();
     }
 
     private UsMain _usmooth;
