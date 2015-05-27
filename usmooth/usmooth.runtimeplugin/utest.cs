@@ -27,6 +27,8 @@ public class GameInterface
 {
     public static GameInterface Instance = new GameInterface();
 
+    public static string EnvironmentRootName = "Environment";
+
     public static Dictionary<string, string> ObjectNames = new Dictionary<string, string>
     { 
         { "Scene_Objects", "Environment/Models" }, 
@@ -105,13 +107,18 @@ public class GameInterface
         }
     }
 
+    private bool IsEnvironmentObject(GameObject go)
+    {
+        return go.transform.root.gameObject.name == EnvironmentRootName;
+    }
+
     public void FilterVisibleObjects(float percentage, float psysPercent)
     {
         List<Renderer> VisibleRenderers = new List<Renderer>();
         List<ParticleSystemRenderer> VisiblePSysRenderers = new List<ParticleSystemRenderer>();
         foreach (Renderer r in UnityEngine.Object.FindObjectsOfType(typeof(Renderer)) as Renderer[])
         {
-            if (r.isVisible && r.enabled)
+            if (r.isVisible && r.enabled && IsEnvironmentObject(r.gameObject))
             {
                 if (r is ParticleSystemRenderer)
                 {
