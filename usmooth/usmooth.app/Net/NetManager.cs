@@ -184,6 +184,9 @@ namespace usmooth.app
         private long _lastReceivingData = 0;
         private void Tick()
         {
+            if (!_client.IsConnected)
+                return;
+
             _currentTimeInMilliseconds = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
             if (_currentTimeInMilliseconds - _lastKeepAlive > INTERVAL_KeepAlive)
