@@ -174,6 +174,12 @@ namespace usmooth.app.Pages
                         break;
                 }
                 bb_logging.BBCode += content;
+
+                while (bb_logging.BBCode.Length >= 1024 * 256)
+                {
+                    bb_logging.BBCode.Substring(bb_logging.BBCode.IndexOf('\n') + 1);
+                }
+
                 m_loggingPanel.ScrollToBottom();
             }));
         }

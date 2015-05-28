@@ -20,7 +20,7 @@ public class GameUtil
         return Math.Max(Math.Min(value, max), min);
     }
 
-    public static int FontSize = 24;
+    public static int FontSize = 16;
 }
 
 public class GameInterface

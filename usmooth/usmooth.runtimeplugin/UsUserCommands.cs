@@ -31,6 +31,7 @@ using usmooth.common;
 using System.Collections.Generic;
 using System.Reflection;
 using GameCommon;
+using System.ComponentModel;
 	
 public enum eUserCmdResult
 {
@@ -48,6 +49,8 @@ public class ConsoleHandler : Attribute
 
     public string Command;
 }
+
+public delegate void EffectStressTestHandler(string effectName);
 
 public class UsUserCommands 
 {
@@ -153,6 +156,30 @@ public class UsUserCommands
         try
         {
             GameInterface.Instance.ChangePercentage(args[1], double.Parse(args[2]));
+        }
+        catch (Exception ex)
+        {
+            Log.Exception(ex);
+            throw;
+        }
+        return true;
+    }
+
+    [ConsoleHandler("effect_stress")]
+    private bool EffectStressTestTriggered(string[] args)
+    {
+        try
+        {
+            if (args.Length != 3)
+            {
+                Log.Error("Command 'effect_stress' parameter count mismatched. (%d expected, %d got)", 3, args.Length);
+                return false;
+            }
+
+            string effectName = args[1];
+            int effectCount = int.Parse(args[2]);
+
+            UsEffectNotifier.Instance.PostEvent_EffectStressTest(effectName, effectCount);
         }
         catch (Exception ex)
         {
