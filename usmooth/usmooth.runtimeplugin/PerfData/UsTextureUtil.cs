@@ -91,7 +91,6 @@ public class UsTextureUtil {
 	
 	public static int CalculateTextureSizeBytes(Texture tTexture)
 	{
-		
 		int tWidth=tTexture.width;
 		int tHeight=tTexture.height;
 		if (tTexture is Texture2D)

@@ -75,10 +75,10 @@
     <Compile Include="UsMain.cs" />
     <Compile Include="UsvConsole.cs" />
     <Compile Include="Notifiers\UsEditorNotifier.cs" />
-    <Compile Include="UsMainHandlers.cs" />
+    <Compile Include="UsMain_NetHandlers.cs" />
     <Compile Include="UsNet.cs" />
-    <Compile Include="UsTextureUtil.cs" />
-    <Compile Include="UsUserCommands.cs" />
+    <Compile Include="PerfData\UsTextureUtil.cs" />
+    <Compile Include="UsvConsoleCmds.cs" />
     <Compile Include="utest.cs" />
   </ItemGroup>
   <ItemGroup>

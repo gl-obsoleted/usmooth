@@ -4,6 +4,16 @@ using System.Linq;
 using System.Text;
 using usmooth.common;
 
+public class UsEffectListEventArgs : EventArgs
+{
+    public UsEffectListEventArgs(string[] effectNameList)
+    {
+        _effectNameList = effectNameList;
+    }
+
+    public string[] _effectNameList;
+}
+
 public class UsEffectStressTestEventArgs : EventArgs
 {
     public UsEffectStressTestEventArgs(string effectName, int effectCount)
@@ -32,16 +42,28 @@ public class UsEffectNotifier
 {
     public static UsEffectNotifier Instance = new UsEffectNotifier();
 
-    public void PostEvent_EffectStressTest(string effectName, int effectCount)
+    public void PostEvent_QueryEffectList()
     {
-        SysPost.InvokeMulticast(this, EffectStressTest, new UsEffectStressTestEventArgs(effectName, effectCount));
+        SysPost.InvokeMulticast(this, QueryEffectList);
     }
 
-    public void PostEvent_EffectStressTestResult(string effectName, float avgMilliseconds)
+    public void PostEvent_QueryEffectListResult(string[] effectNameList)
     {
-        SysPost.InvokeMulticast(this, EffectStressTestResult, new UsEffectStressTestResultEventArgs(effectName, avgMilliseconds));
+        SysPost.InvokeMulticast(this, QueryEffectListResult, new UsEffectListEventArgs(effectNameList));
     }
 
-    public event SysPost.StdMulticastDelegation EffectStressTest;
-    public event SysPost.StdMulticastDelegation EffectStressTestResult;
+    public void PostEvent_RunEffectStressTest(string effectName, int effectCount)
+    {
+        SysPost.InvokeMulticast(this, RunEffectStressTest, new UsEffectStressTestEventArgs(effectName, effectCount));
+    }
+
+    public void PostEvent_RunEffectStressTestResult(string effectName, float avgMilliseconds)
+    {
+        SysPost.InvokeMulticast(this, RunEffectStressTestResult, new UsEffectStressTestResultEventArgs(effectName, avgMilliseconds));
+    }
+
+    public event SysPost.StdMulticastDelegation QueryEffectList;
+    public event SysPost.StdMulticastDelegation QueryEffectListResult;
+    public event SysPost.StdMulticastDelegation RunEffectStressTest;
+    public event SysPost.StdMulticastDelegation RunEffectStressTestResult;
 }

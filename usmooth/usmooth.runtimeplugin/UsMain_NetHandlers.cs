@@ -29,12 +29,12 @@ using System.Collections;
 using System;
 using usmooth.common;
 using System.Collections.Generic;
-using GameCommon;
 
-public class UsMainHandlers {
-	public static UsMainHandlers Instance = new UsMainHandlers();
+public class UsMain_NetHandlers {
+	public static UsMain_NetHandlers Instance;
 
-	public void RegisterHandlers(UsCmdParsing exec) {
+    public UsMain_NetHandlers(UsCmdParsing exec)
+    {
 		exec.RegisterHandler (eNetCmd.CL_Handshake, NetHandle_Handshake); 
 		exec.RegisterHandler (eNetCmd.CL_KeepAlive, NetHandle_KeepAlive); 
 		exec.RegisterHandler (eNetCmd.CL_ExecCommand, NetHandle_ExecCommand); 
@@ -64,15 +64,11 @@ public class UsMainHandlers {
 
 	private bool NetHandle_ExecCommand(eNetCmd cmd, UsCmd c) {
 		string read = c.ReadString();
-
-        var result = new KeyValuePair<eUserCmdResult, string>(eUserCmdResult.OK, "");
-        if (!UsvConsole.Instance.ExecuteCommand(read))
-            result = UsUserCommands.Instance.Execute(read);
+        bool ret = UsvConsole.Instance.ExecuteCommand(read);
 
 		UsCmd reply = new UsCmd();
 		reply.WriteNetCmd(eNetCmd.SV_ExecCommandResponse);
-		reply.WriteInt32 ((int)result.Key);
-		reply.WriteString (result.Value);
+		reply.WriteInt32 (ret ? 1 : 0);
 		UsNet.Instance.SendCommand(reply);
 		return true;
 	}

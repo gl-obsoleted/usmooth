@@ -24,20 +24,8 @@ SOFTWARE.
 
 */
 
-﻿using UnityEngine;
-using System.Collections;
-using System;
-using usmooth.common;
-using System.Collections.Generic;
-using System.Reflection;
-using GameCommon;
-using System.ComponentModel;
-	
-public enum eUserCmdResult
-{
-	OK,
-	Error,
-}
+﻿using System;
+using UnityEngine;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public class ConsoleHandler : Attribute
@@ -50,73 +38,43 @@ public class ConsoleHandler : Attribute
     public string Command;
 }
 
-public delegate void EffectStressTestHandler(string effectName);
-
-public class UsUserCommands 
+public class UsvConsoleCmds 
 {
-	public static UsUserCommands Instance = new UsUserCommands();
+	public static UsvConsoleCmds Instance;
 
-	public KeyValuePair<eUserCmdResult, string> Execute(string cmd) {
-		//Debug.Log ("executing command: " + cmd);
-
-		string[] ca = cmd.Split ();
-		if (ca.Length == 0) {
-			return new KeyValuePair<eUserCmdResult, string> (eUserCmdResult.Error, "empty command.");
-		} else if (ca [0] == "showmesh") {
-			int instID = 0;
-			if (int.TryParse(ca[1], out instID)) {
-				return ShowMesh(instID, true);
-			}
-		} else if (ca [0] == "hidemesh") {
-			int instID = 0;
-			if (int.TryParse(ca[1], out instID)) {
-				return ShowMesh(instID, false);
-			}
-		}
-
-		return new KeyValuePair<eUserCmdResult, string> (eUserCmdResult.Error, "unknown command.");
-	}
-	
-	private KeyValuePair<eUserCmdResult, string> ShowMesh(int instID, bool visible) {
-		MeshRenderer[] meshRenderers = UnityEngine.Object.FindObjectsOfType(typeof(MeshRenderer)) as MeshRenderer[];
-		foreach (MeshRenderer mr in meshRenderers) {
-			if (mr.gameObject.GetInstanceID() == instID) {
-				mr.enabled = visible;
-				return new KeyValuePair<eUserCmdResult, string> (eUserCmdResult.OK, "");
-			}
-		}
-
-		return new KeyValuePair<eUserCmdResult, string> (eUserCmdResult.Error, "mesh not found. <ShowMesh>");
-	}
-
-    public void RegisterHandlers(UsvConsole console)
+    [ConsoleHandler("showmesh")]
+    public bool ShowMesh(string[] args)
     {
-        foreach (var method in typeof(UsUserCommands).GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+        return SetMeshVisible(args[1], true);
+    }
+
+    [ConsoleHandler("hidemesh")]
+    public bool HideMesh(string[] args)
+    {
+        return SetMeshVisible(args[1], false);
+    }
+
+    private bool SetMeshVisible(string strInstID, bool visible)
+    {
+        int instID = 0;
+        if (!int.TryParse(strInstID, out instID))
+            return false;
+
+        MeshRenderer[] meshRenderers = UnityEngine.Object.FindObjectsOfType(typeof(MeshRenderer)) as MeshRenderer[];
+        foreach (MeshRenderer mr in meshRenderers)
         {
-            foreach (var attr in method.GetCustomAttributes(typeof(ConsoleHandler), false))
+            if (mr.gameObject.GetInstanceID() == instID)
             {
-                ConsoleHandler handler = attr as ConsoleHandler;
-                if (handler != null)
-                {
-                    try
-                    {
-                        Delegate del = Delegate.CreateDelegate(typeof(UsvConsoleCmdHandler), this, method);
-                        if (del != null)
-                        {
-                            console.RegisterHandler(handler.Command, (UsvConsoleCmdHandler)del);
-                        }
-                    }
-                    catch (System.Exception ex)
-                    {
-                        Debug.LogException(ex);                    	
-                    }
-                }
+                mr.enabled = visible;
+                return true;
             }
         }
+
+        return false;
     }
 
     [ConsoleHandler("testlogs")]
-    private bool PrintTestLogs(string[] args)
+    public bool PrintTestLogs(string[] args)
     {
         Debug.Log("A typical line of logging.");
         Debug.Log("Another line.");
@@ -136,7 +94,7 @@ public class UsUserCommands
     }
 
     [ConsoleHandler("toggle")]
-    private bool ToggleSwitch(string[] args)
+    public bool ToggleSwitch(string[] args)
     {
         try
         {
@@ -151,7 +109,7 @@ public class UsUserCommands
     }
 
     [ConsoleHandler("slide")]
-    private bool SlideChanged(string[] args)
+    public bool SlideChanged(string[] args)
     {
         try
         {
@@ -165,8 +123,29 @@ public class UsUserCommands
         return true;
     }
 
-    [ConsoleHandler("effect_stress")]
-    private bool EffectStressTestTriggered(string[] args)
+    [ConsoleHandler("query_effect_list")]
+    public bool QueryEffectListTriggered(string[] args)
+    {
+        try
+        {
+            if (args.Length != 1)
+            {
+                Log.Error("Command 'query_effect_list' parameter count mismatched. (%d expected, %d got)", 1, args.Length);
+                return false;
+            }
+
+            UsEffectNotifier.Instance.PostEvent_QueryEffectList();
+        }
+        catch (Exception ex)
+        {
+            Log.Exception(ex);
+            throw;
+        }
+        return true;
+    }
+
+    [ConsoleHandler("run_effect_stress")]
+    public bool EffectStressTestTriggered(string[] args)
     {
         try
         {
@@ -179,7 +158,7 @@ public class UsUserCommands
             string effectName = args[1];
             int effectCount = int.Parse(args[2]);
 
-            UsEffectNotifier.Instance.PostEvent_EffectStressTest(effectName, effectCount);
+            UsEffectNotifier.Instance.PostEvent_RunEffectStressTest(effectName, effectCount);
         }
         catch (Exception ex)
         {

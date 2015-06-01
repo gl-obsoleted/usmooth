@@ -24,8 +24,9 @@ SOFTWARE.
 
 */
 
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 public delegate bool UsvConsoleCmdHandler(string[] args);
@@ -34,9 +35,33 @@ public class UsvConsole
 {
     public static UsvConsole Instance;
 
-    public void RegisterHandler(string cmd, UsvConsoleCmdHandler handler)
+    public UsvConsole()
     {
-        _handlers[cmd.ToLower()] = handler;
+        UsvConsoleCmds.Instance = new UsvConsoleCmds();
+
+        foreach (var method in typeof(UsvConsoleCmds).GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+        {
+            foreach (var attr in method.GetCustomAttributes(typeof(ConsoleHandler), false))
+            {
+                ConsoleHandler handler = attr as ConsoleHandler;
+                if (handler != null)
+                {
+                    try
+                    {
+                        Delegate del = Delegate.CreateDelegate(typeof(UsvConsoleCmdHandler), this, method);
+                        if (del != null)
+                        {
+                            string cmd = handler.Command.ToLower();
+                            _handlers[cmd] = (UsvConsoleCmdHandler)del;
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Debug.LogException(ex);
+                    }
+                }
+            }
+        }
     }
 
     public bool ExecuteCommand(string fullcmd)
@@ -44,18 +69,24 @@ public class UsvConsole
         string[] fragments = fullcmd.Split();
         if (fragments.Length == 0)
         {
-            Debug.Log("empty command received, ignored.");
+            Log.Info("empty command received, ignored.");
             return false;
         }
 
         UsvConsoleCmdHandler handler;
         if (!_handlers.TryGetValue(fragments[0].ToLower(), out handler))
         {
-            Debug.Log(string.Format("unknown command ('{0}') received, ignored.", fullcmd));
+            Log.Info("unknown command ('{0}') received, ignored.", fullcmd);
             return false;            
         }
 
-        return handler(fragments);
+        if (!handler(fragments))
+        {
+            Log.Info("executing command ('{0}') failed.", fullcmd);
+            return false;            
+        }
+
+        return true;
     }
 
     private Dictionary<string, UsvConsoleCmdHandler> _handlers = new Dictionary<string, UsvConsoleCmdHandler>();

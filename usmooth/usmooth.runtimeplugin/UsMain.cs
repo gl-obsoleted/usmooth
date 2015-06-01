@@ -26,7 +26,6 @@ SOFTWARE.
 
 ﻿using UnityEngine;
 using System;
-using GameCommon;
 using usmooth.common;
 
 public class UsMain : IDisposable
@@ -54,10 +53,9 @@ public class UsMain : IDisposable
         }
 
 		UsNet.Instance = new UsNet(_serverPort);
-        UsvConsole.Instance = new UsvConsole();
 
-		UsMainHandlers.Instance.RegisterHandlers(UsNet.Instance.CmdExecutor);
-        UsUserCommands.Instance.RegisterHandlers(UsvConsole.Instance);
+        UsMain_NetHandlers.Instance = new UsMain_NetHandlers(UsNet.Instance.CmdExecutor);
+        UsvConsole.Instance = new UsvConsole();
 
         GameUtil.Log("on_level loaded.");
         GameInterface.Instance.Init();
