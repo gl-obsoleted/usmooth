@@ -48,7 +48,7 @@ public class UsvConsole
                 {
                     try
                     {
-                        Delegate del = Delegate.CreateDelegate(typeof(UsvConsoleCmdHandler), this, method);
+                        Delegate del = Delegate.CreateDelegate(typeof(UsvConsoleCmdHandler), UsvConsoleCmds.Instance, method);
                         if (del != null)
                         {
                             string cmd = handler.Command.ToLower();

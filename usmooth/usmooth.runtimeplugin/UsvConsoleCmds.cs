@@ -26,6 +26,7 @@ SOFTWARE.
 
 ﻿using System;
 using UnityEngine;
+using usmooth.common;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public class ConsoleHandler : Attribute
@@ -123,18 +124,21 @@ public class UsvConsoleCmds
         return true;
     }
 
-    [ConsoleHandler("query_effect_list")]
+    public event SysPost.StdMulticastDelegation QueryEffectList;
+    public event SysPost.StdMulticastDelegation RunEffectStressTest;
+
+    [ConsoleHandler("get_effect_list")]
     public bool QueryEffectListTriggered(string[] args)
     {
         try
         {
             if (args.Length != 1)
             {
-                Log.Error("Command 'query_effect_list' parameter count mismatched. (%d expected, %d got)", 1, args.Length);
+                Log.Error("Command 'get_effect_list' parameter count mismatched. ({0} expected, {1} got)", 1, args.Length);
                 return false;
             }
 
-            UsEffectNotifier.Instance.PostEvent_QueryEffectList();
+            SysPost.InvokeMulticast(this, QueryEffectList);
         }
         catch (Exception ex)
         {
@@ -144,6 +148,18 @@ public class UsvConsoleCmds
         return true;
     }
 
+    public class UsEffectStressTestEventArgs : EventArgs
+    {
+        public UsEffectStressTestEventArgs(string effectName, int effectCount)
+        {
+            _effectName = effectName;
+            _effectCount = effectCount;
+        }
+
+        public string _effectName;
+        public int _effectCount = 0;
+    }
+
     [ConsoleHandler("run_effect_stress")]
     public bool EffectStressTestTriggered(string[] args)
     {
@@ -151,14 +167,14 @@ public class UsvConsoleCmds
         {
             if (args.Length != 3)
             {
-                Log.Error("Command 'effect_stress' parameter count mismatched. (%d expected, %d got)", 3, args.Length);
+                Log.Error("Command 'effect_stress' parameter count mismatched. ({0} expected, {1} got)", 3, args.Length);
                 return false;
             }
 
             string effectName = args[1];
             int effectCount = int.Parse(args[2]);
 
-            UsEffectNotifier.Instance.PostEvent_RunEffectStressTest(effectName, effectCount);
+            SysPost.InvokeMulticast(this, RunEffectStressTest, new UsEffectStressTestEventArgs(effectName, effectCount));
         }
         catch (Exception ex)
         {

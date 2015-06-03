@@ -70,6 +70,9 @@ namespace usmooth.common
         SV_QuerySwitchesResponse,
         SV_QuerySlidersResponse,
 
+        SV_StressTestNames,
+        SV_StressTestResult,
+
         SV_CmdEnd,
     }
 

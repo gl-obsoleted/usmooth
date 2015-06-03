@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using usmooth.common;
 
 namespace usmooth.app.Pages
@@ -16,6 +17,8 @@ namespace usmooth.app.Pages
 
             NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_QuerySwitchesResponse, NetHandle_QuerySwitchesResponse);
             NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_QuerySlidersResponse, NetHandle_QuerySlidersResponse);
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_StressTestNames, NetHandle_StressTestNames);
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_StressTestResult, NetHandle_StressTestResult);
         }
 
         private void OnLogicallyConnected(object sender, EventArgs e)
@@ -46,6 +49,16 @@ namespace usmooth.app.Pages
                     cmd.WriteNetCmd(eNetCmd.CL_QuerySliders);
                     NetManager.Instance.Send(cmd);
                 }
+
+                Button btGetEffectList = new Button();
+                btGetEffectList.Content = "Get Effect List";
+                btGetEffectList.Click += (_sender, _e) => { NetManager.Instance.ExecuteCmd("get_effect_list"); };
+                _effectPanel.Children.Add(btGetEffectList);
+
+                Button btRunTestEffect = new Button();
+                btRunTestEffect.Content = "Run test effect";
+                btRunTestEffect.Click += (_sender, _e) => { NetManager.Instance.ExecuteCmd("run_effect_stress born01 100"); };
+                _effectPanel.Children.Add(btRunTestEffect);
             }));
         }
 
@@ -59,6 +72,7 @@ namespace usmooth.app.Pages
 
                 _switchersPanel.Children.Clear();
                 _slidersPanel.Children.Clear();
+                _effectPanel.Children.Clear();
             }));
         }
 
@@ -95,6 +109,24 @@ namespace usmooth.app.Pages
                     AddSlider(name, minVal, maxVal, initVal);
                 }));
             }
+
+            return true;
+        }
+
+        bool NetHandle_StressTestNames(eNetCmd cmd, UsCmd c)
+        {
+            int count = c.ReadInt32();
+            for (int i = 0; i < count; i++)
+            {
+                string name = c.ReadString();
+                UsLogging.Printf("name got: {0}", name);
+            }
+
+            return true;
+        }
+
+        bool NetHandle_StressTestResult(eNetCmd cmd, UsCmd c)
+        {
 
             return true;
         }

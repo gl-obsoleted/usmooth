@@ -74,9 +74,6 @@ namespace usmooth.app.Pages
             cb_logCallstackLevel.ItemsSource = Enum.GetValues(typeof(UsNetLogging.eLogCallstackLevel)).Cast<UsNetLogging.eLogCallstackLevel>();
             cb_logCallstackLevel.SelectedItem = UsNetLogging.s_logCallstackLevel;
 
-            //AddSwitcher("t1", "t1/t1/t1", true);
-            //AddSlider("t1", 0, 100, 50);
-
             UsLogging.Receivers += Impl_PrintLogToWnd;
             UsLogging.Printf("usmooth is initialized successfully.");
 

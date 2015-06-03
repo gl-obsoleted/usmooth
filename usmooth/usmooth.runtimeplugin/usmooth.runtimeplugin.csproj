@@ -68,7 +68,6 @@
     <Compile Include="..\usmooth.common\UsUtil.cs">
       <Link>Common\UsUtil.cs</Link>
     </Compile>
-    <Compile Include="Notifiers\UsEffectNotifier.cs" />
     <Compile Include="PerfData\DataCollector.cs" />
     <Compile Include="PerfData\MeshLut.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
