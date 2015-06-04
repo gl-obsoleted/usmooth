@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="usmooth.app.Pages.Effect.Effect"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Style="{StaticResource ContentRoot}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+            <StackPanel Height="30" Width="Auto" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,5">
+                <Button x:Name="bt_getEffectList" Height="25" Width="150" Content="获取特效列表" Margin="10,0,10,0" Click="bt_getEffectList_Click" />
+                <Button x:Name="bt_runStressTest" Height="25" Width="150" Content="运行压力测试" Margin="10,0,10,0" Click="bt_runStressTest_Click" />
+            </StackPanel>
+
+        <DataGrid Grid.Row="1" Name="EffectGrid" ItemsSource="{Binding}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <mui:DataGridTextColumn Header="EffectName" Binding="{Binding Name}" IsReadOnly="True"/>
+                    <mui:DataGridTextColumn Header="MilliSeconds(avg)" Binding="{Binding MSAvg}" IsReadOnly="True" />
+                    <mui:DataGridTextColumn Header="Milliseconds(max)" Binding="{Binding MSMax}" IsReadOnly="True"/>
+                    <mui:DataGridTextColumn Header="TotalDrawCall" Binding="{Binding TotalDrawCall}" IsReadOnly="True"/>
+                    <mui:DataGridTextColumn Header="TotalParticleCount" Binding="{Binding TotalParticles}" IsReadOnly="True"/>
+                </DataGrid.Columns>
+            </DataGrid>
+    </Grid>
+</UserControl>

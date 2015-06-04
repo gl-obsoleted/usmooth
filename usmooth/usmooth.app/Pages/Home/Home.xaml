@@ -46,8 +46,6 @@
                     </StackPanel>
                     <StackPanel x:Name="_slidersPanel" Orientation="Vertical" Margin="0,0,0,20">
                     </StackPanel>
-                    <StackPanel x:Name="_effectPanel" Orientation="Vertical" Margin="0,0,0,20">
-                    </StackPanel>
                 </StackPanel>
             </Expander>
         </Grid>

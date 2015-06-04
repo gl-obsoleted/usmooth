@@ -17,6 +17,11 @@
                 <mui:Link DisplayName="data" Source="/Pages/Realtime/Realtime.xaml" />
             </mui:LinkGroup.Links>
         </mui:LinkGroup>
+        <mui:LinkGroup DisplayName="特效">
+            <mui:LinkGroup.Links>
+                <mui:Link DisplayName="data" Source="/Pages/Effect/Effect.xaml" />
+            </mui:LinkGroup.Links>
+        </mui:LinkGroup>
         <mui:LinkGroup DisplayName="settings" GroupKey="settings">
             <mui:LinkGroup.Links>
                 <mui:Link DisplayName="software" Source="/Pages/SettingsPage.xaml" />
