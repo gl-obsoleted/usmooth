@@ -110,6 +110,7 @@ namespace usmooth.app.Pages.Effect
 
             _effectsEnumerator = _effectsToBePopulated.GetEnumerator();
             _isEffectEnumeratorAvailable = true;
+            _testedCount = 0;
 
             RunNextEffectStressTest();
         }
@@ -122,6 +123,12 @@ namespace usmooth.app.Pages.Effect
             bool iterating = _effectsEnumerator.MoveNext();
             if (iterating)
             {
+                ++_testedCount;
+                labelProgress.Dispatcher.Invoke(new Action(() => 
+                {
+                    labelProgress.Content = string.Format("({0}/{1})", _testedCount, EffectGrid.Items.Count);
+                }));
+
                 cb_effectCount.Dispatcher.Invoke(new Action(() =>
                 {
                     string effectName = _effectsEnumerator.Current;
@@ -131,6 +138,12 @@ namespace usmooth.app.Pages.Effect
             }
             else
             {
+                _testedCount = 0;
+                labelProgress.Dispatcher.Invoke(new Action(() =>
+                {
+                    labelProgress.Content = "(finished)";
+                }));
+
                 _effectsEnumerator.Dispose();
             }
         }
@@ -195,6 +208,7 @@ namespace usmooth.app.Pages.Effect
         List<string>.Enumerator _effectsEnumerator;
         bool _isEffectEnumeratorAvailable = false;
         EffectObject _highlighted = null;
+        int _testedCount = 0;
 
         private void PerformReSort()
         {

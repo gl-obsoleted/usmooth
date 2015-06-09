@@ -19,6 +19,7 @@
                 <TextBlock Text="粒子数目:" Margin="30,0,10,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 <ComboBox x:Name="cb_effectCount" Width="150" VerticalAlignment="Center" Margin="10,0,10,0" IsEditable="True" >
                 </ComboBox>
+                <Label x:Name="labelProgress" Height="25" Width="120" Content="(inactive)" Margin="10,0,10,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
         </StackPanel>
 
         <DataGrid Grid.Row="1" Name="EffectGrid" ItemsSource="{Binding}" AutoGenerateColumns="False" >
