@@ -122,8 +122,12 @@ namespace usmooth.app.Pages.Effect
             bool iterating = _effectsEnumerator.MoveNext();
             if (iterating)
             {
-                string effectName = _effectsEnumerator.Current;
-                NetManager.Instance.ExecuteCmd(string.Format("run_effect_stress {0} {1}", effectName, cb_effectCount.SelectedItem));
+                cb_effectCount.Dispatcher.Invoke(new Action(() =>
+                {
+                    string effectName = _effectsEnumerator.Current;
+                    string effectCount = (string)cb_effectCount.SelectedItem;
+                    NetManager.Instance.ExecuteCmd(string.Format("run_effect_stress {0} {1}", effectName, effectCount));
+                }));
             }
             else
             {
@@ -171,8 +175,8 @@ namespace usmooth.app.Pages.Effect
 
                         mo.MSAvg = avgMS;
                         mo.MSMax = maxMS;
-                        mo.DrawCallCount = maxMS;
-                        mo.TotalParticles = maxMS;
+                        mo.DrawCallCount = drawcall;
+                        mo.TotalParticles = parCount;
 
                         DataGridUtil.MarkAsHighlighted(EffectGrid, item, Colors.Chartreuse);
                         _highlighted = mo;
