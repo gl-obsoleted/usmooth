@@ -49,6 +49,8 @@ namespace usmooth.common
         CL_QuerySwitches,
         CL_QuerySliders,
 
+        CL_StartAnalysePixels,
+
 		CL_CmdEnd,
 
         SV_CmdBegin             = 2000,
@@ -72,6 +74,8 @@ namespace usmooth.common
 
         SV_StressTestNames,
         SV_StressTestResult,
+
+        SV_StartAnalysePixels,
 
         SV_CmdEnd,
     }
