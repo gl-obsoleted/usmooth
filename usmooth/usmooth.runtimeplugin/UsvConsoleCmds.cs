@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using usmooth.common;
 
@@ -165,16 +166,21 @@ public class UsvConsoleCmds
     {
         try
         {
-            if (args.Length != 3)
+            if (args.Length == 3)
             {
-                Log.Error("Command 'effect_stress' parameter count mismatched. ({0} expected, {1} got)", 3, args.Length);
-                return false;
+                string effectName = args[1];
+                int effectCount = int.Parse(args[2]);
+                SysPost.InvokeMulticast(this, RunEffectStressTest, new UsEffectStressTestEventArgs(effectName, effectCount));
             }
-
-            string effectName = args[1];
-            int effectCount = int.Parse(args[2]);
-
-            SysPost.InvokeMulticast(this, RunEffectStressTest, new UsEffectStressTestEventArgs(effectName, effectCount));
+            else
+            {
+                int effectCount = int.Parse(args[args.Length - 1]);
+                List<string> effectNameList = new List<string>(args);
+                effectNameList.RemoveAt(0);
+                effectNameList.RemoveAt(effectNameList.Count - 1);
+                string effectName = string.Join(" ", effectNameList.ToArray());
+                SysPost.InvokeMulticast(this, RunEffectStressTest, new UsEffectStressTestEventArgs(effectName, effectCount));
+            }
         }
         catch (Exception ex)
         {
