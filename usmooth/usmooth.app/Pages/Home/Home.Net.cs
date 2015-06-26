@@ -17,6 +17,8 @@ namespace usmooth.app.Pages
 
             NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_QuerySwitchesResponse, NetHandle_QuerySwitchesResponse);
             NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_QuerySlidersResponse, NetHandle_QuerySlidersResponse);
+    
+            NetManager.Instance.RegisterCmdHandler(eNetCmd.SV_StartAnalysePixels, NetHandle_StartAnalysePixels);
         }
 
         private void OnLogicallyConnected(object sender, EventArgs e)
@@ -47,6 +49,7 @@ namespace usmooth.app.Pages
                     cmd.WriteNetCmd(eNetCmd.CL_QuerySliders);
                     NetManager.Instance.Send(cmd);
                 }
+
             }));
         }
 
@@ -97,6 +100,17 @@ namespace usmooth.app.Pages
                 }));
             }
 
+            return true;
+        }
+
+        bool NetHandle_StartAnalysePixels(eNetCmd cmd, UsCmd c)
+        {
+            int count = c.ReadInt32();
+            for (int i = 0; i < count; ++i )
+            {
+                string msg = c.ReadString();
+                UsLogging.Printf(msg);
+            }
             return true;
         }
     }

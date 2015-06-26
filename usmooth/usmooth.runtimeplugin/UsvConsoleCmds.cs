@@ -128,6 +128,44 @@ public class UsvConsoleCmds
     public event SysPost.StdMulticastDelegation QueryEffectList;
     public event SysPost.StdMulticastDelegation RunEffectStressTest;
 
+    public event SysPost.StdMulticastDelegation StartAnalyzePixel;
+
+    public class AnalysePixelsArgs : EventArgs
+    {
+        public AnalysePixelsArgs(bool b)
+        {
+            bRefresh = b;
+        }
+        public bool bRefresh;
+    }
+
+    [ConsoleHandler("start_analyze_pixels")]
+    public bool StartAnalysePixelsTriggered(string[] args)
+    {
+        try
+        {
+            bool bRefresh = false;
+            if (args.Length == 2)
+            {
+                string args2 = args[1];
+                if (args2 == "refresh")
+                { 
+                    bRefresh = true;
+                }
+            }
+
+            SysPost.InvokeMulticast(this, StartAnalyzePixel, new AnalysePixelsArgs(bRefresh));
+        }
+        catch(Exception ex)
+        {
+            Log.Exception(ex);
+            throw;
+        }
+
+        return true;
+    }
+
+
     [ConsoleHandler("get_effect_list")]
     public bool QueryEffectListTriggered(string[] args)
     {

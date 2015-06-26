@@ -44,6 +44,7 @@ public class UsMain_NetHandlers {
         exec.RegisterHandler(eNetCmd.CL_FrameV2_RequestNames, NetHandle_FrameV2_RequestNames);
         exec.RegisterHandler(eNetCmd.CL_QuerySwitches, NetHandle_QuerySwitches);
         exec.RegisterHandler(eNetCmd.CL_QuerySliders, NetHandle_QuerySliders); 
+ 
 	}
 	
 	private bool NetHandle_Handshake(eNetCmd cmd, UsCmd c) {
