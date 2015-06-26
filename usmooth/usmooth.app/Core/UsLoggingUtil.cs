@@ -181,4 +181,29 @@ namespace usmooth.app
             UsLogging.Printf(LogWndOpt.NetLog, ret);
         }
     }
+
+    public class UsLogFileReceiver : IDisposable
+    {
+        public static UsLogFileReceiver Instance;
+
+        public UsLogFileReceiver()
+        {
+            _file = new System.IO.StreamWriter(@"usmooth.app.log");
+        }
+
+        public void Dispose()
+        {
+            _file.Dispose();
+        }
+
+        public void LogIntoFile(LogWndOpt opt, string text)
+        {
+            if (_file != null)
+            {
+                _file.WriteLine(text);
+            }
+        }
+
+        System.IO.StreamWriter _file;
+    }
 }

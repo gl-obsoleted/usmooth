@@ -47,7 +47,11 @@ public class UsMain_NetHandlers {
 	}
 	
 	private bool NetHandle_Handshake(eNetCmd cmd, UsCmd c) {
-		Debug.Log ("executing handshake.");
+        Debug.Log("executing handshake.");
+        if (!string.IsNullOrEmpty(LogService.LastLogFile))
+        {
+            Debug.Log("Log Path: " + LogService.LastLogFile);
+        }
 
 		UsCmd reply = new UsCmd();
 		reply.WriteNetCmd(eNetCmd.SV_HandshakeResponse);

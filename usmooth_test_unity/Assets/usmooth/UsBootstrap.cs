@@ -26,7 +26,6 @@ SOFTWARE.
 
 ﻿using UnityEngine;
 using System;
-using GameCommon;
 using usmooth.common;
 
 public class UsBootstrap : MonoBehaviour 
