@@ -39,7 +39,9 @@ public class UsMain : IDisposable
     private LogService _logServ;
     private utest _test;
 
-    public UsMain(bool LogRemotely, bool LogIntoFile) 
+    private bool _inGameGui = false;
+
+    public UsMain(bool LogRemotely, bool LogIntoFile, bool InGameGui) 
     {
 		Application.runInBackground = true;
 
@@ -59,6 +61,8 @@ public class UsMain : IDisposable
 
         GameUtil.Log("on_level loaded.");
         GameInterface.Instance.Init();
+
+        _inGameGui = InGameGui;
 	}
 
     void LogTarget_Remotely(object sender, LogEventArgs args)
@@ -103,6 +107,7 @@ public class UsMain : IDisposable
 
     public void OnGUI()
     {
-        _test.OnGUI();
+        if (_inGameGui)
+            _test.OnGUI();
     }
 }

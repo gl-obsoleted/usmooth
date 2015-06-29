@@ -32,30 +32,35 @@ public class UsBootstrap : MonoBehaviour
 {
     public bool LogRemotely = true;
     public bool LogIntoFile = false;
+    public bool InGameGui = false;
 
 	void Start() 
     {
-        _usmooth = new UsMain(LogRemotely, LogIntoFile);
+        _usmooth = new UsMain(LogRemotely, LogIntoFile, InGameGui);
 	}
 
 	void Update()
     {
-		_usmooth.Update();
+        if (_usmooth != null)
+		    _usmooth.Update();
 	}
 
     void OnDestroy()
     {
-        _usmooth.Dispose();
+        if (_usmooth != null)
+            _usmooth.Dispose();
     }
 
     void OnGUI() 
     {
-        _usmooth.OnGUI();
+        if (_usmooth != null)
+            _usmooth.OnGUI();
 	}
 
     void OnLevelWasLoaded()
     {
-        _usmooth.OnLevelWasLoaded();
+        if (_usmooth != null)
+            _usmooth.OnLevelWasLoaded();
     }
 
     private UsMain _usmooth;
