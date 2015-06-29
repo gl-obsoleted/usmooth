@@ -83,6 +83,8 @@ public class UsvConsoleCmds
         Debug.LogWarning("An ordinary warning.");
         Debug.LogError("An ordinary error.");
 
+        Debug.Log("misc.中.文.测.试.test.中文测试.");
+
         try
         {
             throw new ApplicationException("A user-thrown exception.");

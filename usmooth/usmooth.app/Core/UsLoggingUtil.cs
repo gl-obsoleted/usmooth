@@ -193,7 +193,11 @@ namespace usmooth.app
 
         public void Dispose()
         {
-            _file.Dispose();
+            if (_file != null)
+            {
+                _file.Dispose();
+                _file = null;
+            }
         }
 
         public void LogIntoFile(LogWndOpt opt, string text)

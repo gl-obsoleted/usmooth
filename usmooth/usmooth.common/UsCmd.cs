@@ -124,11 +124,13 @@ public class UsCmd
         else
         {
             string stripped = value.Length > stripLen ? value.Substring(0, stripLen) : value;
-            WritePrimitive((short)stripped.Length);
 
             byte[] byteArray = Encoding.Default.GetBytes(stripped);
+
+            WritePrimitive((short)byteArray.Length);
+
             byteArray.CopyTo(_buffer, _writeOffset);
-            _writeOffset += stripped.Length;
+            _writeOffset += byteArray.Length;
         }
 	}
 	
