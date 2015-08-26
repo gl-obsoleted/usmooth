@@ -38,9 +38,12 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ulog, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\external\Unity-5.0.1f1\UnityEngine.dll</HintPath>
+      <HintPath>..\bin\Release\ulog.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\external\ulog\ulog\Unity-4.6.3\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -79,12 +82,6 @@
     <Compile Include="PerfData\UsTextureUtil.cs" />
     <Compile Include="UsvConsoleCmds.cs" />
     <Compile Include="utest.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\external\ulog\ulog\ulog.csproj">
-      <Project>{89f36330-2685-4a23-be90-f37c35590672}</Project>
-      <Name>ulog</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
