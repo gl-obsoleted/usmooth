@@ -45,7 +45,7 @@ public class UsMain : IDisposable
     {
 		Application.runInBackground = true;
 
-        _logServ = new LogService(LogIntoFile, -1);
+        _logServ = new LogService(LogIntoFile, -1, true);
 
         _test = new utest();
 
