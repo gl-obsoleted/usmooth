@@ -51,7 +51,7 @@ public class UsMain : IDisposable
 
         if (LogRemotely)
         {
-            //_logServ.LogTargets += LogTarget_Remotely;
+            _logServ.LogTargets += LogTarget_Remotely;
         }
 
 		UsNet.Instance = new UsNet(_serverPort);
