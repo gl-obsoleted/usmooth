@@ -1,6 +1,0 @@
-[submodule "external/docopt"]
-	path = external/docopt
-	url = https://github.com/docopt/docopt.git
-[submodule "external/ulog"]
-	path = external/ulog
-	url = https://github.com/mc-gulu/ulog.git
