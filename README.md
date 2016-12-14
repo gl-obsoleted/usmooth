@@ -1,5 +1,9 @@
-﻿# usmooth ![status](https://ci.appveyor.com/api/projects/status/github/SeaSunOpenSource/usmooth?svg=true)  
+# usmooth 
 
+**该工具已不再更新，已整合入 [PerfAssist/PA_Term](https://github.com/PerfAssist/PA_Term)，测试场景见 [PA_Term_DemoScene](https://github.com/PerfAssist/PA_Term_DemoScene)**
+ 
+ 
+ 
 - [__Download (v0.2a)__](https://github.com/SeaSunOpenSource/usmooth/releases/tag/0.2a)  
 - [__Tutorial__](https://github.com/SeaSunOpenSource/usmooth/wiki/tutorial)
 - [Release Notes](/release_notes.md)
